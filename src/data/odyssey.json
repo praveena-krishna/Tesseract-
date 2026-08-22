@@ -1,0 +1,2249 @@
+{
+  "_meta": {
+    "project": "The Odyssey",
+    "generatedFrom": [
+      "Daily tracking.csv",
+      "Our Training Journey(Sheet1).csv",
+      "Training Feedback — Your Honest Voice(Sheet1).csv"
+    ],
+    "peopleCount": 16,
+    "note": "See DATA-NOTES.md for what is real vs. placeholder and the known gaps (person<->project, person<->AI tool, person<->week links)."
+  },
+  "people": [
+    {
+      "id": "P01",
+      "name": "Ajay Kumar",
+      "email": null,
+      "projectIds": [
+        "ai-companion"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "Ajay Kumar",
+        "startConfidence": "4",
+        "nowConfidence": "5",
+        "hopes": [
+          "Learn new technical skills",
+          "Improve my existing knowledge",
+          "Improve problem-solving skills"
+        ],
+        "interestTopics": [
+          "AI Topics",
+          "Linux",
+          "Databricks",
+          "Data Visualization",
+          "Testing",
+          "Web/Mobile Application",
+          "IoT",
+          "Database",
+          "Backend (Nextjs)",
+          "Data Visualization Project",
+          "Git",
+          "Group Project",
+          "UI/UX",
+          "Self Learning by Trainee members",
+          "Devops",
+          "Cybersecurity"
+        ],
+        "learnFrequency": "Almost every day",
+        "toughestTopics": [
+          "Web/Mobile Application",
+          "Testing",
+          "Devops",
+          "Cybersecurity"
+        ],
+        "toughestDifficulty": "1",
+        "stuckAction": "Searched online",
+        "teamworkFrequency": "Almost every day",
+        "teamRating": "5",
+        "groupRole": "Idea Generator",
+        "teammatesHelpedWith": "",
+        "enjoyedActivity": [
+          "Data Visualization",
+          "Coding/Programming",
+          "Group Project Activities",
+          "Presentations"
+        ],
+        "challengingActivity": [
+          "Coding/Programming",
+          "Group Project Activities"
+        ],
+        "mostImprovedPart": [
+          "Technical knowledge",
+          "Teamwork",
+          "Presentation skills",
+          "Problem-solving"
+        ],
+        "oneThingToKeep": "Database",
+        "oneWordJourney": "Excellent",
+        "trainingSuggestions": "If the trainer teach something first about the topic practically to get a little bit knowledge about the topic",
+        "favoriteMemory": ""
+      },
+      "feedbackSurvey": null,
+      "source": "real",
+      "skillIds": [
+        "ai-topics",
+        "backend-nextjs",
+        "cybersecurity",
+        "data-visualization",
+        "data-visualization-project",
+        "database",
+        "databricks",
+        "devops",
+        "git",
+        "group-project",
+        "iot",
+        "linux",
+        "self-learning-by-trainee-members",
+        "testing",
+        "ui-ux",
+        "web-mobile-application"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P02",
+      "name": "Anbarasan K",
+      "email": null,
+      "projectIds": [
+        "ar-robot"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "Anbarasan K",
+        "startConfidence": "5",
+        "nowConfidence": "",
+        "hopes": [
+          "Learn new technical skills",
+          "Improve my existing knowledge",
+          "Work on real projects",
+          "Improve problem-solving skills",
+          "Improve communication",
+          "Learn to work in a team",
+          "Prepare for my career"
+        ],
+        "interestTopics": [
+          "AI Topics",
+          "Linux",
+          "Web/Mobile Application",
+          "Databricks",
+          "Git",
+          "IoT",
+          "Data Visualization",
+          "Database",
+          "Backend (Nextjs)",
+          "Self Learning by Trainee members"
+        ],
+        "learnFrequency": "Almost every day",
+        "toughestTopics": [
+          "Testing",
+          "Devops"
+        ],
+        "toughestDifficulty": "",
+        "stuckAction": "Tried to solve it myself",
+        "teamworkFrequency": "",
+        "teamRating": "",
+        "groupRole": "",
+        "teammatesHelpedWith": "",
+        "enjoyedActivity": [],
+        "challengingActivity": [],
+        "mostImprovedPart": [],
+        "oneThingToKeep": "",
+        "oneWordJourney": "",
+        "trainingSuggestions": "",
+        "favoriteMemory": ""
+      },
+      "feedbackSurvey": null,
+      "source": "real",
+      "skillIds": [
+        "ai-topics",
+        "backend-nextjs",
+        "data-visualization",
+        "database",
+        "databricks",
+        "git",
+        "iot",
+        "linux",
+        "self-learning-by-trainee-members",
+        "web-mobile-application"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P03",
+      "name": "Deepa Saravanan",
+      "email": "deepa.s@finstein.ai",
+      "projectIds": [
+        "vibesync"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "Deepa Saravanan",
+        "startConfidence": "3",
+        "nowConfidence": "4",
+        "hopes": [
+          "Learn new technical skills",
+          "Improve my existing knowledge"
+        ],
+        "interestTopics": [
+          "AI Topics",
+          "Databricks",
+          "Database"
+        ],
+        "learnFrequency": "Almost every day",
+        "toughestTopics": [
+          "Backend (Nextjs)",
+          "Web/Mobile Application"
+        ],
+        "toughestDifficulty": "2",
+        "stuckAction": "Tried to solve it myself",
+        "teamworkFrequency": "Almost every day",
+        "teamRating": "4",
+        "groupRole": "Depends on the situation",
+        "teammatesHelpedWith": "improve my technical skills",
+        "enjoyedActivity": [
+          "Data Visualization",
+          "Presentations",
+          "Group Project Activities"
+        ],
+        "challengingActivity": [
+          "Coding/Programming"
+        ],
+        "mostImprovedPart": [
+          "Technical knowledge",
+          "Confidence",
+          "Teamwork"
+        ],
+        "oneThingToKeep": "effective communication,technical knowledge",
+        "oneWordJourney": "average",
+        "trainingSuggestions": "focus ,timeline is missing,no proper scheduling",
+        "favoriteMemory": "vibesync team collabration"
+      },
+      "feedbackSurvey": {
+        "name": "Deepa Saravanan",
+        "email": "deepa.s@finstein.ai",
+        "overallRating": "4",
+        "biggestDifficulty": [
+          "Time management"
+        ],
+        "improvementAreas": [
+          "Training content",
+          "Practical sessions"
+        ],
+        "bestTrainer": "stalin bro,siva bro",
+        "supportRating": "4",
+        "usefulTopics": [
+          "AI Topics",
+          "Databricks",
+          "Data Visualization",
+          "Database",
+          "Group Project",
+          "Git",
+          "Self Learning by Trainee members"
+        ],
+        "timeWastedPart": [
+          "Discussions took more time than expected",
+          "Repeated topics",
+          "We started one topic, but moved to another topic before completing it"
+        ],
+        "growingProfessionally": "Yes, definitely",
+        "trainingSuggestion": "timeline is not in a proper manner",
+        "anonymousComment": "don't switch to another while it is not completed yet"
+      },
+      "source": "real",
+      "skillIds": [
+        "ai-topics",
+        "data-visualization",
+        "database",
+        "databricks",
+        "git",
+        "group-project",
+        "self-learning-by-trainee-members"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P04",
+      "name": "Elamaran A",
+      "email": "elamaran.a@finstein.ai",
+      "projectIds": [
+        "twinz-360"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": null,
+      "feedbackSurvey": {
+        "name": "Elamaran A",
+        "email": "elamaran.a@finstein.ai",
+        "overallRating": "3",
+        "biggestDifficulty": [
+          "Technical issues"
+        ],
+        "improvementAreas": [
+          "Practical sessions"
+        ],
+        "bestTrainer": "Stalin",
+        "supportRating": "3",
+        "usefulTopics": [
+          "AI Topics"
+        ],
+        "timeWastedPart": [
+          "Group activities"
+        ],
+        "growingProfessionally": "Yes, definitely",
+        "trainingSuggestion": "More practical sessions, real-time projects, and regular feedback would improve the overall training and trainee experience",
+        "anonymousComment": "More equal participation, better communication, and a positive learning environment would help everyone"
+      },
+      "source": "real",
+      "skillIds": [
+        "ai-topics"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P05",
+      "name": "Eraianbu A",
+      "email": "eraianbu.a@finstein.ai",
+      "projectIds": [
+        "ar-robot"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "Eraianbu A",
+        "startConfidence": "3",
+        "nowConfidence": "3",
+        "hopes": [
+          "Learn new technical skills",
+          "Work on real projects",
+          "Improve problem-solving skills",
+          "Improve communication",
+          "Learn to work in a team",
+          "Improve my existing knowledge",
+          "Prepare for my career"
+        ],
+        "interestTopics": [
+          "AI Topics",
+          "Linux",
+          "Web/Mobile Application",
+          "Databricks",
+          "Testing",
+          "IoT",
+          "Cybersecurity",
+          "UI/UX",
+          "Group Project"
+        ],
+        "learnFrequency": "Almost every day",
+        "toughestTopics": [
+          "Data Visualization",
+          "Devops",
+          "Web/Mobile Application",
+          "Cybersecurity"
+        ],
+        "toughestDifficulty": "3",
+        "stuckAction": "Searched online",
+        "teamworkFrequency": "Almost every day",
+        "teamRating": "2",
+        "groupRole": "Depends on the situation",
+        "teammatesHelpedWith": "see problems from new perspectives and find better solutions",
+        "enjoyedActivity": [
+          "Fun Activity",
+          "Group Project Activities",
+          "Assignments"
+        ],
+        "challengingActivity": [
+          "Data Visualization",
+          "Group Project Activities"
+        ],
+        "mostImprovedPart": [
+          "Technical knowledge",
+          "Problem-solving",
+          "Confidence",
+          "Teamwork",
+          "Communication"
+        ],
+        "oneThingToKeep": "I would keep the practical problem-solving mindset I developed during the training—especially learning how to understand a problem, break it into smaller parts, and apply the right technology to solve it",
+        "oneWordJourney": "Good",
+        "trainingSuggestions": "More hands-on projects, real-world case studies, and additional time for practical implementation would make the training even more effective. Regular mini-projects and mentor feedback after each topic would also help us understand the concepts better",
+        "favoriteMemory": "My favorite memory is working on practical projects and seeing the concepts I learned actually work. The hands-on sessions, discussions with mentors, and solving technical problems together made the learning experience memorable"
+      },
+      "feedbackSurvey": {
+        "name": "Eraianbu A",
+        "email": "eraianbu.a@finstein.ai",
+        "overallRating": "3",
+        "biggestDifficulty": [
+          "Teamwork",
+          "Understanding the concepts"
+        ],
+        "improvementAreas": [
+          "Training content",
+          "Explanation of concepts",
+          "Practical sessions",
+          "Assignments",
+          "Projects",
+          "Group activities",
+          "Doubt clarification"
+        ],
+        "bestTrainer": "Stalin Bro From Data Engineering",
+        "supportRating": "3",
+        "usefulTopics": [
+          "AI Topics",
+          "Linux",
+          "Web/Mobile Application",
+          "Databricks",
+          "IoT",
+          "Cybersecurity",
+          "Group Project",
+          "UI/UX",
+          "Self Learning by Trainee members"
+        ],
+        "timeWastedPart": [
+          "Waiting time",
+          "We started one topic, but moved to another topic before completing it"
+        ],
+        "growingProfessionally": "Yes, definitely",
+        "trainingSuggestion": "A properly structured curriculum with a clear learning roadmap, planned topics, and sufficient time for hands-on practice would improve the overall training experience",
+        "anonymousComment": "Nothing"
+      },
+      "source": "real",
+      "skillIds": [
+        "ai-topics",
+        "cybersecurity",
+        "databricks",
+        "group-project",
+        "iot",
+        "linux",
+        "self-learning-by-trainee-members",
+        "testing",
+        "ui-ux",
+        "web-mobile-application"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P06",
+      "name": "Kavipriya R",
+      "email": "Kavipriya.r@finstein.ai",
+      "projectIds": [
+        "ar-robot"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "Kavipriya R",
+        "startConfidence": "2",
+        "nowConfidence": "4",
+        "hopes": [
+          "Work on real projects",
+          "Learn new technical skills",
+          "Improve problem-solving skills"
+        ],
+        "interestTopics": [
+          "AI Topics",
+          "Databricks",
+          "Data Visualization",
+          "Database",
+          "Data Visualization Project",
+          "Group Project",
+          "Git",
+          "UI/UX",
+          "Self Learning by Trainee members",
+          "Linux",
+          "Testing",
+          "Web/Mobile Application",
+          "Backend (Nextjs)",
+          "IoT",
+          "Cybersecurity",
+          "Devops"
+        ],
+        "learnFrequency": "Almost every day",
+        "toughestTopics": [
+          "Backend (Nextjs)"
+        ],
+        "toughestDifficulty": "3",
+        "stuckAction": "Searched online",
+        "teamworkFrequency": "Several times a week",
+        "teamRating": "3",
+        "groupRole": "Idea Generator",
+        "teammatesHelpedWith": "built communication, idea sharing , knowledge",
+        "enjoyedActivity": [
+          "Data Visualization",
+          "Coding/Programming",
+          "Assignments",
+          "Presentations",
+          "Group Project Activities"
+        ],
+        "challengingActivity": [
+          "Assignments"
+        ],
+        "mostImprovedPart": [
+          "ALL OF THE ABOVE"
+        ],
+        "oneThingToKeep": "Gaining knowledge",
+        "oneWordJourney": "Time to learn",
+        "trainingSuggestions": "Sessions and concept derivation of topics , and future projects",
+        "favoriteMemory": "Entire journey"
+      },
+      "feedbackSurvey": {
+        "name": "Kavipriya R",
+        "email": "Kavipriya.r@finstein.ai",
+        "overallRating": "3",
+        "biggestDifficulty": [
+          "NIL"
+        ],
+        "improvementAreas": [
+          "Practical sessions",
+          "Training content"
+        ],
+        "bestTrainer": "All",
+        "supportRating": "4",
+        "usefulTopics": [
+          "Databricks",
+          "Data Visualization",
+          "Self Learning by Trainee members",
+          "UI/UX",
+          "Git",
+          "AI Topics",
+          "Testing",
+          "Linux",
+          "Web/Mobile Application",
+          "IoT",
+          "Cybersecurity",
+          "Devops",
+          "Database",
+          "Backend (Nextjs)",
+          "Data Visualization Project",
+          "Group Project"
+        ],
+        "timeWastedPart": [
+          "none of the above"
+        ],
+        "growingProfessionally": "Yes, to some extent",
+        "trainingSuggestion": "No",
+        "anonymousComment": "Nil"
+      },
+      "source": "real",
+      "skillIds": [
+        "ai-topics",
+        "backend-nextjs",
+        "cybersecurity",
+        "data-visualization",
+        "data-visualization-project",
+        "database",
+        "databricks",
+        "devops",
+        "git",
+        "group-project",
+        "iot",
+        "linux",
+        "self-learning-by-trainee-members",
+        "testing",
+        "ui-ux",
+        "web-mobile-application"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P07",
+      "name": "Kavirajan N",
+      "email": null,
+      "projectIds": [
+        "twinz-360"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "Kavirajan N",
+        "startConfidence": "5",
+        "nowConfidence": "4",
+        "hopes": [
+          "Learn to work in a team",
+          "Improve my existing knowledge",
+          "Learn new technical skills",
+          "Improve problem-solving skills"
+        ],
+        "interestTopics": [
+          "Databricks",
+          "AI Topics"
+        ],
+        "learnFrequency": "Sometimes | Almost every day",
+        "toughestTopics": [
+          "Self Learning by Trainee members"
+        ],
+        "toughestDifficulty": "1",
+        "stuckAction": "Tried to solve it myself",
+        "teamworkFrequency": "Almost every day",
+        "teamRating": "1",
+        "groupRole": "Idea Generator",
+        "teammatesHelpedWith": "",
+        "enjoyedActivity": [
+          "Coding/Programming",
+          "Group Project Activities",
+          "Presentations"
+        ],
+        "challengingActivity": [
+          "Coding/Programming",
+          "Assignments",
+          "Group Project Activities"
+        ],
+        "mostImprovedPart": [
+          "Teamwork"
+        ],
+        "oneThingToKeep": "",
+        "oneWordJourney": "good",
+        "trainingSuggestions": "",
+        "favoriteMemory": ""
+      },
+      "feedbackSurvey": null,
+      "source": "real",
+      "skillIds": [
+        "ai-topics",
+        "databricks"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P08",
+      "name": "Ragul D",
+      "email": "ragul.d@finstein.ai",
+      "projectIds": [
+        "vivid-echo"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "Ragul D",
+        "startConfidence": "3",
+        "nowConfidence": "3",
+        "hopes": [
+          "Learn new technical skills",
+          "Improve my existing knowledge",
+          "Work on real projects",
+          "Improve problem-solving skills",
+          "Improve communication",
+          "Prepare for my career",
+          "Learn to work in a team"
+        ],
+        "interestTopics": [
+          "AI Topics",
+          "Web/Mobile Application",
+          "Databricks",
+          "Database"
+        ],
+        "learnFrequency": "Sometimes",
+        "toughestTopics": [
+          "AI Topics",
+          "Linux",
+          "Testing",
+          "Data Visualization",
+          "Cybersecurity",
+          "Devops",
+          "Data Visualization Project"
+        ],
+        "toughestDifficulty": "3",
+        "stuckAction": "Asked a teammate",
+        "teamworkFrequency": "Almost every day",
+        "teamRating": "3",
+        "groupRole": "Depends on the situation",
+        "teammatesHelpedWith": "Getting knowledge in uncover concept",
+        "enjoyedActivity": [
+          "Group Project Activities"
+        ],
+        "challengingActivity": [
+          "Coding/Programming"
+        ],
+        "mostImprovedPart": [
+          "Confidence",
+          "Communication",
+          "Teamwork"
+        ],
+        "oneThingToKeep": "Patient",
+        "oneWordJourney": "Average",
+        "trainingSuggestions": "Path was not clear",
+        "favoriteMemory": "Heated conversation"
+      },
+      "feedbackSurvey": {
+        "name": "Ragul D",
+        "email": "ragul.d@finstein.ai",
+        "overallRating": "3",
+        "biggestDifficulty": [
+          "Understanding the concepts",
+          "Keeping up with the training pace",
+          "Technical issues"
+        ],
+        "improvementAreas": [
+          "Training content",
+          "Practical sessions"
+        ],
+        "bestTrainer": "Stalin",
+        "supportRating": "1",
+        "usefulTopics": [
+          "Web/Mobile Application",
+          "Database"
+        ],
+        "timeWastedPart": [
+          "Certain training sessions",
+          "Waiting time",
+          "Discussions took more time than expected",
+          "Repeated topics",
+          "Technical issues",
+          "Assignments"
+        ],
+        "growingProfessionally": "Not much",
+        "trainingSuggestion": "Set a path",
+        "anonymousComment": ""
+      },
+      "source": "real",
+      "skillIds": [
+        "ai-topics",
+        "database",
+        "databricks",
+        "web-mobile-application"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P09",
+      "name": "SaiSathya Ramamoorthy",
+      "email": null,
+      "projectIds": [
+        "twinz-360"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "SaiSathya Ramamoorthy",
+        "startConfidence": "3",
+        "nowConfidence": "4",
+        "hopes": [
+          "Learn new technical skills",
+          "Improve my existing knowledge",
+          "Work on real projects",
+          "Learn to work in a team",
+          "Prepare for my career",
+          "I learnt The way how the people are present thier projects and how they speak"
+        ],
+        "interestTopics": [
+          "AI Topics",
+          "Databricks",
+          "Data Visualization Project",
+          "Database",
+          "UI/UX",
+          "Self Learning by Trainee members",
+          "Group Project"
+        ],
+        "learnFrequency": "Almost every day",
+        "toughestTopics": [
+          "Web/Mobile Application",
+          "IoT",
+          "Devops"
+        ],
+        "toughestDifficulty": "2",
+        "stuckAction": "Tried to solve it myself",
+        "teamworkFrequency": "Sometimes",
+        "teamRating": "3",
+        "groupRole": "Depends on the situation",
+        "teammatesHelpedWith": "Learn new things,communication,idea,improving network",
+        "enjoyedActivity": [
+          "Group Project Activities",
+          "Coding/Programming"
+        ],
+        "challengingActivity": [
+          "Data Visualization",
+          "Presentations"
+        ],
+        "mostImprovedPart": [
+          "Technical knowledge",
+          "Confidence",
+          "Teamwork"
+        ],
+        "oneThingToKeep": "",
+        "oneWordJourney": "Adventure",
+        "trainingSuggestions": "More interactive sessions, practical learning, open discussions, and opportunities to explore our own ideas would make the training even better",
+        "favoriteMemory": "Fight,team lunch,some gossips"
+      },
+      "feedbackSurvey": null,
+      "source": "real",
+      "skillIds": [
+        "ai-topics",
+        "data-visualization-project",
+        "database",
+        "databricks",
+        "group-project",
+        "self-learning-by-trainee-members",
+        "ui-ux"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P10",
+      "name": "Sanjay Kumar J",
+      "email": "sanjaykumar.j@finstein.ai",
+      "projectIds": [
+        "vivid-echo"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "Sanjay Kumar J",
+        "startConfidence": "3 | 2",
+        "nowConfidence": "4 | 3",
+        "hopes": [
+          "Learn new technical skills",
+          "Improve my existing knowledge",
+          "Work on real projects",
+          "Improve problem-solving skills",
+          "Improve communication",
+          "Learn to work in a team",
+          "Prepare for my career"
+        ],
+        "interestTopics": [
+          "AI Topics",
+          "Linux",
+          "Web/Mobile Application",
+          "Databricks",
+          "Data Visualization",
+          "IoT",
+          "Cybersecurity",
+          "Database",
+          "Backend (Nextjs)",
+          "Data Visualization Project",
+          "Group Project",
+          "Git",
+          "Devops",
+          "Testing",
+          "UI/UX",
+          "Self Learning by Trainee members"
+        ],
+        "learnFrequency": "Almost every day",
+        "toughestTopics": [
+          "Devops",
+          "Testing",
+          "IoT",
+          "Backend (Nextjs)"
+        ],
+        "toughestDifficulty": "3",
+        "stuckAction": "Took a break and came back later",
+        "teamworkFrequency": "Almost every day",
+        "teamRating": "3",
+        "groupRole": "Organizer",
+        "teammatesHelpedWith": "adapt socially and bearing people | cope up with flow of training and learned about bearing and adapting to people and situations",
+        "enjoyedActivity": [
+          "Data Visualization",
+          "Group Project Activities"
+        ],
+        "challengingActivity": [
+          "Coding/Programming",
+          "Group Project Activities",
+          "Data Visualization"
+        ],
+        "mostImprovedPart": [
+          "Technical knowledge",
+          "Problem-solving",
+          "Confidence",
+          "Communication",
+          "Teamwork",
+          "Time management"
+        ],
+        "oneThingToKeep": "Technical knowledge",
+        "oneWordJourney": "embrace",
+        "trainingSuggestions": "Proper scheduling the Curriculum",
+        "favoriteMemory": "Project VividEcho with my Teammates and DataViz | DataViz"
+      },
+      "feedbackSurvey": {
+        "name": "Sanjay Kumar J",
+        "email": "sanjaykumar.j@finstein.ai",
+        "overallRating": "2",
+        "biggestDifficulty": [
+          "Understanding the concepts"
+        ],
+        "improvementAreas": [
+          "Training content",
+          "Explanation of concepts",
+          "Practical sessions",
+          "Assignments",
+          "Projects",
+          "Group activities",
+          "Doubt clarification",
+          "Time management"
+        ],
+        "bestTrainer": "none",
+        "supportRating": "2",
+        "usefulTopics": [
+          "Linux",
+          "AI Topics",
+          "Web/Mobile Application",
+          "Databricks",
+          "Data Visualization",
+          "Data Visualization Project",
+          "Git"
+        ],
+        "timeWastedPart": [
+          "Certain training sessions",
+          "Discussions took more time than expected",
+          "Technical issues",
+          "We started one topic, but moved to another topic before completing it"
+        ],
+        "growingProfessionally": "Yes, to some extent",
+        "trainingSuggestion": "the overall training should be properly scheduled and proceeded accordingly. and being a trainee, it was kind of uncertain in term of session and curriculum of the training batch",
+        "anonymousComment": "The batch shouldn't be handled by one single Mentor"
+      },
+      "source": "real",
+      "skillIds": [
+        "ai-topics",
+        "backend-nextjs",
+        "cybersecurity",
+        "data-visualization",
+        "data-visualization-project",
+        "database",
+        "databricks",
+        "devops",
+        "git",
+        "group-project",
+        "iot",
+        "linux",
+        "self-learning-by-trainee-members",
+        "testing",
+        "ui-ux",
+        "web-mobile-application"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P11",
+      "name": "Sivarakshan R",
+      "email": "sivarakshan.r@finstein.ai",
+      "projectIds": [
+        "vibesync"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "Sivarakshan R",
+        "startConfidence": "5",
+        "nowConfidence": "4",
+        "hopes": [
+          "Learn new technical skills",
+          "Improve my existing knowledge",
+          "Work on real projects",
+          "Improve problem-solving skills",
+          "Improve communication",
+          "Learn to work in a team",
+          "Prepare for my career"
+        ],
+        "interestTopics": [
+          "AI Topics",
+          "Databricks",
+          "Data Visualization",
+          "Group Project",
+          "Git",
+          "Self Learning by Trainee members"
+        ],
+        "learnFrequency": "Several times a week",
+        "toughestTopics": [
+          "Devops",
+          "Testing"
+        ],
+        "toughestDifficulty": "3",
+        "stuckAction": "Tried to solve it myself",
+        "teamworkFrequency": "Almost every day",
+        "teamRating": "4",
+        "groupRole": "Problem Solver",
+        "teammatesHelpedWith": "learn from different perspectives, collaborate effectively, and complete tasks more confidently as a team",
+        "enjoyedActivity": [
+          "Coding/Programming"
+        ],
+        "challengingActivity": [
+          "Presentations"
+        ],
+        "mostImprovedPart": [
+          "Problem-solving",
+          "Technical knowledge",
+          "Teamwork"
+        ],
+        "oneThingToKeep": "The one thing I would keep from this training is the practical knowledge of AI and how to apply it to real-world projects to improve productivity and problem-solving",
+        "oneWordJourney": "Transformative",
+        "trainingSuggestions": "I would suggest including more hands-on activities, practical assignments, team-building activities, and interactive sessions. It would also be helpful to have dedicated sessions on AI Agents and regular feedback or progress tracking to support each trainee's learning journey",
+        "favoriteMemory": "My favorite memory was spending time with my teammates, sharing ideas, participating in fun activities, learning new things together, and creating memorable moments beyond just technical sessions"
+      },
+      "feedbackSurvey": {
+        "name": "Sivarakshan R",
+        "email": "sivarakshan.r@finstein.ai",
+        "overallRating": "3",
+        "biggestDifficulty": [
+          "Technical issues"
+        ],
+        "improvementAreas": [
+          "Training content",
+          "Practical sessions",
+          "Doubt clarification"
+        ],
+        "bestTrainer": "Dinesh Sir, Stalin Anna",
+        "supportRating": "3",
+        "usefulTopics": [
+          "Databricks",
+          "Data Visualization",
+          "Git",
+          "Self Learning by Trainee members",
+          "AI Topics",
+          "Group Project"
+        ],
+        "timeWastedPart": [
+          "Repeated topics"
+        ],
+        "growingProfessionally": "Yes, definitely",
+        "trainingSuggestion": "I would suggest adding more dedicated sessions on AI Agents, along with hands-on practical assignments and real-world projects. It would also be helpful to track each trainee's learning activities, assignments, and progress regularly so that individual learning gaps can be identified and supported",
+        "anonymousComment": "No"
+      },
+      "source": "real",
+      "skillIds": [
+        "ai-topics",
+        "data-visualization",
+        "databricks",
+        "git",
+        "group-project",
+        "self-learning-by-trainee-members"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P12",
+      "name": "Subasri R",
+      "email": "subasri.r@finstein.ai",
+      "projectIds": [
+        "vivid-echo"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "Subasri R",
+        "startConfidence": "4",
+        "nowConfidence": "4",
+        "hopes": [
+          "Learn new technical skills",
+          "Improve my existing knowledge",
+          "Improve communication",
+          "Learn to work in a team"
+        ],
+        "interestTopics": [
+          "Testing",
+          "Databricks",
+          "Linux",
+          "Data Visualization",
+          "Cybersecurity",
+          "Devops",
+          "Group Project",
+          "Self Learning by Trainee members",
+          "UI/UX"
+        ],
+        "learnFrequency": "Several times a week",
+        "toughestTopics": [
+          "Backend (Nextjs)",
+          "Devops"
+        ],
+        "toughestDifficulty": "2",
+        "stuckAction": "Tried to solve it myself",
+        "teamworkFrequency": "Almost every day",
+        "teamRating": "4",
+        "groupRole": "Depends on the situation",
+        "teammatesHelpedWith": "increase my knowledge",
+        "enjoyedActivity": [
+          "Group Project Activities",
+          "Presentations"
+        ],
+        "challengingActivity": [
+          "nothing"
+        ],
+        "mostImprovedPart": [
+          "Technical knowledge",
+          "Confidence",
+          "Communication",
+          "Teamwork",
+          "Time management",
+          "Presentation skills"
+        ],
+        "oneThingToKeep": "Consistent",
+        "oneWordJourney": "Nice",
+        "trainingSuggestions": "Follow a structured pattern which is helpful",
+        "favoriteMemory": "Group project activities"
+      },
+      "feedbackSurvey": {
+        "name": "Subasri R",
+        "email": "subasri.r@finstein.ai",
+        "overallRating": "3",
+        "biggestDifficulty": [
+          "Keeping up with the training pace"
+        ],
+        "improvementAreas": [
+          "Assignments"
+        ],
+        "bestTrainer": "Stalin , Divya",
+        "supportRating": "3",
+        "usefulTopics": [
+          "AI Topics",
+          "Linux",
+          "Databricks",
+          "Data Visualization",
+          "Cybersecurity",
+          "Devops",
+          "Database",
+          "Group Project",
+          "Git"
+        ],
+        "timeWastedPart": [
+          "Discussions took more time than expected"
+        ],
+        "growingProfessionally": "Yes, to some extent",
+        "trainingSuggestion": "follow a structured format",
+        "anonymousComment": "Nothing"
+      },
+      "source": "real",
+      "skillIds": [
+        "ai-topics",
+        "cybersecurity",
+        "data-visualization",
+        "database",
+        "databricks",
+        "devops",
+        "git",
+        "group-project",
+        "linux",
+        "self-learning-by-trainee-members",
+        "testing",
+        "ui-ux"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P13",
+      "name": "Syril A",
+      "email": "syril.a@finstein.ai",
+      "projectIds": [
+        "vibesync"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "Syril A",
+        "startConfidence": "5",
+        "nowConfidence": "4",
+        "hopes": [
+          "Learn new technical skills",
+          "Improve my existing knowledge",
+          "Work on real projects",
+          "Improve problem-solving skills",
+          "Improve communication",
+          "Learn to work in a team",
+          "Prepare for my career"
+        ],
+        "interestTopics": [
+          "AI Topics",
+          "Group Project",
+          "Databricks",
+          "Web/Mobile Application"
+        ],
+        "learnFrequency": "Almost every day",
+        "toughestTopics": [
+          "Data Visualization"
+        ],
+        "toughestDifficulty": "2",
+        "stuckAction": "Took a break and came back later",
+        "teamworkFrequency": "Almost every day",
+        "teamRating": "4",
+        "groupRole": "Depends on the situation",
+        "teammatesHelpedWith": "Finish the work",
+        "enjoyedActivity": [
+          "Group Project Activities",
+          "Coding/Programming"
+        ],
+        "challengingActivity": [
+          "Data Visualization"
+        ],
+        "mostImprovedPart": [
+          "Technical knowledge",
+          "Problem-solving",
+          "Confidence",
+          "Teamwork"
+        ],
+        "oneThingToKeep": "Knowledge",
+        "oneWordJourney": "Super",
+        "trainingSuggestions": "Nothing",
+        "favoriteMemory": "Nothing"
+      },
+      "feedbackSurvey": {
+        "name": "Syril A",
+        "email": "syril.a@finstein.ai",
+        "overallRating": "4",
+        "biggestDifficulty": [
+          "Time management"
+        ],
+        "improvementAreas": [
+          "Group activities",
+          "Explanation of concepts"
+        ],
+        "bestTrainer": "-",
+        "supportRating": "4",
+        "usefulTopics": [
+          "AI Topics",
+          "Web/Mobile Application",
+          "Databricks",
+          "Data Visualization"
+        ],
+        "timeWastedPart": [
+          "Certain training sessions"
+        ],
+        "growingProfessionally": "Yes, definitely",
+        "trainingSuggestion": "No",
+        "anonymousComment": "No"
+      },
+      "source": "real",
+      "skillIds": [
+        "ai-topics",
+        "data-visualization",
+        "databricks",
+        "group-project",
+        "web-mobile-application"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P14",
+      "name": "Vignesh Siva",
+      "email": "vignesh.siva@finstein.ai",
+      "projectIds": [
+        "ai-companion"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "Vignesh Siva",
+        "startConfidence": "5",
+        "nowConfidence": "4",
+        "hopes": [
+          "Learn new technical skills",
+          "Improve my existing knowledge",
+          "Improve problem-solving skills",
+          "Learn to work in a team"
+        ],
+        "interestTopics": [
+          "Databricks",
+          "Backend (Nextjs)",
+          "Database",
+          "Web/Mobile Application",
+          "Git",
+          "Group Project",
+          "Linux"
+        ],
+        "learnFrequency": "Almost every day",
+        "toughestTopics": [
+          "Data Visualization Project",
+          "Data Visualization"
+        ],
+        "toughestDifficulty": "4",
+        "stuckAction": "Tried to solve it myself",
+        "teamworkFrequency": "Almost every day",
+        "teamRating": "4",
+        "groupRole": "Problem Solver",
+        "teammatesHelpedWith": "Working with my teammates helped me to share new ideas, finish big tasks faster, and learn useful skills from different people",
+        "enjoyedActivity": [
+          "Coding/Programming",
+          "Group Project Activities"
+        ],
+        "challengingActivity": [
+          "Data Visualization"
+        ],
+        "mostImprovedPart": [
+          "Confidence",
+          "Communication",
+          "Teamwork",
+          "Technical knowledge",
+          "Problem-solving",
+          "Presentation skills",
+          "Time management"
+        ],
+        "oneThingToKeep": "Team Work",
+        "oneWordJourney": "Good",
+        "trainingSuggestions": "utilizing microlearning to shorten sessions, adding interactive group tasks, and gathering direct feedback from participants",
+        "favoriteMemory": "Team Project"
+      },
+      "feedbackSurvey": {
+        "name": "Vignesh Siva",
+        "email": "vignesh.siva@finstein.ai",
+        "overallRating": "3",
+        "biggestDifficulty": [
+          "Assignments"
+        ],
+        "improvementAreas": [
+          "Practical sessions",
+          "Explanation of concepts",
+          "Training content",
+          "Projects"
+        ],
+        "bestTrainer": "Stalin, Siva and Yamuna",
+        "supportRating": "3",
+        "usefulTopics": [
+          "Linux",
+          "Web/Mobile Application",
+          "Databricks",
+          "Database",
+          "Backend (Nextjs)",
+          "Group Project",
+          "Git"
+        ],
+        "timeWastedPart": [
+          "I don't feel my time was wasted"
+        ],
+        "growingProfessionally": "Yes, to some extent",
+        "trainingSuggestion": "focus on making sessions more interactive, using practical hands on tasks, collecting regular feedback, and providing clear career support",
+        "anonymousComment": "yes"
+      },
+      "source": "real",
+      "skillIds": [
+        "backend-nextjs",
+        "database",
+        "databricks",
+        "git",
+        "group-project",
+        "linux",
+        "web-mobile-application"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P15",
+      "name": "Yugendhran V Venkatajalapathy",
+      "email": "yugendhran.v@finstein.ai",
+      "projectIds": [
+        "ai-companion"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "Yugendhran V Venkatajalapathy",
+        "startConfidence": "5",
+        "nowConfidence": "3",
+        "hopes": [
+          "Learn new technical skills",
+          "Improve communication",
+          "Work on real projects",
+          "Learn to work in a team",
+          "Prepare for my career"
+        ],
+        "interestTopics": [
+          "AI Topics",
+          "Linux",
+          "Group Project"
+        ],
+        "learnFrequency": "Almost every day",
+        "toughestTopics": [
+          "Backend (Nextjs)"
+        ],
+        "toughestDifficulty": "3",
+        "stuckAction": "Searched online",
+        "teamworkFrequency": "Almost every day",
+        "teamRating": "4",
+        "groupRole": "Idea Generator",
+        "teammatesHelpedWith": "Working with my teammates helped me to solve problems",
+        "enjoyedActivity": [
+          "Coding/Programming",
+          "Data Visualization",
+          "Presentations",
+          "Group Project Activities"
+        ],
+        "challengingActivity": [
+          "Assignments"
+        ],
+        "mostImprovedPart": [
+          "Technical knowledge",
+          "Time management"
+        ],
+        "oneThingToKeep": "Class took by overselves",
+        "oneWordJourney": "Good",
+        "trainingSuggestions": "Time management and proper time table",
+        "favoriteMemory": "My colleague's"
+      },
+      "feedbackSurvey": {
+        "name": "Yugendhran V Venkatajalapathy",
+        "email": "yugendhran.v@finstein.ai",
+        "overallRating": "5",
+        "biggestDifficulty": [
+          "Understanding the concepts"
+        ],
+        "improvementAreas": [
+          "Training content",
+          "Assignments"
+        ],
+        "bestTrainer": "Stalin",
+        "supportRating": "5",
+        "usefulTopics": [
+          "AI Topics",
+          "Linux",
+          "Web/Mobile Application",
+          "Database",
+          "Git",
+          "Group Project",
+          "Self Learning by Trainee members"
+        ],
+        "timeWastedPart": [
+          "Certain training sessions",
+          "Repeated topics"
+        ],
+        "growingProfessionally": "Yes, definitely",
+        "trainingSuggestion": "Nill",
+        "anonymousComment": "Nil"
+      },
+      "source": "real",
+      "skillIds": [
+        "ai-topics",
+        "database",
+        "git",
+        "group-project",
+        "linux",
+        "self-learning-by-trainee-members",
+        "web-mobile-application"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    },
+    {
+      "id": "P16",
+      "name": "Praveena",
+      "email": null,
+      "projectIds": [
+        "vibesync"
+      ],
+      "aiToolIds": [],
+      "weeks": [],
+      "journeySurvey": {
+        "name": "Praveena",
+        "startConfidence": "4",
+        "nowConfidence": "4",
+        "hopes": [
+          "Learn new technical skills",
+          "Improve my existing knowledge",
+          "Work on real projects",
+          "Improve problem-solving skills"
+        ],
+        "interestTopics": [
+          "AI Topics",
+          "Databricks"
+        ],
+        "learnFrequency": "Almost every day",
+        "toughestTopics": [
+          "Databricks"
+        ],
+        "toughestDifficulty": "3",
+        "stuckAction": "Searched online; Asked a teammate; Asked the trainer",
+        "teamworkFrequency": "Almost every day",
+        "teamRating": "3",
+        "groupRole": "Depends on the situation",
+        "teammatesHelpedWith": "Idea sharing, Collaboration",
+        "enjoyedActivity": [
+          "Coding/Programming",
+          "Data Visualization",
+          "Presentations",
+          "Group Project Activities"
+        ],
+        "challengingActivity": [
+          "Group Project Activities"
+        ],
+        "mostImprovedPart": [
+          "Technical knowledge",
+          "Problem-solving",
+          "Confidence",
+          "Teamwork",
+          "Communication",
+          "Presentation skills"
+        ],
+        "oneThingToKeep": "Practical knowledge and problem-solving skills",
+        "oneWordJourney": "Valuable",
+        "trainingSuggestions": "Nothing",
+        "favoriteMemory": "Working with my VibeSync teammates"
+      },
+      "feedbackSurvey": null,
+      "placeholderFields": [
+        "toughestTopics",
+        "toughestDifficulty",
+        "challengingActivity",
+        "trainingSuggestions",
+        "favoriteMemory"
+      ],
+      "source": "manually collected directly from the user (not from the CSV files) for most fields; the fields listed in placeholderFields were filled in with a placeholder guess at the user's request and are excluded from the global challenge/frequency counts until the user replaces them with her real answers",
+      "skillIds": [
+        "ai-topics",
+        "databricks"
+      ],
+      "projectIdsSource": "authoritative team roster (provided directly by the user)"
+    }
+  ],
+  "projects": [
+    {
+      "id": "ai-companion",
+      "name": "AI Companion",
+      "memberIds": [
+        "P01",
+        "P14",
+        "P15"
+      ],
+      "techIds": [],
+      "aiToolIds": [],
+      "logMentionCount": 20,
+      "source": "daily log (name) + authoritative team roster (members, provided directly by the user)"
+    },
+    {
+      "id": "vivid-echo",
+      "name": "Vivid Echo",
+      "memberIds": [
+        "P10",
+        "P08",
+        "P12"
+      ],
+      "techIds": [],
+      "aiToolIds": [],
+      "logMentionCount": 20,
+      "source": "daily log (name) + authoritative team roster (members, provided directly by the user)"
+    },
+    {
+      "id": "twinz-360",
+      "name": "Twinz 360",
+      "memberIds": [
+        "P07",
+        "P09",
+        "P04"
+      ],
+      "techIds": [],
+      "aiToolIds": [],
+      "logMentionCount": 20,
+      "source": "daily log (name) + authoritative team roster (members, provided directly by the user)"
+    },
+    {
+      "id": "vibesync",
+      "name": "VibeSync",
+      "memberIds": [
+        "P16",
+        "P03",
+        "P11",
+        "P13"
+      ],
+      "techIds": [],
+      "aiToolIds": [],
+      "logMentionCount": 18,
+      "source": "daily log (name) + authoritative team roster (members, provided directly by the user)"
+    },
+    {
+      "id": "ar-robot",
+      "name": "AR Robot",
+      "memberIds": [
+        "P02",
+        "P06",
+        "P05"
+      ],
+      "techIds": [],
+      "aiToolIds": [],
+      "logMentionCount": 5,
+      "source": "daily log (name) + authoritative team roster (members, provided directly by the user)"
+    }
+  ],
+  "skills": [
+    {
+      "id": "ai-topics",
+      "name": "AI Topics",
+      "popularity": 15,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "databricks",
+      "name": "Databricks",
+      "popularity": 14,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "group-project",
+      "name": "Group Project",
+      "popularity": 11,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "database",
+      "name": "Database",
+      "popularity": 10,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "self-learning-by-trainee-members",
+      "name": "Self Learning by Trainee members",
+      "popularity": 10,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "git",
+      "name": "Git",
+      "popularity": 9,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "web-mobile-application",
+      "name": "Web/Mobile Application",
+      "popularity": 9,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "data-visualization",
+      "name": "Data Visualization",
+      "popularity": 8,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "linux",
+      "name": "Linux",
+      "popularity": 8,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "ui-ux",
+      "name": "UI/UX",
+      "popularity": 6,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "backend-nextjs",
+      "name": "Backend (Nextjs)",
+      "popularity": 5,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "cybersecurity",
+      "name": "Cybersecurity",
+      "popularity": 5,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "iot",
+      "name": "IoT",
+      "popularity": 5,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "testing",
+      "name": "Testing",
+      "popularity": 5,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "data-visualization-project",
+      "name": "Data Visualization Project",
+      "popularity": 4,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "devops",
+      "name": "Devops",
+      "popularity": 4,
+      "source": "survey (Our Training Journey / Training Feedback)"
+    },
+    {
+      "id": "claude-code",
+      "name": "Claude Code",
+      "popularity": null,
+      "source": "daily log only (no per-person survey link)"
+    },
+    {
+      "id": "javascript",
+      "name": "JavaScript",
+      "popularity": null,
+      "source": "daily log only (no per-person survey link)"
+    },
+    {
+      "id": "langgraph",
+      "name": "LangGraph",
+      "popularity": null,
+      "source": "daily log only (no per-person survey link)"
+    },
+    {
+      "id": "mcp",
+      "name": "MCP",
+      "popularity": null,
+      "source": "daily log only (no per-person survey link)"
+    },
+    {
+      "id": "prompt-engineering",
+      "name": "Prompt Engineering",
+      "popularity": null,
+      "source": "daily log only (no per-person survey link)"
+    },
+    {
+      "id": "pyspark",
+      "name": "PySpark",
+      "popularity": null,
+      "source": "daily log only (no per-person survey link)"
+    },
+    {
+      "id": "rag",
+      "name": "RAG",
+      "popularity": null,
+      "source": "daily log only (no per-person survey link)"
+    },
+    {
+      "id": "sql",
+      "name": "SQL",
+      "popularity": null,
+      "source": "daily log only (no per-person survey link)"
+    },
+    {
+      "id": "typescript",
+      "name": "TypeScript",
+      "popularity": null,
+      "source": "daily log only (no per-person survey link)"
+    }
+  ],
+  "aiTools": [
+    {
+      "id": "chatgpt",
+      "name": "ChatGPT",
+      "source": "daily log (batch-level; no per-person link)"
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini",
+      "source": "daily log (batch-level; no per-person link)"
+    },
+    {
+      "id": "claude",
+      "name": "Claude",
+      "source": "daily log (batch-level; no per-person link)"
+    }
+  ],
+  "challenges": [
+    {
+      "id": "devops",
+      "name": "Devops",
+      "affectedPersonIds": [
+        "P01",
+        "P02",
+        "P05",
+        "P08",
+        "P09",
+        "P10",
+        "P11",
+        "P12"
+      ],
+      "size": 8,
+      "sourceSurveys": [
+        "journey_aha_moment"
+      ]
+    },
+    {
+      "id": "testing",
+      "name": "Testing",
+      "affectedPersonIds": [
+        "P01",
+        "P02",
+        "P08",
+        "P10",
+        "P11"
+      ],
+      "size": 5,
+      "sourceSurveys": [
+        "journey_aha_moment"
+      ]
+    },
+    {
+      "id": "backend-nextjs",
+      "name": "Backend (Nextjs)",
+      "affectedPersonIds": [
+        "P03",
+        "P06",
+        "P10",
+        "P12",
+        "P15"
+      ],
+      "size": 5,
+      "sourceSurveys": [
+        "journey_aha_moment"
+      ]
+    },
+    {
+      "id": "web-mobile-application",
+      "name": "Web/Mobile Application",
+      "affectedPersonIds": [
+        "P01",
+        "P03",
+        "P05",
+        "P09"
+      ],
+      "size": 4,
+      "sourceSurveys": [
+        "journey_aha_moment"
+      ]
+    },
+    {
+      "id": "data-visualization",
+      "name": "Data Visualization",
+      "affectedPersonIds": [
+        "P05",
+        "P08",
+        "P13",
+        "P14"
+      ],
+      "size": 4,
+      "sourceSurveys": [
+        "journey_aha_moment"
+      ]
+    },
+    {
+      "id": "understanding-the-concepts",
+      "name": "Understanding the concepts",
+      "affectedPersonIds": [
+        "P05",
+        "P08",
+        "P10",
+        "P15"
+      ],
+      "size": 4,
+      "sourceSurveys": [
+        "feedback_biggest_difficulty"
+      ]
+    },
+    {
+      "id": "cybersecurity",
+      "name": "Cybersecurity",
+      "affectedPersonIds": [
+        "P01",
+        "P05",
+        "P08"
+      ],
+      "size": 3,
+      "sourceSurveys": [
+        "journey_aha_moment"
+      ]
+    },
+    {
+      "id": "technical-issues",
+      "name": "Technical issues",
+      "affectedPersonIds": [
+        "P04",
+        "P08",
+        "P11"
+      ],
+      "size": 3,
+      "sourceSurveys": [
+        "feedback_biggest_difficulty"
+      ]
+    },
+    {
+      "id": "time-management",
+      "name": "Time management",
+      "affectedPersonIds": [
+        "P03",
+        "P13"
+      ],
+      "size": 2,
+      "sourceSurveys": [
+        "feedback_biggest_difficulty"
+      ]
+    },
+    {
+      "id": "data-visualization-project",
+      "name": "Data Visualization Project",
+      "affectedPersonIds": [
+        "P08",
+        "P14"
+      ],
+      "size": 2,
+      "sourceSurveys": [
+        "journey_aha_moment"
+      ]
+    },
+    {
+      "id": "keeping-up-with-the-training-pace",
+      "name": "Keeping up with the training pace",
+      "affectedPersonIds": [
+        "P08",
+        "P12"
+      ],
+      "size": 2,
+      "sourceSurveys": [
+        "feedback_biggest_difficulty"
+      ]
+    },
+    {
+      "id": "iot",
+      "name": "IoT",
+      "affectedPersonIds": [
+        "P09",
+        "P10"
+      ],
+      "size": 2,
+      "sourceSurveys": [
+        "journey_aha_moment"
+      ]
+    },
+    {
+      "id": "teamwork",
+      "name": "Teamwork",
+      "affectedPersonIds": [
+        "P05"
+      ],
+      "size": 1,
+      "sourceSurveys": [
+        "feedback_biggest_difficulty"
+      ]
+    },
+    {
+      "id": "self-learning-by-trainee-members",
+      "name": "Self Learning by Trainee members",
+      "affectedPersonIds": [
+        "P07"
+      ],
+      "size": 1,
+      "sourceSurveys": [
+        "journey_aha_moment"
+      ]
+    },
+    {
+      "id": "ai-topics",
+      "name": "AI Topics",
+      "affectedPersonIds": [
+        "P08"
+      ],
+      "size": 1,
+      "sourceSurveys": [
+        "journey_aha_moment"
+      ]
+    },
+    {
+      "id": "linux",
+      "name": "Linux",
+      "affectedPersonIds": [
+        "P08"
+      ],
+      "size": 1,
+      "sourceSurveys": [
+        "journey_aha_moment"
+      ]
+    },
+    {
+      "id": "assignments",
+      "name": "Assignments",
+      "affectedPersonIds": [
+        "P14"
+      ],
+      "size": 1,
+      "sourceSurveys": [
+        "feedback_biggest_difficulty"
+      ]
+    }
+  ],
+  "solutions": [
+    {
+      "id": "tried-to-solve-it-myself",
+      "name": "Tried to solve it myself",
+      "personIds": [
+        "P02",
+        "P03",
+        "P07",
+        "P09",
+        "P11",
+        "P12",
+        "P14"
+      ],
+      "count": 7
+    },
+    {
+      "id": "searched-online",
+      "name": "Searched online",
+      "personIds": [
+        "P01",
+        "P05",
+        "P06",
+        "P15",
+        "P16"
+      ],
+      "count": 5
+    },
+    {
+      "id": "asked-a-teammate",
+      "name": "Asked a teammate",
+      "personIds": [
+        "P08",
+        "P16"
+      ],
+      "count": 2
+    },
+    {
+      "id": "took-a-break-and-came-back-later",
+      "name": "Took a break and came back later",
+      "personIds": [
+        "P10",
+        "P13"
+      ],
+      "count": 2
+    },
+    {
+      "id": "asked-the-trainer",
+      "name": "Asked the trainer",
+      "personIds": [
+        "P16"
+      ],
+      "count": 1
+    }
+  ],
+  "weeks": [
+    {
+      "week": 1,
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "dateStart": "4/6/2026",
+      "dateEnd": "11/6/2026",
+      "skillIds": [
+        "ai-topics",
+        "data-visualization",
+        "javascript",
+        "prompt-engineering"
+      ],
+      "projectIds": [],
+      "activePersonIds": [],
+      "source": "Daily tracking.csv (batch-level; no per-person link)"
+    },
+    {
+      "week": 2,
+      "days": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "dateStart": "12/6/2026",
+      "dateEnd": "19/6/2026",
+      "skillIds": [
+        "ai-topics",
+        "data-visualization",
+        "git",
+        "javascript",
+        "linux",
+        "mcp",
+        "rag",
+        "testing"
+      ],
+      "projectIds": [],
+      "activePersonIds": [],
+      "source": "Daily tracking.csv (batch-level; no per-person link)"
+    },
+    {
+      "week": 3,
+      "days": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "dateStart": "22/6/2026",
+      "dateEnd": "29/06/2026",
+      "skillIds": [
+        "backend-nextjs",
+        "cybersecurity",
+        "data-visualization",
+        "devops",
+        "javascript",
+        "sql",
+        "testing",
+        "ui-ux"
+      ],
+      "projectIds": [],
+      "activePersonIds": [],
+      "source": "Daily tracking.csv (batch-level; no per-person link)"
+    },
+    {
+      "week": 4,
+      "days": [
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "dateStart": "30/06/2026",
+      "dateEnd": "8/7/2026",
+      "skillIds": [
+        "ai-topics",
+        "data-visualization",
+        "sql",
+        "typescript"
+      ],
+      "projectIds": [
+        "ai-companion",
+        "twinz-360",
+        "vibesync",
+        "vivid-echo"
+      ],
+      "activePersonIds": [],
+      "source": "Daily tracking.csv (batch-level; no per-person link)"
+    },
+    {
+      "week": 5,
+      "days": [
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "dateStart": "9/7/2026",
+      "dateEnd": "16/7/2026",
+      "skillIds": [
+        "ai-topics",
+        "iot"
+      ],
+      "projectIds": [
+        "ai-companion",
+        "twinz-360",
+        "vibesync",
+        "vivid-echo"
+      ],
+      "activePersonIds": [],
+      "source": "Daily tracking.csv (batch-level; no per-person link)"
+    },
+    {
+      "week": 6,
+      "days": [
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ],
+      "dateStart": "16/7/2026",
+      "dateEnd": "24/7/2026",
+      "skillIds": [
+        "ai-topics",
+        "data-visualization",
+        "mcp",
+        "prompt-engineering"
+      ],
+      "projectIds": [
+        "ai-companion",
+        "ar-robot",
+        "twinz-360",
+        "vibesync",
+        "vivid-echo"
+      ],
+      "activePersonIds": [],
+      "source": "Daily tracking.csv (batch-level; no per-person link)"
+    },
+    {
+      "week": 7,
+      "days": [
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49
+      ],
+      "dateStart": "25/7/2026",
+      "dateEnd": "1/8/2026",
+      "skillIds": [
+        "ai-topics",
+        "databricks",
+        "iot"
+      ],
+      "projectIds": [
+        "ai-companion",
+        "twinz-360",
+        "vibesync",
+        "vivid-echo"
+      ],
+      "activePersonIds": [],
+      "source": "Daily tracking.csv (batch-level; no per-person link)"
+    },
+    {
+      "week": 8,
+      "days": [
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56
+      ],
+      "dateStart": "3/8/2026",
+      "dateEnd": "10/8/2026",
+      "skillIds": [
+        "ai-topics",
+        "cybersecurity",
+        "data-visualization",
+        "databricks",
+        "iot",
+        "langgraph",
+        "pyspark",
+        "sql"
+      ],
+      "projectIds": [],
+      "activePersonIds": [],
+      "source": "Daily tracking.csv (batch-level; no per-person link)"
+    },
+    {
+      "week": 9,
+      "days": [
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "dateStart": "11/8/2026",
+      "dateEnd": "19/8/2026",
+      "skillIds": [
+        "data-visualization",
+        "databricks",
+        "mcp",
+        "pyspark",
+        "sql"
+      ],
+      "projectIds": [],
+      "activePersonIds": [],
+      "source": "Daily tracking.csv (batch-level; no per-person link)"
+    },
+    {
+      "week": 10,
+      "days": [
+        64
+      ],
+      "dateStart": "20/8/2026",
+      "dateEnd": "20/8/2026",
+      "skillIds": [
+        "claude-code",
+        "data-visualization",
+        "databricks"
+      ],
+      "projectIds": [],
+      "activePersonIds": [],
+      "source": "Daily tracking.csv (batch-level; no per-person link)"
+    }
+  ]
+}

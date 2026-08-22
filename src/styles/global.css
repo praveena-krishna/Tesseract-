@@ -1,0 +1,50 @@
+/*
+ * Global ground. Colour values mirror src/config/palette.ts — the canvas and
+ * the DOM overlay must resolve to the same near-black or the composite shows a
+ * seam at the edges of the viewport.
+ */
+
+:root {
+  --bg: #05060a;
+  --ui-text: #e6ebf2;
+  --ui-dim: #5a6472;
+
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ui-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+canvas {
+  display: block;
+  /* The world responds to drags; the browser's own gesture handling must not
+     intercept them on touch devices. */
+  touch-action: none;
+}
+
+::selection {
+  background: rgba(199, 214, 232, 0.2);
+}

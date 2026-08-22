@@ -1,0 +1,532 @@
+/*
+ * The interface is intentionally almost absent. Everything here is a thin
+ * typographic layer over the world: no panels, no chrome, no containers.
+ * Type is tracked out and set light, which reads as editorial rather than
+ * as a science-fiction overlay.
+ */
+
+.veil {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  background: var(--bg);
+  opacity: 1;
+  transition: opacity var(--veil-fade) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.veil[data-state='hiding'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.veil__title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 0.9375rem;
+  letter-spacing: 0.3em;
+  color: var(--ui-text);
+  text-indent: 0.3em;
+  animation: veil-track 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.veil__status {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.625rem;
+  letter-spacing: 0.3em;
+  color: var(--ui-dim);
+  text-indent: 0.3em;
+  animation: veil-breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes veil-track {
+  from {
+    letter-spacing: 0.3em;
+    opacity: 0.6;
+  }
+  to {
+    letter-spacing: 0.44em;
+    opacity: 1;
+  }
+}
+
+@keyframes veil-breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* ---- Persistent world interface ---- */
+
+.world-ui {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--ui-fade) ease-out;
+}
+
+.world-ui[data-visible='true'] {
+  opacity: 1;
+}
+
+.world-ui__masthead {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+}
+
+.world-ui__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 0.8125rem;
+  letter-spacing: 0.35em;
+  color: var(--ui-text);
+  text-indent: 0.35em;
+}
+
+.world-ui__rule {
+  width: 1.5rem;
+  height: 1px;
+  margin: 0.75rem 0;
+  background: var(--ui-dim);
+  opacity: 0.4;
+}
+
+.world-ui__subtitle {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.625rem;
+  letter-spacing: 0.25em;
+  color: var(--ui-dim);
+  text-indent: 0.25em;
+}
+
+/* Bottom left: the right-hand corner belongs to the counterfactual control. */
+.world-ui__hint {
+  position: absolute;
+  left: 2rem;
+  bottom: 2rem;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  color: var(--ui-dim);
+  text-indent: 0.3em;
+  opacity: 0.7;
+  transition: opacity 800ms ease-out;
+}
+
+.world-ui__hint[data-retired='true'] {
+  opacity: 0;
+}
+
+/* ---- Spatial identity label ---- */
+
+/*
+ * Type anchored in the world, not a tooltip. No container, no background, no
+ * border — a container would read as interface laid over the scene, which is
+ * exactly what selection here is meant not to feel like.
+ */
+.trainee-label {
+  margin: 0;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 0.6875rem;
+  letter-spacing: 0.26em;
+  text-indent: 0.26em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+  /* Keeps the type legible where it crosses a bright orb or a lit strut. */
+  text-shadow: 0 0 0.75rem rgba(5, 6, 10, 0.95), 0 0 0.25rem rgba(5, 6, 10, 0.9);
+  transition:
+    color 400ms ease-out,
+    opacity 400ms ease-out;
+  opacity: 0.75;
+}
+
+.trainee-label[data-selected='true'] {
+  color: var(--ui-text);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trainee-label {
+    transition: none;
+  }
+}
+
+/* ---- Time: three marks on one continuous transformation ---- */
+
+.time-control {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  gap: 2.75rem;
+  opacity: 0;
+  transition: opacity var(--ui-fade, 600ms) ease-out;
+}
+
+.time-control[data-visible='true'] {
+  opacity: 1;
+}
+
+.time-control__mark {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--ui-dim);
+  transition: color 500ms ease-out;
+}
+
+/* The line the months sit on, drawn between the marks rather than under them. */
+.time-control__mark:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 0.85rem;
+  left: calc(100% + 0.4rem);
+  width: 1.95rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.28;
+}
+
+.time-control__mark[data-active='true'] {
+  color: var(--ui-text);
+}
+
+.time-control__mark[data-unavailable='true'] {
+  cursor: not-allowed;
+  opacity: 0.3;
+  text-decoration: line-through;
+}
+
+.time-control__label {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 0.6875rem;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+}
+
+.time-control__title {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5rem;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 500ms ease-out;
+}
+
+.time-control__mark[data-active='true'] .time-control__title,
+.time-control__mark:hover .time-control__title {
+  opacity: 0.7;
+}
+
+/* ---- Counterfactual conditions ---- */
+
+.whatif {
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+  opacity: 0;
+  transition: opacity var(--ui-fade, 600ms) ease-out;
+}
+
+.whatif[data-visible='true'] {
+  opacity: 1;
+}
+
+.whatif__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5625rem;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+  transition: color 400ms ease-out;
+}
+
+.whatif__toggle:hover,
+.whatif[data-open='true'] .whatif__toggle {
+  color: var(--ui-text);
+}
+
+.whatif__dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #9d86e8;
+}
+
+.whatif__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 17rem;
+  padding: 1rem 1.1rem 1.1rem;
+  /* The faintest possible container: enough to group the controls, not enough
+     to become a card sitting on top of the world. */
+  border: 1px solid rgba(90, 100, 114, 0.22);
+  background: rgba(5, 6, 10, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.whatif__row {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.whatif__name {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+}
+
+.whatif__input {
+  grid-column: 2 / 4;
+  padding: 0.3rem 0.4rem;
+  border: 1px solid rgba(90, 100, 114, 0.3);
+  background: rgba(5, 6, 10, 0.9);
+  color: var(--ui-text);
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  letter-spacing: 0.05em;
+}
+
+.whatif__slider {
+  width: 100%;
+  accent-color: #9d86e8;
+}
+
+.whatif__value {
+  min-width: 2.4rem;
+  text-align: right;
+  font-family: var(--font-body);
+  font-size: 0.5625rem;
+  color: var(--ui-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.whatif__reset {
+  margin-top: 0.2rem;
+  padding: 0.4rem 0;
+  border: 0;
+  border-top: 1px solid rgba(90, 100, 114, 0.22);
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+  transition: color 300ms ease-out;
+}
+
+.whatif__reset:hover:not(:disabled) {
+  color: var(--ui-text);
+}
+
+.whatif__reset:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ---- What the world knows about the current subject ---- */
+
+.readout {
+  position: fixed;
+  top: 50%;
+  left: 2rem;
+  z-index: 10;
+  width: 15rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  animation: readout-in 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.readout__eyebrow {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+}
+
+.readout__title {
+  margin: 0 0 1.1rem;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 1rem;
+  letter-spacing: 0.14em;
+  color: var(--ui-text);
+}
+
+.readout__flag {
+  margin: -0.6rem 0 1rem;
+  font-family: var(--font-body);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  color: #9d86e8;
+}
+
+.readout__row {
+  margin-bottom: 0.85rem;
+}
+
+.readout__label {
+  margin: 0 0 0.2rem;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+}
+
+.readout__value {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: rgba(230, 235, 242, 0.86);
+}
+
+.readout__note {
+  margin: 0.15rem 0 0;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5625rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: rgba(90, 100, 114, 0.9);
+}
+
+@keyframes readout-in {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+@media (max-width: 60rem) {
+  .readout {
+    top: auto;
+    bottom: 7rem;
+    transform: none;
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .readout {
+    animation: none;
+  }
+}
+
+/* ---- No-WebGL fallback ---- */
+
+.fallback {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 2rem;
+  text-align: center;
+  background: var(--bg);
+}
+
+.fallback__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 0.9375rem;
+  letter-spacing: 0.42em;
+  color: var(--ui-text);
+  text-indent: 0.42em;
+}
+
+.fallback__body {
+  max-width: 30rem;
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.75rem;
+  line-height: 1.9;
+  letter-spacing: 0.14em;
+  color: var(--ui-dim);
+}
+
+@media (max-width: 40rem) {
+  .world-ui__masthead {
+    top: 1.25rem;
+    left: 1.25rem;
+  }
+
+  .world-ui__hint {
+    left: 1.25rem;
+    bottom: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .veil__title,
+  .veil__status {
+    animation: none;
+  }
+}
