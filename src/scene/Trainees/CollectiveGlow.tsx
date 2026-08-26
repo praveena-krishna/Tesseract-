@@ -39,7 +39,7 @@ export function CollectiveGlow() {
     const step = Math.min(delta, 0.1);
     const store = useWorldStore.getState();
     const live =
-      store.enteredMonth === CHALLENGES.MONTH && store.lens === 'challenges';
+      store.enteredMonth === CHALLENGES.MONTH && store.lens === 'databricks';
 
     let total = 0;
     if (live) {

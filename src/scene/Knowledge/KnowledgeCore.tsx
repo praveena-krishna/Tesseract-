@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
-import { Html } from '@react-three/drei';
 import { CORE_FRAG, CORE_VERT } from '../../shaders/knowledgeCore.glsl';
 import { PALETTE } from '../../config/palette';
 import { MEDALLION, RENDER_ORDER } from '../../config/dimensions';
@@ -15,28 +14,22 @@ const LAYERS = [
     id: 'bronze',
     radius: MEDALLION.BRONZE,
     colour: PALETTE.MEDALLION_BRONZE,
-    label: 'Bronze',
     meridians: 14,
     parallels: 8,
-    bearing: Math.PI * 0.72,
   },
   {
     id: 'silver',
     radius: MEDALLION.SILVER,
     colour: PALETTE.MEDALLION_SILVER,
-    label: 'Silver',
     meridians: 20,
     parallels: 11,
-    bearing: Math.PI * 0.5,
   },
   {
     id: 'gold',
     radius: MEDALLION.GOLD,
     colour: PALETTE.MEDALLION_GOLD,
-    label: 'Gold',
     meridians: 26,
     parallels: 14,
-    bearing: Math.PI * 0.28,
   },
 ] as const;
 
@@ -116,7 +109,7 @@ export function KnowledgeCore() {
     const step = Math.min(delta, 0.1);
     const store = useWorldStore.getState();
     const live =
-      store.enteredMonth === MEDALLION.MONTH && store.lens === 'challenges';
+      store.enteredMonth === MEDALLION.MONTH && store.lens === 'databricks';
 
     const ease = reducedMotion ? 1 : 1 - Math.exp(-step / MEDALLION.EASE);
     state.current.presence += ((live ? 1 : 0) - state.current.presence) * ease;
@@ -165,35 +158,6 @@ export function KnowledgeCore() {
           frustumCulled={false}
           raycast={() => null}
         />
-      ))}
-
-      {/*
-        Fanned rather than stacked. All three anchored on one axis projected to
-        within a few pixels of each other at this camera distance and read as a
-        single smear; setting each on its own bearing round its own shell keeps
-        them apart on screen at any framing, and keeps each one next to the
-        surface it names.
-      */}
-      {LAYERS.map((layer) => (
-        <group
-          key={`${layer.id}-label`}
-          position={[
-            Math.cos(layer.bearing) * layer.radius,
-            Math.sin(layer.bearing) * layer.radius,
-            0,
-          ]}
-        >
-          <Html center transform={false} zIndexRange={[9, 0]} pointerEvents="none">
-            {/*
-              The name and nothing else. A line of description under each shell
-              ran into its neighbour at this distance, and the three metals are
-              already the whole of what the layers are called.
-            */}
-            <div className="medallion-label" data-layer={layer.id}>
-              <p className="medallion-label__name">{layer.label}</p>
-            </div>
-          </Html>
-        </group>
       ))}
     </group>
   );

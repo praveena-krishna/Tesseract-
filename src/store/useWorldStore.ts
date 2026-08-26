@@ -34,7 +34,13 @@ export type InteractionState =
 /** How far a person has got with one of their difficulties. */
 export type ChallengeStatus = 'not-started' | 'in-progress' | 'overcome';
 
-export type Lens = 'people' | 'teams' | 'projects' | 'classes' | 'challenges';
+export type Lens =
+  | 'people'
+  | 'teams'
+  | 'projects'
+  | 'classes'
+  | 'challenges'
+  | 'databricks';
 
 /** The three-month temporal buckets the training data resolves into. */
 export type TimeBucket = 0 | 1 | 2;

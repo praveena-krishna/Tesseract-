@@ -14,6 +14,7 @@ import { KnowledgeCore } from '../Knowledge/KnowledgeCore';
 import { DataFlows } from '../Knowledge/DataFlows';
 import { challengesOf } from '../../data/challenges';
 import { GROWTH_PER_CHALLENGE, baselineGrowth } from '../../data/growth';
+import { arrivalAt } from '../Knowledge/flowState';
 import { SessionLabel } from './SessionLabel';
 import { useSelectionKeys } from '../../interaction/useSelectionKeys';
 import {
@@ -368,7 +369,13 @@ export function TraineeField() {
 
 
     const ease = reducedMotion ? 1 : 1 - Math.exp(-step / ORBS.EMPHASIS_EASE);
+    // Two clocks. Knowledge settling after a difficulty is worked through has
+    // to arrive slowly or it reads as a flash; a beam landing has to arrive
+    // quickly or the slow clock smooths it away entirely and nothing is seen to
+    // happen. The arrival figure is already continuous, so responding to it
+    // fast cannot produce a step.
     const growthEase = reducedMotion ? 1 : 1 - Math.exp(-step / GROWTH.EASE);
+    const arrivalEase = reducedMotion ? 1 : 1 - Math.exp(-step / GROWTH.ARRIVAL_EASE);
     const slowEase = reducedMotion ? 1 : 1 - Math.exp(-step / 0.85);
     const settled = transitionDepth() > 0.92;
 
@@ -520,9 +527,22 @@ export function TraineeField() {
             ).length *
               GROWTH_PER_CHALLENGE,
         );
-        const growthTarget = live && lens === 'challenges' ? gained : 0;
+        // Under the lens that is about knowledge, a person is lit by what is
+        // actually reaching them down their own beam rather than by a figure
+        // computed alongside it — so the glow is visibly caused by the light
+        // the viewer can see arriving. Under the lens that is about difficulty
+        // it falls back to what they have gained, which is the same number
+        // without the delivery.
+        const growthTarget = !live
+          ? 0
+          : lens === 'databricks'
+            ? arrivalAt(trainee.id)
+            : lens === 'challenges'
+              ? gained
+              : 0;
         buffers.growthLevel[index] +=
-          (growthTarget - buffers.growthLevel[index]) * growthEase;
+          (growthTarget - buffers.growthLevel[index]) *
+          (lens === 'databricks' ? arrivalEase : growthEase);
 
         // Confidence sets the vessel's size, scaled to the layer it stands in
         // so a person looks the same in every month — which is what lets the

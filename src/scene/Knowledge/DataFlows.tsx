@@ -7,6 +7,7 @@ import { GROWTH_PER_CHALLENGE, baselineGrowth } from '../../data/growth';
 import { PALETTE } from '../../config/palette';
 import { MEDALLION, RENDER_ORDER } from '../../config/dimensions';
 import { useWorldStore } from '../../store/useWorldStore';
+import { clearArrivals, publishArrival } from './flowState';
 
 /**
  * The line from each person into the core, and the energy running down it.
@@ -17,12 +18,14 @@ import { useWorldStore } from '../../store/useWorldStore';
  * are the connective tissue of the composition and the moment they compete with
  * the people or the core, the picture stops being about either.
  *
- * The energy travelling them is what makes the order legible. A pulse leaves
- * its person, crosses to gold, and its colour changes as it passes each shell —
- * violet while it belongs to the person, then bronze, then silver, then gold —
- * so a single moving light states the whole sequence without a label. Several
- * are in flight at once on each line, staggered, so the flow reads as
- * continuous rather than as sixteen separate deliveries.
+ * The energy travels outward, from the core to the people. That direction is
+ * the argument: what the structure has worked raw learning up into is knowledge,
+ * and knowledge is delivered back to the person it belongs to. A pulse leaves
+ * the gold surface and crosses to its person, changing colour as it passes each
+ * threshold — bronze, then silver, then gold, then the person's own violet as it
+ * arrives — so one moving light states the sequence without a label. Several are
+ * in flight on each line at once, staggered, so it reads as continuous supply
+ * rather than sixteen separate deliveries.
  *
  * How fast and how brightly a line runs is that person's own growth. Somebody
  * who has gained little has a line that is nearly dark, which is the honest
@@ -127,18 +130,16 @@ export function DataFlows({
   const level = useMemo(() => new Float32Array(people.length), [people.length]);
 
   /**
-   * The colour a pulse carries at a given point along its journey.
+   * The colour a pulse carries where it currently is.
    *
-   * `t` is 0 at the person and 1 at the core's centre. The thresholds are the
-   * shell radii expressed as a fraction of the whole journey, so the colour
-   * genuinely changes as the pulse crosses each surface rather than at three
-   * arbitrary points along the line.
+   * Keyed on its actual distance from the centre rather than on how far along
+   * its line it has travelled, so it holds whichever way the energy is running
+   * and cannot drift out of step with the shells it is passing.
    */
-  const tintAt = (t: number, span: number, out: THREE.Color) => {
-    const remaining = (1 - t) * span;
-    if (remaining > MEDALLION.GOLD) out.copy(tints.person);
-    else if (remaining > MEDALLION.SILVER) out.copy(tints.gold);
-    else if (remaining > MEDALLION.BRONZE) out.copy(tints.silver);
+  const tintAt = (radius: number, out: THREE.Color) => {
+    if (radius > MEDALLION.GOLD) out.copy(tints.person);
+    else if (radius > MEDALLION.SILVER) out.copy(tints.gold);
+    else if (radius > MEDALLION.BRONZE) out.copy(tints.silver);
     else out.copy(tints.bronze);
     return out;
   };
@@ -152,7 +153,7 @@ export function DataFlows({
     const step = Math.min(delta, 0.1);
     const store = useWorldStore.getState();
     const live =
-      store.enteredMonth === MEDALLION.MONTH && store.lens === 'challenges';
+      store.enteredMonth === MEDALLION.MONTH && store.lens === 'databricks';
     const ease = reducedMotion ? 1 : 1 - Math.exp(-step / MEDALLION.EASE);
 
     const linePos = geometry.getAttribute('position') as THREE.BufferAttribute;
@@ -176,6 +177,7 @@ export function DataFlows({
       brightest = Math.max(brightest, level[i]);
 
       if (!centre) {
+        publishArrival(personId, 0);
         linePos.setXYZ(i * 2, 0, 0, 0);
         linePos.setXYZ(i * 2 + 1, 0, 0, 0);
         for (let p = 0; p < MEDALLION.PULSES; p++) {
@@ -192,22 +194,39 @@ export function DataFlows({
 
       linePos.setXYZ(i * 2, scratch.from.x, scratch.from.y, scratch.from.z);
       linePos.setXYZ(i * 2 + 1, scratch.to.x, scratch.to.y, scratch.to.z);
-      // The line itself is faint and takes the person's colour at their end and
-      // gold at the core's, so even at rest the direction of travel is clear.
+      // Faint, and brightest at the end the energy is arriving at, so the
+      // direction the line runs is clear even in a still frame.
       const dim = 0.25 + level[i] * 0.75;
       lineCol.setXYZ(i * 2, tints.person.r * dim, tints.person.g * dim, tints.person.b * dim);
-      lineCol.setXYZ(i * 2 + 1, tints.gold.r * dim, tints.gold.g * dim, tints.gold.b * dim);
+      lineCol.setXYZ(
+        i * 2 + 1,
+        tints.gold.r * dim * 0.5,
+        tints.gold.g * dim * 0.5,
+        tints.gold.b * dim * 0.5,
+      );
+
+      // What is landing on this person, for their vessel to light by. A steady
+      // component, because energy is arriving continuously, and a bump as each
+      // pulse actually reaches them — so the glow is visibly caused by the
+      // beams rather than merely correlated with them.
+      let landing = 0;
 
       for (let p = 0; p < MEDALLION.PULSES; p++) {
         const index = i * MEDALLION.PULSES + p;
         // Staggered along the line, and offset per person so the sixteen do not
         // pulse in unison — nothing in this world synchronises.
         const phase = (time / MEDALLION.FLOW + p / MEDALLION.PULSES + i * 0.137) % 1;
-        scratch.at.copy(scratch.from).lerp(scratch.to, phase);
+        // Outward: starts on the gold surface and arrives at the person.
+        scratch.at.copy(scratch.to).lerp(scratch.from, phase);
         pulsePos.setXYZ(index, scratch.at.x, scratch.at.y, scratch.at.z);
 
-        tintAt(phase, span, scratch.tint);
+        tintAt(scratch.at.length(), scratch.tint);
         const bright = level[i] * (0.35 + 0.65 * Math.sin(phase * Math.PI));
+
+        // A pulse is landing when it is nearly all the way out to its person.
+        // A wider window than a single frame, so the arrival can be seen
+        // rather than merely happening.
+        landing = Math.max(landing, Math.pow(Math.max(0, phase - 0.62) / 0.38, 2));
         pulseCol.setXYZ(
           index,
           scratch.tint.r * bright,
@@ -215,7 +234,16 @@ export function DataFlows({
           scratch.tint.b * bright,
         );
       }
+
+      // A quiet baseline while energy is on its way, and a hard lift as it
+      // actually reaches the person. The peak deliberately runs past one: what
+      // this drives is colour only, so a value above full simply means a person
+      // is briefly brighter than their settled state — which is the whole point
+      // of watching something arrive.
+      publishArrival(personId, level[i] * (0.4 + 1.75 * landing));
     }
+
+    if (!live) clearArrivals();
 
     linePos.needsUpdate = true;
     lineCol.needsUpdate = true;

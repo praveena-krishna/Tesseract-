@@ -847,38 +847,3 @@
 .challenge-list__item .challenge-list__kind {
   margin-top: 0.18rem;
 }
-
-/* ---- The three layers of the knowledge core ---- */
-
-/*
- * Named where they stand rather than in a key off to one side, and kept to two
- * short lines: at the distance the month is viewed from, anything longer runs
- * into the label of the shell next to it.
- */
-.medallion-label {
-  text-align: center;
-  white-space: nowrap;
-  pointer-events: none;
-  user-select: none;
-}
-
-.medallion-label__name {
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-size: 0.7rem;
-  letter-spacing: 0.26em;
-  text-indent: 0.26em;
-  text-transform: uppercase;
-}
-
-.medallion-label[data-layer='bronze'] .medallion-label__name {
-  color: #e08a3c;
-}
-
-.medallion-label[data-layer='silver'] .medallion-label__name {
-  color: #b8cee8;
-}
-
-.medallion-label[data-layer='gold'] .medallion-label__name {
-  color: #f5b942;
-}

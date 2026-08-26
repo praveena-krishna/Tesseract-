@@ -31,6 +31,12 @@ const LENSES: LensOption[] = [
     title: 'What people found hard',
     months: [2],
   },
+  {
+    id: 'databricks',
+    label: 'Databricks',
+    title: 'Raw learning worked up into knowledge',
+    months: [2],
+  },
 ];
 
 /**

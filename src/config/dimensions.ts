@@ -333,11 +333,11 @@ export const MEDALLION = {
   /** The month it stands in — the third, and only the third. */
   MONTH: 2,
   /** Raw data and input. Innermost, warm. */
-  BRONZE: 0.56,
+  BRONZE: 0.45,
   /** Processing and transformation. Middle, cool. */
-  SILVER: 0.94,
+  SILVER: 0.76,
   /** Final knowledge and mastery. Outermost, golden. */
-  GOLD: 1.32,
+  GOLD: 1.06,
   /** Seconds the structure takes to arrive once the month is entered. */
   EASE: 1.2,
   /** Radians per second the whole thing turns. Slow: this is not a vortex. */
@@ -353,10 +353,24 @@ export const MEDALLION = {
 export const GROWTH = {
   /** Seconds for a change in what somebody knows to finish arriving. */
   EASE: 2.4,
-  /** How much light the interior gives off at full growth. */
-  INNER: 0.55,
+  /**
+   * Seconds a vessel takes to answer a beam landing on it.
+   *
+   * Short, and necessarily so. On the slow clock above, a pulse arriving over a
+   * third of a second was smoothed away to nothing and the orbs simply sat at
+   * their average — the light was being delivered and never seen to land.
+   */
+  ARRIVAL_EASE: 0.16,
+  /**
+   * How much light the interior gives off at full growth.
+   *
+   * Safe to push: this adds colour and nothing else, touching neither the
+   * interior's density nor the shell's coverage. Wired into density instead, it
+   * fogged the vessels into smoke — that failure is no longer reachable.
+   */
+  INNER: 0.95,
   /** How much the rim lifts at full growth. */
-  OUTER: 0.22,
+  OUTER: 0.4,
   /** Seconds a mote of learning takes to travel in and be absorbed. */
   TRAVEL: 1.8,
   /** How far out it forms, in orb radii. */

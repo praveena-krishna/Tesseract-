@@ -76,6 +76,11 @@ interface Shard extends ChallengeRecord {
  *
  * The tint is taken out of the light rather than added to it, which is the
  * whole difference between coloured glass and a coloured lamp.
+ *
+ * This is the challenges lens and only that. The knowledge core and the beams
+ * that feed the people are a separate reading on a lens of their own: one
+ * answers what somebody ran into, the other what the training made of it, and
+ * showing both at once left neither legible.
  */
 export function ChallengeShards({
   positions,
