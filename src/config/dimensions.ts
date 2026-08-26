@@ -319,6 +319,37 @@ export const PROJECTS_CONFIG = {
  * than the gain, and the easing matters more than either. Nothing here is
  * allowed to arrive quickly enough to read as a flash.
  */
+/**
+ * The knowledge core standing at the centre of the third month.
+ *
+ * Three concentric shells: raw learning at the middle, transformation around
+ * it, mastery outermost. The radii are absolute world units rather than
+ * fractions of the box, because what constrains them is not the box but the
+ * people — the nearest person stands about two units out with a radius of just
+ * under half a unit, so the outermost shell has to finish comfortably inside
+ * that or the structure and the sixteen would intersect.
+ */
+export const MEDALLION = {
+  /** The month it stands in — the third, and only the third. */
+  MONTH: 2,
+  /** Raw data and input. Innermost, warm. */
+  BRONZE: 0.56,
+  /** Processing and transformation. Middle, cool. */
+  SILVER: 0.94,
+  /** Final knowledge and mastery. Outermost, golden. */
+  GOLD: 1.32,
+  /** Seconds the structure takes to arrive once the month is entered. */
+  EASE: 1.2,
+  /** Radians per second the whole thing turns. Slow: this is not a vortex. */
+  DRIFT: 0.05,
+  /** Seconds one pulse of energy takes to travel a person's line inward. */
+  FLOW: 3.4,
+  /** How many pulses are in flight along each line at once. */
+  PULSES: 3,
+  /** How much a person's glass fragments fade once knowledge has come in. */
+  SHARD_FADE: 0.62,
+} as const;
+
 export const GROWTH = {
   /** Seconds for a change in what somebody knows to finish arriving. */
   EASE: 2.4,

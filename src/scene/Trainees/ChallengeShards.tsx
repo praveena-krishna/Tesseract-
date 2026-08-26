@@ -15,6 +15,8 @@ import { PALETTE } from '../../config/palette';
 import { CHALLENGES, DIMENSION, RENDER_ORDER, SHELLS } from '../../config/dimensions';
 import { ORBS } from '../../config/orbs';
 import { useWorldStore } from '../../store/useWorldStore';
+import { MEDALLION } from '../../config/dimensions';
+import { GROWTH_PER_CHALLENGE, baselineGrowth } from '../../data/growth';
 
 /** The axis the hull is drawn out along, and so the axis a fragment enters on. */
 const LONG_AXIS = new THREE.Vector3(1, 0, 0);
@@ -210,7 +212,23 @@ export function ChallengeShards({
       // in there; only being overcome takes it out.
       const overcome = store.challengeStatus[shard.id] === 'overcome';
 
-      const chargeTo = centre && !overcome ? 1 : 0;
+      // Knowledge gained pushes the glass back without removing it. A person
+      // who has learned a great deal still carries what they came through —
+      // it is simply no longer the loudest thing about them.
+      const known = centre
+        ? Math.min(
+            1,
+            baselineGrowth(shard.personId) +
+              CHALLENGE_RECORDS.filter(
+                (record) =>
+                  record.personId === shard.personId &&
+                  store.challengeStatus[record.id] === 'overcome',
+              ).length *
+                GROWTH_PER_CHALLENGE,
+          )
+        : 0;
+      const chargeTo =
+        centre && !overcome ? 1 - known * MEDALLION.SHARD_FADE : 0;
       charge[i] += (chargeTo - charge[i]) * ease;
       const attendedTo = centre && store.focusedTraineeId === shard.personId ? 1 : 0;
       attention[i] += (attendedTo - attention[i]) * ease;

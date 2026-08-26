@@ -99,6 +99,16 @@ export const PALETTE = {
    * Warm and steady where the trouble was cold and restless: the person did not
    * merely lose a problem, they came away with something.
    */
+  /**
+   * The three layers of the knowledge core.
+   *
+   * Warm through cool to warm again, so the middle layer separates from the two
+   * either side of it by temperature as well as by radius — three concentric
+   * shells that all read warm would be one blur at any distance.
+   */
+  MEDALLION_BRONZE: '#e08a3c',
+  MEDALLION_SILVER: '#b8cee8',
+  MEDALLION_GOLD: '#f5b942',
   KNOWLEDGE: '#ffe3a6',
   ORB_FRACTURE: '#0b1424',
 

@@ -10,6 +10,8 @@ import { LearningField } from './LearningField';
 import { ChallengeShards } from './ChallengeShards';
 import { GrowthMotes } from './GrowthMotes';
 import { CollectiveGlow } from './CollectiveGlow';
+import { KnowledgeCore } from '../Knowledge/KnowledgeCore';
+import { DataFlows } from '../Knowledge/DataFlows';
 import { challengesOf } from '../../data/challenges';
 import { GROWTH_PER_CHALLENGE, baselineGrowth } from '../../data/growth';
 import { SessionLabel } from './SessionLabel';
@@ -839,6 +841,15 @@ export function TraineeField() {
       */}
       <GrowthMotes positions={positions} />
       <CollectiveGlow />
+
+      {/*
+        The knowledge core, and the lines carrying each person's learning into
+        it. The core stands at the centre of the month with the sixteen around
+        it; the flows run inward from each of them, changing colour as they
+        cross each shell so one moving light states the whole sequence.
+      */}
+      <KnowledgeCore />
+      <DataFlows positions={positions} />
 
       <instancedMesh
         ref={orbRef}
