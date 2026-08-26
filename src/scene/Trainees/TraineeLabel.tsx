@@ -3,7 +3,8 @@ import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { ORBS } from '../../config/orbs';
-import { teamById, traineeById } from '../../data/world';
+import { orbKey } from './orbKey';
+import { traineeById } from '../../data/world';
 import { useWorldStore } from '../../store/useWorldStore';
 
 /**
@@ -28,20 +29,18 @@ export function TraineeLabel() {
   const teamId = focusedTeamId ?? hoveredTeamId;
   const traineeId = focusedTraineeId ?? hoveredTraineeId;
 
-  // A project the pointer is on wins over a person it merely passed over,
-  // because the cores sit among the orbs and would otherwise be hard to read.
-  const subject = teamId
-    ? { kind: 'team' as const, id: teamId, selected: focusedTeamId !== null }
-    : traineeId
-      ? { kind: 'trainee' as const, id: traineeId, selected: focusedTraineeId !== null }
-      : null;
+  // Projects name themselves, beside their own artifact. This used to do it too,
+  // which put two labels for one thing in the same patch of screen.
+  const subject =
+    teamId || !traineeId
+      ? null
+      : {
+          kind: 'trainee' as const,
+          id: traineeId,
+          selected: focusedTraineeId !== null,
+        };
 
-  const text =
-    subject?.kind === 'team'
-      ? teamById.get(subject.id)?.name
-      : subject
-        ? traineeById.get(subject.id)?.name
-        : undefined;
+  const text = subject ? traineeById.get(subject.id)?.name : undefined;
 
   const offset = useMemo(() => new THREE.Vector3(), []);
 
@@ -50,15 +49,18 @@ export function TraineeLabel() {
     if (!group || !subject) return;
 
     const store = useWorldStore.getState();
-    const position =
-      subject.kind === 'team'
-        ? store.teamCentres?.get(subject.id)
-        : store.traineePositions?.get(subject.id);
+    // Everything is keyed by layer as well as by identity, because the same
+    // person stands in more than one month and only the one being occupied is
+    // the subject.
+    if (store.enteredMonth === null) return;
+    const position = store.traineePositions?.get(
+      orbKey(store.enteredMonth, subject.id),
+    );
     if (!position) return;
 
     // Sit clear of the subject's own glow so the type never overlaps it.
     offset.copy(position);
-    offset.y += subject.kind === 'team' ? 0.62 : (ORBS.BASE_RADIUS + ORBS.RADIUS_VARIANCE) * 2.1;
+    offset.y += (ORBS.BASE_RADIUS + ORBS.RADIUS_VARIANCE) * 2.1;
     group.position.copy(offset);
   });
 
@@ -70,7 +72,7 @@ export function TraineeLabel() {
         <p
           className="trainee-label"
           data-selected={subject.selected}
-          data-kind={subject.kind}
+          data-kind="trainee"
         >
           {text}
         </p>

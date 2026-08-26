@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { SHELLS } from '../../config/dimensions';
+import { DIMENSION, SHELLS } from '../../config/dimensions';
 import { ORBS } from '../../config/orbs';
 import { cubeVertices } from '../Tesseract/frameGeometry';
 
@@ -15,16 +15,18 @@ interface Segment {
   end: THREE.Vector3;
 }
 
-/** Every structural member of every shell, as line segments to keep clear of. */
+/**
+ * The members the people have to keep clear of.
+ *
+ * Only the Month 1 box's twelve. The people live inside it, and the other two
+ * shells stand a long way outside the band they occupy, so including them would
+ * add twenty-four segments to every step of the relaxation for a constraint
+ * that can never bind.
+ */
 function shellSegments(): Segment[] {
-  const segments: Segment[] = [];
-  for (const shell of SHELLS) {
-    const vertices = cubeVertices(shell.half);
-    for (const [a, b] of EDGE_PAIRS) {
-      segments.push({ start: vertices[a], end: vertices[b] });
-    }
-  }
-  return segments;
+  const half = SHELLS[DIMENSION.SHELL_OF_MONTH[0]].half;
+  const vertices = cubeVertices(half);
+  return EDGE_PAIRS.map(([a, b]) => ({ start: vertices[a], end: vertices[b] }));
 }
 
 /** Shortest distance from a point to a finite line segment. */
@@ -77,7 +79,7 @@ const RELAXATION_STEPS = 220;
 const STEP_SIZE = 0.32;
 
 /**
- * Places the trainee orbs inside the tesseract.
+ * Places the trainee orbs inside the Month 1 box.
  *
  * The distribution starts from a jittered golden-angle spiral, which spreads
  * points over a sphere far more evenly than random sampling would, and is then
@@ -86,8 +88,9 @@ const STEP_SIZE = 0.32;
  * then pulled back into the radial band.
  *
  * Relaxation rather than rejection sampling because the feasible region here is
- * genuinely tight — three shells of struts to avoid inside a thin spherical
- * band — and a rejection sampler that runs out of attempts has to fall back on
+ * genuinely tight — twelve struts to avoid inside a thin spherical band a
+ * single unit across — and a rejection sampler that runs out of attempts has to
+ * fall back on
  * its least-bad candidate, which is precisely how two orbs end up sitting on
  * top of each other. Relaxation instead improves every position simultaneously
  * and converges on an even spread.
@@ -134,10 +137,13 @@ export function computeOrbPositions(count: number): THREE.Vector3[] {
         if (i === j) continue;
         const other = points[j];
         const distance = point.distanceTo(other);
-        if (distance >= ORBS.SEPARATION || distance === 0) continue;
+        if (distance >= ORBS.LAYOUT_SEPARATION || distance === 0) continue;
 
         away.subVectors(point, other).divideScalar(distance);
-        push.addScaledVector(away, (ORBS.SEPARATION - distance) / ORBS.SEPARATION);
+        push.addScaledVector(
+          away,
+          (ORBS.LAYOUT_SEPARATION - distance) / ORBS.LAYOUT_SEPARATION,
+        );
       }
 
       // Move clear of any structural member that is too close.

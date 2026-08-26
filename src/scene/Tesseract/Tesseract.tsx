@@ -4,6 +4,8 @@ import { useFrame } from '@react-three/fiber';
 import { Shell } from './Shell';
 import { Connections } from './Connections';
 import { CoreVolume } from './CoreVolume';
+import { MonthPortal } from './MonthPortal';
+import { DimensionalTransition } from './DimensionalTransition';
 import { SHELLS } from '../../config/dimensions';
 import { TIMINGS } from '../../config/timings';
 import { useWorldStore } from '../../store/useWorldStore';
@@ -11,6 +13,17 @@ import { useWorldStore } from '../../store/useWorldStore';
 /**
  * The world itself: three nested shells, the dimensional links between their
  * corresponding vertices, and the luminous core they enclose.
+ *
+ * The shells are also the three months, and time runs outward: the innermost
+ * box is Month 1, the middle is Month 2, the outer is Month 3. The training
+ * starts small and contained and expands, so the structure expands with it.
+ *
+ * Months 1 and 2 are reachable; Month 3 is not wired yet. Month 1 is the
+ * smallest and faintest of the three from outside — which is what the nest was
+ * built to do, each shell receding behind the last — so the moment a layer is
+ * entered the hierarchy inverts: the one being occupied lights up and the
+ * others pull back, and the box holding the people becomes the brightest thing
+ * in the frame instead of the dimmest.
  *
  * The inner shells counter-rotate at rates just above the threshold of
  * perception. This is the single cheapest thing in the scene and one of the
@@ -52,6 +65,10 @@ export function Tesseract() {
 
       <Connections />
       <CoreVolume />
+
+      <MonthPortal month={0} />
+      <MonthPortal month={1} />
+      <DimensionalTransition />
     </group>
   );
 }

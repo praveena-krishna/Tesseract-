@@ -59,17 +59,38 @@ export const PALETTE = {
   ORB_HALO: '#6a52b0',
 
   /**
-   * Knowledge held inside a vessel. A restrained cyan-white, distinct from the
-   * violet energy around it so the structures read as discrete things the
-   * person has acquired rather than as part of the glass itself.
+   * The sessions a person liked, orbiting their vessel.
+   *
+   * One colour for all fifteen forms, on purpose. They differ by shape,
+   * structure and behaviour, never by hue: giving each session its own colour
+   * would turn the sixteen people into a legend to be memorised, while a form
+   * is simply recognised. A restrained cyan-white sets them apart from the
+   * violet the people themselves are made of, so a session reads as something a
+   * person carries rather than as part of them.
    */
-  SKILL_NODE: '#bfeaf2',
+  SESSION_FORM: '#bfeaf2',
+  SESSION_EMISSIVE: '#7fd2e6',
 
   /** A live collaboration between two people. */
   CONNECTION_ACTIVE: '#8ea8e8',
   /** The project structure that collaboration builds. */
   PROJECT_CORE: '#3b3570',
   PROJECT_EMISSIVE: '#9d86e8',
+
+  /**
+   * A fracture in a vessel, where the surveys record difficulty. Colder and
+   * darker than the glass around it, because a crack both blocks light and
+   * scatters what gets past it.
+   */
+  ORB_FRACTURE: '#0b1424',
+
+  /**
+   * A glass fragment: a piece of difficulty on its way to somebody.
+   *
+   * The same cold near-white a real chip of glass would be, not a warning
+   * colour. Nothing here is trying to alarm — these are things people found
+   * hard, and colouring them like a fault light would editorialise.
+   */
 
   /** Soft volumetric core suspended at the centre of the structure. */
   CORE_HAZE: '#6c86a6',

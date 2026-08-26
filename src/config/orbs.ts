@@ -1,16 +1,31 @@
 /**
  * Constants for the sixteen trainee orbs.
  *
- * Orbs occupy the volume between the outer and inner shells — the gap the
- * tesseract's fourth-dimensional displacement opens up. Placing them there
- * rather than at the centre keeps the core clear and means every orb is read
- * against the structure rather than against empty space.
+ * The orbs live inside the Month 1 box — the innermost of the three nested
+ * shells. That is what makes entering a month mean something: the people are
+ * not scattered through the tesseract at large, they are contained by the layer
+ * that stands for their month, and the box's far side wraps visibly behind
+ * them.
+ *
+ * Everything here is therefore scaled to a chamber two and a half units across
+ * rather than to the ten-unit outer hull.
  */
 
 export const ORBS = {
-  /** Radial band the orbs are distributed through, measured from the origin. */
-  RADIUS_INNER: 3.05,
-  RADIUS_OUTER: 4.55,
+  /**
+   * Radial band the orbs rest in, measured from the centre of their layer.
+   *
+   * Pushed out to use very nearly all the room the box has. Sixteen bodies in a
+   * thin central shell read as one clustered mass however far apart they
+   * nominally are; the readable difference comes from giving each of them a
+   * territory, and the only source of territory here is the box's volume.
+   *
+   * The outer edge plus an orb's radius has to stay inside the box in the worst
+   * direction — straight at the middle of a face, where the cube is closest to
+   * its own centre.
+   */
+  RADIUS_INNER: 0.46,
+  RADIUS_OUTER: 1.02,
 
   /**
    * Baseline orb radius before per-person variation.
@@ -20,18 +35,38 @@ export const ORBS = {
    * collapses to a single bright pixel and every orb looks identical, which
    * defeats the whole idea of a contained living system.
    */
-  BASE_RADIUS: 0.46,
+  BASE_RADIUS: 0.115,
   /**
    * How far radius may vary with recorded confidence. Kept deliberately narrow:
    * the orbs must read as one population of peers, so scale differentiates
    * without ranking them into large and small.
    */
-  RADIUS_VARIANCE: 0.1,
+  RADIUS_VARIANCE: 0.026,
 
-  /** Clearance an orb must keep from any shell's structural members. */
-  STRUT_CLEARANCE: 0.78,
-  /** Minimum centre-to-centre distance between two orbs. */
-  SEPARATION: 1.4,
+  /** Clearance an orb must keep from its layer's structural members. */
+  STRUT_CLEARANCE: 0.22,
+
+  /**
+   * How far apart the resting layout places two people.
+   *
+   * This is the spacing that makes sixteen individuals read as sixteen
+   * individuals, and it is deliberately not the same number as the repulsion
+   * below. They were one value once, and that was a mistake with a visible
+   * consequence: spreading people out at rest also pushed teammates apart in
+   * the second month, so the gravity had nothing left to show. One sets where
+   * people stand when nothing is pulling them; the other only stops bodies
+   * passing through each other.
+   */
+  LAYOUT_SEPARATION: 0.52,
+
+  /**
+   * Distance at which two orbs start pushing each other away.
+   *
+   * Just over twice an orb's radius, so it prevents interpenetration and
+   * nothing else. Any larger and a team cannot gather tightly enough to read as
+   * a team.
+   */
+  SEPARATION: 0.28,
 
   /** Halo billboard size as a multiple of the orb's own radius. */
   HALO_SCALE: 3.6,
@@ -41,7 +76,7 @@ export const ORBS = {
   DETAIL: 3,
 
   /** Amplitude of each orb's slow wander around its anchor point, in world units. */
-  DRIFT: 0.075,
+  DRIFT: 0.025,
   /** Breathing scale range, as a fraction of the orb's radius. */
   BREATH: 0.045,
   /** Seconds per breath, before per-orb variation. */
@@ -52,12 +87,18 @@ export const ORBS = {
   /**
    * Emphasis levels. Neutral is the resting state of every orb; attended is a
    * hovered or selected one; receded is everything else once a person has been
-   * chosen. Receded stays well clear of zero — the other fifteen people do not
-   * stop existing because one has been selected.
+   * chosen.
+   *
+   * Receded sits low. The selected person has to be unmistakably the subject,
+   * and at a gentler value fifteen neighbours at close range still crowd the
+   * frame and the eye has no idea which vessel it is meant to be reading. It
+   * stays clear of zero, though: the other fifteen do not stop existing because
+   * one has been chosen, and they are what says this person is standing among
+   * a cohort.
    */
   EMPHASIS_NEUTRAL: 0.5,
   EMPHASIS_ATTENDED: 1.0,
-  EMPHASIS_RECEDED: 0.22,
+  EMPHASIS_RECEDED: 0.08,
   /** Seconds for an orb to travel between emphasis levels. */
   EMPHASIS_EASE: 0.4,
 
@@ -71,8 +112,18 @@ export const ORBS = {
 
   /** Restoring pull toward a person's own resting position. */
   HOME_PULL: 2.4,
-  /** Attraction toward a team's centre of mass when collaborating. */
-  TEAM_PULL: 5.5,
+  /**
+   * Attraction toward where a person's team gathers.
+   *
+   * Strong relative to the restoring pull that holds someone where they stand
+   * alone, and it has to be. At a gentler value the two forces balanced part of
+   * the way in: every team settled short of its own place and drifted toward
+   * the middle, so five formations that were correctly assigned five separate
+   * regions ended up bunched near the centre with no room between them. What is
+   * left of the home pull is what keeps the settling organic rather than
+   * collapsing each team onto a point.
+   */
+  TEAM_PULL: 11,
   /** Mutual repulsion, which keeps bound orbs from interpenetrating. */
   REPULSION: 14,
   /** Velocity retained per frame at 60fps. Heavy, so the field settles. */
@@ -80,12 +131,60 @@ export const ORBS = {
   /** Jitter amplitude from unresolved difficulty. */
   TURBULENCE: 1.6,
 
-  /* ---- Skills held inside each orb ---- */
+  /* ---- The sessions a person liked, held inside their vessel ---- */
 
-  /** Radius of the shell skill nodes occupy, as a fraction of the orb radius. */
-  SKILL_ORBIT: 0.62,
-  /** World size of a single skill node. */
-  SKILL_SIZE: 0.028,
-  /** Seconds a skill node takes to fade in as it is acquired. */
-  SKILL_EMERGE: 0.9,
+  /**
+   * How deep inside the orb each tier sits, as a fraction of the orb's radius.
+   *
+   * Inside, not around. An object orbiting outside the glass reads as a
+   * decoration attached to a sphere; the same object suspended within it reads
+   * as something the person contains. The vessel was always meant to be a
+   * container and this is what it contains.
+   *
+   * Two depths, and the near one is the favourite. Combined with the spiral
+   * that spreads them over three dimensions, no two sessions sit at the same
+   * distance from the lens, so orbiting the person parallaxes them against each
+   * other and the interior reads as a volume rather than as a decal.
+   */
+  SESSION_DEPTH_PRIMARY: 0.4,
+  SESSION_DEPTH_SECONDARY: 0.62,
+  /** Object size, also as a fraction of the orb's radius. */
+  SESSION_SIZE_PRIMARY: 0.25,
+  SESSION_SIZE_SECONDARY: 0.145,
+
+  /**
+   * How far the arrangement opens out when the person is attended to.
+   *
+   * Small. The objects must stay inside the glass — pushing them past the
+   * surface is the failure this replaced — so attention widens the interior
+   * slightly rather than expelling anything from it.
+   */
+  SESSION_SPREAD_ON_ATTENTION: 1.12,
+
+  /**
+   * The clear volume at the orb's centre, as a fraction of its radius.
+   *
+   * The person's own core lives here and nothing is allowed to sit on top of
+   * it. An interior packed to the middle stops reading as a person holding
+   * their learning and starts reading as a bag of objects.
+   */
+  SESSION_CORE_CLEARANCE: 0.22,
+
+  /** Revolutions per second of the interior around its person. Restrained. */
+  SESSION_REVOLVE: 0.035,
+  /** How far the revolution runs down while one object is examined. */
+  SESSION_SETTLE: 0.88,
+  /** Seconds for an object to arrive, withdraw, or change tier. */
+  SESSION_EASE: 0.42,
+
+  /**
+   * How present the interior is with nobody attending to that person.
+   *
+   * Faint. From across the month the sixteen should read as vessels, not as
+   * sixteen busy dioramas; the interior resolves into individual objects when
+   * somebody goes to look at one person.
+   */
+  SESSION_IDLE_PRESENCE: 0.3,
+  /** What an object falls to when a different one is being examined. */
+  SESSION_RECEDED: 0.42,
 } as const;

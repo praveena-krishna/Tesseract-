@@ -26,7 +26,7 @@ export function WorldUI() {
       </header>
 
       <p className="world-ui__hint" data-retired={hasInteracted}>
-        DRAG TO EXPLORE
+        DRAG TO ORBIT · CLICK A BOX TO ENTER THAT MONTH · 1 2 · ESC TO STEP BACK
       </p>
     </div>
   );

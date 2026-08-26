@@ -1,12 +1,14 @@
 import {
   MAX_CHALLENGES,
+  teamById,
   MAX_SKILLS,
   MONTH_LABELS,
+  MONTH_TITLES,
   challengeById,
   skillById,
-  teamById,
   traineeById,
 } from '../data/world';
+import type { MonthIndex } from '../data/world';
 import { resolveTrainee } from '../sim/whatIf';
 import { useWorldStore } from '../store/useWorldStore';
 
@@ -30,16 +32,59 @@ const NAME_LIMIT = 6;
 export function Readout() {
   const focusedTraineeId = useWorldStore((state) => state.focusedTraineeId);
   const focusedTeamId = useWorldStore((state) => state.focusedTeamId);
-  const month = useWorldStore((state) => state.month);
+  const enteredMonth = useWorldStore((state) => state.enteredMonth);
+  const hoveredMonth = useWorldStore((state) => state.hoveredMonth);
   const whatIf = useWorldStore((state) => state.whatIf);
 
-  if (focusedTeamId) return <TeamReadout teamId={focusedTeamId} />;
-  if (focusedTraineeId) {
+  // A chosen project says what it is beside the artifact itself, in two lines
+  // anchored in the world. Opening a panel here as well would put a second,
+  // louder answer on screen and make the artifact decoration next to it.
+  if (enteredMonth !== null && focusedTeamId) return null;
+  if (enteredMonth !== null && focusedTraineeId) {
     return (
-      <TraineeReadout traineeId={focusedTraineeId} month={month} whatIf={whatIf} />
+      <TraineeReadout
+        traineeId={focusedTraineeId}
+        month={enteredMonth}
+        whatIf={whatIf}
+      />
     );
   }
-  return null;
+
+  // Nothing chosen: name the layer under the pointer, or the one being stood
+  // in. Without this the boxes are unlabelled and there is no way to tell which
+  // of the three is which month short of entering one and reading the camera.
+  const month = enteredMonth ?? hoveredMonth;
+  if (month === null) return null;
+  return <MonthReadout month={month} inside={enteredMonth !== null} />;
+}
+
+/**
+ * Which layer this is.
+ *
+ * One line, shown while a box is pointed at from outside or while the viewer is
+ * standing in one. The boxes are nested and identical in language, so nothing
+ * about looking at them says which is the first month and which is the second —
+ * and the whole temporal structure is unreadable until something does.
+ */
+function MonthReadout({ month, inside }: { month: MonthIndex; inside: boolean }) {
+  const position = ['innermost', 'middle', 'outer'][month];
+  return (
+    <aside className="readout" aria-live="polite">
+      <p className="readout__eyebrow">
+        {inside ? 'Inside' : 'Dimensional layer'} · {MONTH_LABELS[month]}
+      </p>
+      <h2 className="readout__title">{MONTH_TITLES[month]}</h2>
+      <div className="readout__row">
+        <p className="readout__label">Which box</p>
+        <p className="readout__value">The {position} one</p>
+        {!inside && (
+          <p className="readout__note">
+            click it, or press {month + 1}, to go inside
+          </p>
+        )}
+      </div>
+    </aside>
+  );
 }
 
 function TraineeReadout({
@@ -48,7 +93,7 @@ function TraineeReadout({
   whatIf,
 }: {
   traineeId: string;
-  month: ReturnType<typeof useWorldStore.getState>['month'];
+  month: MonthIndex;
   whatIf: ReturnType<typeof useWorldStore.getState>['whatIf'];
 }) {
   const model = traineeById.get(traineeId);
@@ -112,74 +157,6 @@ function TraineeReadout({
             ? `and ${state.challengeIds.length - NAME_LIMIT} more`
             : undefined
         }
-      />
-    </aside>
-  );
-}
-
-function TeamReadout({ teamId }: { teamId: string }) {
-  const month = useWorldStore((state) => state.month);
-  const whatIf = useWorldStore((state) => state.whatIf);
-  const team = teamById.get(teamId);
-  if (!team) return null;
-
-  const members = team.memberIds
-    .map((id) => traineeById.get(id))
-    .filter((model): model is NonNullable<typeof model> => model != null);
-
-  // Skills the team collectively holds this month, and what they struggled
-  // with — the project described by the people in it rather than by a blurb.
-  const skills = new Set<string>();
-  const challenges = new Set<string>();
-  for (const model of members) {
-    if (model.id === whatIf.removedTraineeId) continue;
-    const state = resolveTrainee(model, month, whatIf, MAX_SKILLS, MAX_CHALLENGES);
-    state.skillIds.forEach((id) => skills.add(id));
-    state.challengeIds.forEach((id) => challenges.add(id));
-  }
-
-  const present = members.filter((model) => model.id !== whatIf.removedTraineeId);
-
-  return (
-    <aside className="readout" aria-live="polite">
-      <p className="readout__eyebrow">Project · {MONTH_LABELS[month]}</p>
-      <h2 className="readout__title">{team.name}</h2>
-
-      <Row
-        label={`Members · ${present.length}`}
-        value={present.map((model) => model.name).join(', ')}
-        note={
-          present.length < members.length
-            ? `${members.length - present.length} absent under the current conditions`
-            : undefined
-        }
-      />
-
-      <Row
-        label={`Skills in play · ${skills.size}`}
-        value={
-          [...skills]
-            .map((id) => skillById.get(id)?.name ?? id)
-            .slice(0, NAME_LIMIT)
-            .join(', ') || 'None yet'
-        }
-        note={skills.size > NAME_LIMIT ? `and ${skills.size - NAME_LIMIT} more` : undefined}
-      />
-
-      <Row
-        label={`Challenges · ${challenges.size}`}
-        value={
-          [...challenges]
-            .map((id) => challengeById.get(id)?.name ?? id)
-            .slice(0, NAME_LIMIT)
-            .join(', ') || 'None recorded'
-        }
-      />
-
-      <Row
-        label="Formation"
-        value={`${Math.round(team.maturityByMonth[Math.min(month, whatIf.months - 1)] * 100)}% built`}
-        note="from how often the logs record work on it"
       />
     </aside>
   );

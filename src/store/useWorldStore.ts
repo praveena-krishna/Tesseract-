@@ -23,6 +23,16 @@ export type InteractionState =
   | 'TEMPORAL_EXPLORATION'
   | 'RESETTING';
 
+/**
+ * Which layer of meaning the world is currently showing.
+ *
+ * Not five views of five datasets — one world, foregrounding one thing at a
+ * time. Everything stays on screen in every lens; what changes is what is
+ * legible. That is the difference between navigating a visualization and
+ * switching between dashboards.
+ */
+export type Lens = 'people' | 'teams' | 'projects' | 'classes' | 'challenges';
+
 /** The three-month temporal buckets the training data resolves into. */
 export type TimeBucket = 0 | 1 | 2;
 
@@ -36,8 +46,41 @@ interface WorldState {
   hoveredTeamId: string | null;
   focusedTeamId: string | null;
 
-  /** Which of the three months the world is currently showing. */
-  month: MonthIndex;
+  /**
+   * Which dimensional layer the pointer is over, if any.
+   *
+   * Separate from the trainee hover because they are different subjects at
+   * different depths: from outside, the layer is what can be reached, and once
+   * inside it the people are.
+   */
+  hoveredMonth: MonthIndex | null;
+
+  /** Which layer of meaning is foregrounded. */
+  lens: Lens;
+
+  /**
+   * The learning object under the pointer, and the one that has been opened,
+   * each keyed `personId:classId`.
+   *
+   * Kept separate from the trainee hover because they are different subjects at
+   * different depths: the orb is a person, an object orbiting it is one session
+   * that person liked, and pointing at the session must not stop the person
+   * being identified.
+   */
+  hoveredSession: string | null;
+  openedSession: string | null;
+
+  /**
+   * Which layer the viewer has passed into, or null while they are outside
+   * looking at the whole structure.
+   *
+   * This is the one piece of state that changes what the experience is about.
+   * Nothing is unmounted when it changes — the tesseract does not go anywhere,
+   * and the people who appear inside it were always going to be there. Only
+   * Month 1 is wired to it so far.
+   */
+  enteredMonth: MonthIndex | null;
+
   /** Counterfactual conditions the world is being run under. */
   whatIf: WhatIf;
 
@@ -69,6 +112,16 @@ interface WorldState {
   setTeamCentres: (centres: Map<string, THREE.Vector3> | null) => void;
   markInteracted: () => void;
 
+  hoverSession: (key: string | null) => void;
+  /** Opens a session to reveal its name, or closes the current one with null. */
+  openSession: (key: string | null) => void;
+
+  setLens: (lens: Lens) => void;
+
+  hoverMonth: (month: MonthIndex | null) => void;
+  /** Passes into a dimensional layer, or back out when given null. */
+  enterMonth: (month: MonthIndex | null) => void;
+
   hoverTrainee: (id: string | null) => void;
   focusTrainee: (id: string | null) => void;
   hoverTeam: (id: string | null) => void;
@@ -76,7 +129,6 @@ interface WorldState {
   /** Steps the selection through the field; used by keyboard navigation. */
   stepFocus: (delta: number, ids: string[]) => void;
 
-  setMonth: (month: MonthIndex) => void;
   setWhatIf: (patch: Partial<WhatIf>) => void;
   resetWhatIf: () => void;
   /** Clears every selection and counterfactual, returning the world to rest. */
@@ -104,9 +156,17 @@ export const useWorldStore = create<WorldState>((set) => ({
   focusedTraineeId: null,
   hoveredTeamId: null,
   focusedTeamId: null,
+  hoveredSession: null,
+  openedSession: null,
+  hoveredMonth: null,
+  // The world opens on the people. Everything else in it is something that
+  // happened to them, so they are what the first look should be about.
+  lens: 'people',
+  // The world opens outside, on the whole structure. Which layer to enter is
+  // the viewer's first decision, not the opening's.
+  enteredMonth: null,
   // The world opens on the first month, so the viewer sees the training begin
   // and can watch it develop rather than arriving at its conclusion.
-  month: 0,
   whatIf: DEFAULT_WHAT_IF,
 
   controls: null,
@@ -121,6 +181,47 @@ export const useWorldStore = create<WorldState>((set) => ({
   setTeamCentres: (teamCentres) => set({ teamCentres }),
   markInteracted: () =>
     set((state) => (state.hasInteracted ? state : { hasInteracted: true })),
+
+  hoverSession: (key) =>
+    set((state) => (state.hoveredSession === key ? state : { hoveredSession: key })),
+
+  openSession: (key) =>
+    set((state) => (state.openedSession === key ? state : { openedSession: key })),
+
+  setLens: (lens) =>
+    set((state) => {
+      if (state.lens === lens) return state;
+      // Changing what the world is about releases whatever was being examined
+      // under the previous lens, so nothing is left described by a layer that
+      // is no longer foregrounded.
+      return {
+        lens,
+        focusedTeamId: lens === 'projects' ? state.focusedTeamId : null,
+        focusedTraineeId:
+          lens === 'people' || lens === 'classes' || lens === 'challenges'
+            ? state.focusedTraineeId
+            : null,
+        openedSession: lens === 'classes' ? state.openedSession : null,
+        hasInteracted: true,
+      };
+    }),
+
+  hoverMonth: (month) =>
+    set((state) => (state.hoveredMonth === month ? state : { hoveredMonth: month })),
+
+  enterMonth: (month) =>
+    set((state) => {
+      if (state.enteredMonth === month) return state;
+      return {
+        enteredMonth: month,
+        // Leaving takes any selection with it: the interface must not be left
+        // describing a person the viewer can no longer see.
+        focusedTraineeId: month === null ? null : state.focusedTraineeId,
+        focusedTeamId: month === null ? null : state.focusedTeamId,
+        hoveredMonth: null,
+        hasInteracted: true,
+      };
+    }),
 
   hoverTrainee: (id) =>
     set((state) => {
@@ -139,6 +240,10 @@ export const useWorldStore = create<WorldState>((set) => ({
         // A person and their project are different subjects; choosing one
         // releases the other rather than stacking two focuses at once.
         focusedTeamId: null,
+        // A session belongs to whoever was selected when it was opened; moving
+        // to somebody else must not leave their neighbour's label standing.
+        openedSession: null,
+        hoveredSession: null,
         interaction: deriveInteraction(state.hoveredTraineeId, id, null),
         hasInteracted: true,
       };
@@ -183,9 +288,6 @@ export const useWorldStore = create<WorldState>((set) => ({
       };
     }),
 
-  setMonth: (month) =>
-    set((state) => (state.month === month ? state : { month, hasInteracted: true })),
-
   setWhatIf: (patch) =>
     set((state) => ({ whatIf: { ...state.whatIf, ...patch }, hasInteracted: true })),
 
@@ -197,6 +299,10 @@ export const useWorldStore = create<WorldState>((set) => ({
       focusedTeamId: null,
       hoveredTraineeId: null,
       hoveredTeamId: null,
+      hoveredMonth: null,
+      enteredMonth: null,
+      hoveredSession: null,
+      openedSession: null,
       whatIf: DEFAULT_WHAT_IF,
       interaction: 'IDLE',
     }),

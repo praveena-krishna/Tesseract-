@@ -20,6 +20,7 @@ export const ORB_VERT = /* glsl */ `
   attribute float aEmphasis;
   attribute float aTurbulence;
   attribute float aPresence;
+  attribute float aCracks;
 
   varying vec3 vNormal;
   varying vec3 vViewDir;
@@ -30,8 +31,10 @@ export const ORB_VERT = /* glsl */ `
   varying float vEmphasis;
   varying float vTurbulence;
   varying float vPresence;
+  varying float vCracks;
 
   void main() {
+    vCracks = aCracks;
     vSeed = aSeed;
     vComplexity = aComplexity;
     vEmphasis = aEmphasis;
@@ -53,6 +56,7 @@ export const ORB_VERT = /* glsl */ `
       sin(pos.z * 8.0 + uTime * 1.7);
 
     pos += normal * (swell + strain * aTurbulence * 0.075);
+
 
     vec4 instancePosition = instanceMatrix * vec4(pos, 1.0);
     vec4 mvPosition = modelViewMatrix * instancePosition;
@@ -86,6 +90,7 @@ export const ORB_FRAG = /* glsl */ `
   uniform vec3 uLightDir;
   uniform float uIor;
   uniform float uOpacity;
+  uniform vec3 uFracture;
 
   varying vec3 vNormal;
   varying vec3 vViewDir;
@@ -96,6 +101,7 @@ export const ORB_FRAG = /* glsl */ `
   varying float vEmphasis;
   varying float vTurbulence;
   varying float vPresence;
+  varying float vCracks;
 
   // Multiply-and-fract hash rather than the usual fract(sin(dot(...))).
   //
@@ -137,6 +143,23 @@ export const ORB_FRAG = /* glsl */ `
       amplitude *= 0.5;
     }
     return total;
+  }
+
+  /**
+   * A challenge, as a fracture in the glass.
+   *
+   * Drawn only where the surveys record difficulty for this person, and only
+   * while the world is about what people found hard — sixteen permanently
+   * cracked vessels would say the training was an ordeal for everybody, which
+   * is not what anyone reported. The line is a narrow band around one level set
+   * of the noise, which is what makes it a fissure rather than a smear, and how
+   * much of the surface is crossed follows how many difficulties that person
+   * actually named.
+   */
+  float fracture(vec3 n) {
+    float field = ridged(n * 4.1 + vSeed * 17.0);
+    float line = 1.0 - smoothstep(0.0, 0.055, abs(field - 0.7));
+    return line * step(1.0 - vCracks, hash(floor(n * 5.0) + vSeed));
   }
 
   void main() {
@@ -196,6 +219,16 @@ export const ORB_FRAG = /* glsl */ `
     // stay transparent at every level.
     float interior = density * (0.35 + vComplexity * 0.75);
 
+    // Looking into somebody.
+    //
+    // The vessel holds the sessions that person liked, and its own churn is in
+    // front of them. So when a person is attended to the glass quiets down: the
+    // internal weather thins and the shell turns more transparent, and what was
+    // a luminous sphere becomes a container you can see into. Nothing is added
+    // to say "selected" — the orb simply stops competing with its own contents.
+    float attended = smoothstep(0.5, 1.0, vEmphasis);
+    interior *= 1.0 - attended * 0.5;
+
     // Cheap dispersion: electric violet through the body where we look deepest
     // into it, picking up a cool cyan only near the silhouette — the direction
     // real dispersion runs, since refraction is steepest at grazing angles.
@@ -221,19 +254,35 @@ export const ORB_FRAG = /* glsl */ `
     // The inner glow is an accent, not the subject. Driving it harder fills the
     // sphere with saturated violet, which reads as a solid neon ball at viewing
     // distance and throws away the transparency the metaphor rests on.
+    float crack = vCracks > 0.001 ? fracture(normalize(vLocalPos)) : 0.0;
+
     vec3 color =
       absorbed +
       glowColor * interior * 0.95 * energyGain +
       uRim * rim * 0.5 * edgeGain +
       uSpecular * specular * 0.9;
 
+    // A fissure both blocks light and scatters what gets past it, so it darkens
+    // the body and catches a cold edge rather than being drawn on top.
+    color = mix(color, uFracture, crack * 0.72);
+
     // Coverage stays low through the middle so the vessel remains genuinely
     // see-through, and climbs at the silhouette where real glass turns opaque.
     // A receded orb thins out, so it withdraws rather than merely dimming.
+    // The emphasis term is deliberately steep at the bottom. Once somebody has
+    // been chosen the other fifteen have to stop competing, and a gentle
+    // falloff leaves a crowd of near-equal spheres with nothing saying which
+    // one is the subject.
     float alpha =
       clamp(0.17 + fresnel * 0.72 + interior * 0.24 * energyGain + specular * 0.6,
             0.0, 0.9) *
-      (0.55 + vEmphasis * 0.9);
+      (0.26 + vEmphasis * 1.05);
+
+    alpha = min(0.94, alpha + crack * 0.28);
+
+    // The shell thins as it is looked into, so the sessions inside read through
+    // it rather than against it.
+    alpha *= 1.0 - attended * 0.45;
 
     // Absence: a person removed from the training leaves a trace of their
     // vessel rather than a hole, so the viewer can see who is missing.
@@ -266,7 +315,9 @@ export const HALO_VERT = /* glsl */ `
     // a bounded range. The halo is additive and unattenuated, so an attended
     // orb seen from close up is otherwise bright enough to bloom across the
     // entire frame and bury the subject it was meant to pick out.
-    vIntensity = (0.3 + aComplexity * 0.5) * (0.3 + aEmphasis * 0.65) * aPresence;
+    // Steep at the bottom for the same reason the glass is: a receded person's
+    // halo must genuinely drop back, not merely dim a little.
+    vIntensity = (0.3 + aComplexity * 0.5) * (0.1 + aEmphasis * 0.9) * aPresence;
 
     // Instance translation and scale, orientation discarded: the quad is
     // rebuilt facing the camera in view space.

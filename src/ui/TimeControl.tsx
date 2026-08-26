@@ -5,41 +5,66 @@ import { useWorldStore } from '../store/useWorldStore';
 const MONTHS: MonthIndex[] = [0, 1, 2];
 
 /**
- * Movement through the three months.
+ * Which months are reachable. Month 3 is not built yet.
  *
- * Not a media player and not a set of tabs: three marks on a line, because the
- * months are positions in one continuous transformation rather than three
- * screens to switch between. Choosing one does not load anything — the same
- * world reorganises itself, and the control's only job is to say where in that
- * transformation you currently are.
+ * Shown rather than hidden, and marked as not yet reached. A control that
+ * silently omits the third month would say the training had two.
+ */
+const REACHABLE = 2;
+
+/**
+ * The three months, as a way in and as a place-marker.
  *
- * When the training is shortened by a counterfactual, the third mark is shown
- * as unreachable rather than removed, so the viewer can see what was lost.
+ * Not a set of tabs: three marks on a hairline, because the months are three
+ * layers of one structure rather than three screens to switch between. Choosing
+ * one does not load anything — the camera travels into that layer of the same
+ * tesseract, and the other two stay exactly where they are.
+ *
+ * It exists because the boxes are nested and identical in language, so nothing
+ * about looking at them says which is the first month and which is the second.
+ * Pointing at a mark lights the box it names, which is the whole of the
+ * connection between the two: the strip is a label for something already in the
+ * world, not a separate way of driving it.
  */
 export function TimeControl() {
-  const month = useWorldStore((state) => state.month);
-  const setMonth = useWorldStore((state) => state.setMonth);
-  const months = useWorldStore((state) => state.whatIf.months);
+  const enteredMonth = useWorldStore((state) => state.enteredMonth);
+  const hoveredMonth = useWorldStore((state) => state.hoveredMonth);
+  const enterMonth = useWorldStore((state) => state.enterMonth);
+  const hoverMonth = useWorldStore((state) => state.hoverMonth);
   const phase = useWorldStore((state) => state.phase);
 
   return (
-    <div className="time-control" data-visible={phase === 'ready'}>
+    <nav
+      className="time-control"
+      data-visible={phase === 'ready'}
+      aria-label="Dimensional layers"
+    >
       {MONTHS.map((index) => {
-        const unavailable = index >= months;
+        const unreached = index >= REACHABLE;
+        const active = index === enteredMonth;
         return (
           <button
             key={index}
             type="button"
             className="time-control__mark"
-            data-active={index === month}
-            data-unavailable={unavailable}
-            aria-current={index === month}
-            disabled={unavailable}
-            onClick={() => setMonth(index)}
+            data-active={active}
+            data-hovered={index === hoveredMonth}
+            data-unavailable={unreached}
+            aria-pressed={active}
+            disabled={unreached}
+            onClick={() => enterMonth(active ? null : index)}
+            // Pointing at a mark lights the box it names, so the two never read
+            // as separate controls that happen to agree.
+            onPointerEnter={() => !unreached && hoverMonth(index)}
+            onPointerLeave={() => hoverMonth(null)}
+            onFocus={() => !unreached && hoverMonth(index)}
+            onBlur={() => hoverMonth(null)}
             title={
-              unavailable
-                ? 'Not reached — training shortened to two months'
-                : MONTH_TITLES[index]
+              unreached
+                ? `${MONTH_TITLES[index]} — not built yet`
+                : active
+                  ? `Leave ${MONTH_TITLES[index]}`
+                  : `Enter ${MONTH_TITLES[index]}`
             }
           >
             <span className="time-control__label">{MONTH_LABELS[index]}</span>
@@ -47,6 +72,6 @@ export function TimeControl() {
           </button>
         );
       })}
-    </div>
+    </nav>
   );
 }

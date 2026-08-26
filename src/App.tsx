@@ -6,7 +6,7 @@ import { LoadingVeil } from './ui/LoadingVeil';
 import { WorldUI } from './ui/WorldUI';
 import { Readout } from './ui/Readout';
 import { TimeControl } from './ui/TimeControl';
-import { WhatIfControl } from './ui/WhatIfControl';
+import { LensControl } from './ui/LensControl';
 import { WebGLFallback } from './ui/WebGLFallback';
 import { useReducedMotion } from './interaction/useReducedMotion';
 import { useHoverCursor } from './interaction/useHoverCursor';
@@ -89,7 +89,13 @@ export default function App() {
       <WorldUI />
       <Readout />
       <TimeControl />
-      <WhatIfControl />
+      <LensControl />
+      {/*
+        The counterfactual panel is still not mounted. It alters skills, teams
+        and training length, none of which are on screen in this phase, and a
+        control that visibly does nothing is worse than one that is absent. It
+        is intact and waiting for the phase that needs it.
+      */}
       <LoadingVeil />
     </>
   );

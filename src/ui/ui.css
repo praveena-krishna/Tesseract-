@@ -140,6 +140,135 @@
  * border — a container would read as interface laid over the scene, which is
  * exactly what selection here is meant not to feel like.
  */
+/* ---- The session a person liked, named ---- */
+
+/*
+ * One line of type with no container. The object itself is the interface and
+ * this only says what it is; a panel here would be the dashboard the whole
+ * treatment exists to avoid.
+ */
+.session-label {
+  transform: translateY(-1.6rem);
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  animation: session-label-in 260ms ease-out both;
+}
+
+@keyframes session-label-in {
+  from {
+    opacity: 0;
+    transform: translateY(-1.1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-1.6rem);
+  }
+}
+
+.session-label__name {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+  text-transform: uppercase;
+  color: var(--ui-text);
+  opacity: 0.72;
+  transition: opacity 300ms ease-out;
+}
+
+.session-label[data-opened='true'] .session-label__name {
+  opacity: 1;
+}
+
+.session-label__rank,
+.session-label__reading,
+.session-label__note {
+  margin-top: 0.3rem;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.625rem;
+  letter-spacing: 0.09em;
+  color: var(--ui-dim);
+}
+
+.session-label__reading {
+  font-style: italic;
+  max-width: 22rem;
+  white-space: normal;
+}
+
+.session-label__note {
+  opacity: 0.75;
+}
+
+/* ---- What a team built ---- */
+
+/*
+ * Two lines of type with no container. The artifact is the interface and this
+ * only names it; a card here would be the dashboard the whole design avoids.
+ */
+.project-label {
+  transform: translateY(-1.4rem);
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+  max-width: 26rem;
+  animation: project-label-in 280ms ease-out both;
+}
+
+@keyframes project-label-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.9rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-1.4rem);
+  }
+}
+
+.project-label__name {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 0.8125rem;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ui-text);
+  opacity: 0.75;
+  transition: opacity 300ms ease-out;
+}
+
+.project-label[data-opened='true'] .project-label__name {
+  opacity: 1;
+}
+
+.project-label__description {
+  margin-top: 0.55rem;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  letter-spacing: 0.03em;
+  color: var(--ui-text);
+  opacity: 0.68;
+}
+
+.project-label__reading {
+  margin-top: 0.4rem;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: var(--ui-dim);
+}
+
 .trainee-label {
   margin: 0;
   white-space: nowrap;
@@ -173,7 +302,7 @@
 
 .time-control {
   position: fixed;
-  bottom: 2rem;
+  bottom: 3.6rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -218,10 +347,20 @@
   color: var(--ui-text);
 }
 
+/*
+ * Pointing at a mark lights the mark as well as the box it names, so the two
+ * are visibly one control rather than two ways of doing the same thing that
+ * happen to agree.
+ */
+.time-control__mark[data-hovered='true']:not([data-unavailable='true']) {
+  color: var(--ui-text);
+}
+
 .time-control__mark[data-unavailable='true'] {
   cursor: not-allowed;
-  opacity: 0.3;
-  text-decoration: line-through;
+  /* Not struck through: the month exists, it has simply not been built yet, and
+     a strikethrough reads as cancelled. */
+  opacity: 0.26;
 }
 
 .time-control__label {
@@ -244,8 +383,66 @@
 }
 
 .time-control__mark[data-active='true'] .time-control__title,
+.time-control__mark[data-hovered='true'] .time-control__title,
 .time-control__mark:hover .time-control__title {
   opacity: 0.7;
+}
+
+/* ---- What the world is currently about ---- */
+
+/*
+ * A row of marks beneath the month strip, in the same language. These are two
+ * halves of one idea — when you are looking, and what you are looking at — so
+ * they read as one control rather than a toolbar bolted to a scene.
+ */
+.lens-control {
+  position: fixed;
+  left: 50%;
+  bottom: 1.4rem;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1.6rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 600ms ease-out;
+  z-index: 3;
+}
+
+.lens-control[data-visible='true'] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lens-control__mark {
+  border: 0;
+  background: none;
+  padding: 0.2rem 0;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5625rem;
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+  transition: color 400ms ease-out, opacity 400ms ease-out;
+}
+
+.lens-control__mark:hover:not([data-unavailable='true']),
+.lens-control__mark:focus-visible:not([data-unavailable='true']) {
+  color: var(--ui-text);
+  outline: none;
+}
+
+/* The active lens carries a hairline under it, the only mark this row makes. */
+.lens-control__mark[data-active='true'] {
+  color: var(--ui-text);
+  box-shadow: inset 0 -1px 0 0 currentColor;
+}
+
+.lens-control__mark[data-unavailable='true'] {
+  cursor: not-allowed;
+  opacity: 0.24;
 }
 
 /* ---- Counterfactual conditions ---- */
@@ -530,3 +727,4 @@
     animation: none;
   }
 }
+

@@ -119,7 +119,11 @@ export function TeamField() {
     const ease = reducedMotion ? 1 : 1 - Math.exp(-step / 0.85);
 
     const store = useWorldStore.getState();
-    const { month, whatIf, focusedTeamId, hoveredTeamId, focusedTraineeId } = store;
+    // Unmounted in this phase. When it returns it reads the layer the viewer is
+    // standing in, which is the only month that has people to connect.
+    const { enteredMonth, whatIf, focusedTeamId, hoveredTeamId, focusedTraineeId } =
+      store;
+    const month = enteredMonth ?? 0;
     const positions = store.traineePositions;
     const collaboration = collaborationStrength(month, whatIf);
     const capped = effectiveMonth(month, whatIf);

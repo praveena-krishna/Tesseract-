@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import type CameraControlsImpl from 'camera-controls';
-import { CAMERA } from '../config/dimensions';
+import { CAMERA, DIMENSION } from '../config/dimensions';
 
 const DEG = THREE.MathUtils.degToRad;
 
@@ -82,6 +82,53 @@ export function frameOverview(
 }
 
 /**
+ * The passage into a dimensional layer.
+ *
+ * Not a dolly. A camera that only closes distance reads as a zoom, and a zoom
+ * is the one thing this must not feel like — the viewer is meant to be crossing
+ * into somewhere, not magnifying a cube. So the bearing swings and the elevation
+ * drops while the distance falls, and all three resolve together: the structure
+ * keeps turning around the lens the whole way in, which is what makes it read
+ * as travel through a space rather than as the space being scaled up.
+ *
+ * It runs on the controls' own damped solver at a long smoothing time, so the
+ * move decelerates into its arrival instead of stopping at it.
+ */
+export async function enterDimension(
+  controls: CameraControlsImpl,
+  /** Half size of the layer being entered; the framing scales with it. */
+  half: number,
+  /**
+   * True when this layer's contents are composed on a plane, and so have a
+   * front to be seen from.
+   */
+  planar = false,
+  animate = true,
+): Promise<void> {
+  const azimuth = planar
+    ? DEG(DIMENSION.PLANAR_AZIMUTH_DEG)
+    : controls.azimuthAngle + DEG(DIMENSION.ENTER_AZIMUTH_SHIFT_DEG);
+  const polar = THREE.MathUtils.clamp(
+    planar
+      ? DEG(DIMENSION.PLANAR_POLAR_DEG)
+      : controls.polarAngle + DEG(DIMENSION.ENTER_POLAR_SHIFT_DEG),
+    DEG(CAMERA.MIN_POLAR_DEG),
+    DEG(CAMERA.MAX_POLAR_DEG),
+  );
+
+  const run = async () => {
+    await Promise.all([
+      controls.setTarget(0, 0, 0, animate),
+      controls.rotateTo(azimuth, polar, animate),
+      controls.dollyTo(half * DIMENSION.INSIDE_RADIUS_FACTOR, animate),
+    ]);
+  };
+
+  if (!animate) return run();
+  return withSmoothing(controls, DIMENSION.ENTER_SMOOTH_TIME, run);
+}
+
+/**
  * The distance at which a sphere of the given radius fills `FOCUS_FILL` of the
  * frame's smaller dimension.
  *
@@ -123,6 +170,14 @@ export async function focusOn(
   subjectRadius: number,
   /** Other bodies in the world the shot should not end up inside. */
   avoid?: Iterable<THREE.Vector3>,
+  /**
+   * How much room to leave them, scaled to the layer.
+   *
+   * It has to stay below the separation between two people, or the nudge can
+   * never be satisfied and every focused shot gets pushed back until the
+   * subject is too small to read.
+   */
+  clearance = CAMERA.FOCUS_ORB_CLEARANCE,
 ): Promise<void> {
   const distance = distanceToFrame(camera, subjectRadius);
 
@@ -154,13 +209,11 @@ export async function focusOn(
     for (const other of avoid) {
       if (other === target) continue;
       const gap = position.distanceTo(other);
-      if (gap >= CAMERA.FOCUS_ORB_CLEARANCE) continue;
+      if (gap >= clearance) continue;
 
       away.subVectors(position, other);
       if (away.lengthSq() < 1e-6) away.copy(bearing);
-      position.copy(
-        other.clone().addScaledVector(away.normalize(), CAMERA.FOCUS_ORB_CLEARANCE),
-      );
+      position.copy(other.clone().addScaledVector(away.normalize(), clearance));
     }
   }
 

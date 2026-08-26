@@ -5,7 +5,9 @@ import { Lighting } from './Lighting';
 import { Effects } from './Effects';
 import { Tesseract } from './Tesseract/Tesseract';
 import { TraineeField } from './Trainees/TraineeField';
-import { TeamField } from './Teams/TeamField';
+import { TeamBonds } from './Teams/TeamBonds';
+import { ProjectCores } from './Teams/ProjectCores';
+import { ProjectLabel } from '../ui/ProjectLabel';
 import { Atmosphere } from './Environment/Atmosphere';
 import { Particles } from './Environment/Particles';
 import { CameraController } from '../interaction/CameraController';
@@ -39,10 +41,23 @@ export function TesseractScene() {
       <Atmosphere />
       <Tesseract />
       {/*
-        Collaboration is drawn before the vessels so the links and project cores
-        sit behind the glass they connect, which is where they physically are.
+        The collaboration layer is not mounted in this phase.
+
+        Month 1 is about sixteen individuals, so nothing may connect them: no
+        links between people, no project formations condensing between them, no
+        team gravity. `TeamField` draws all three and is left intact and
+        unmounted rather than deleted, because it is what a later phase turns
+        back on. It belongs before `TraineeField` when it returns, so the links
+        and cores sit behind the glass they connect, which is where they
+        physically are.
       */}
-      <TeamField />
+      {/*
+        Bonds are drawn before the vessels so they pass behind the glass they
+        connect, which is where they physically are.
+      */}
+      <TeamBonds />
+      <ProjectCores />
+      <ProjectLabel />
       <TraineeField />
       <Particles />
       <Effects />

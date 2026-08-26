@@ -3,12 +3,21 @@ import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import { CameraControls } from '@react-three/drei';
 import CameraControlsImpl from 'camera-controls';
-import { CAMERA } from '../config/dimensions';
+import { BONDS, CAMERA, DIMENSION, SHELLS } from '../config/dimensions';
+import { orbKey } from '../scene/Trainees/orbKey';
+import { trainees } from '../data/world';
 import { ORBS } from '../config/orbs';
 import { TIMINGS } from '../config/timings';
 import { useWorldStore } from '../store/useWorldStore';
 import { useCameraKeys } from './useCameraKeys';
-import { applyFraming, ENTRY, focusOn, frameOverview, OVERVIEW } from './cameraMoves';
+import {
+  applyFraming,
+  ENTRY,
+  enterDimension,
+  focusOn,
+  frameOverview,
+  OVERVIEW,
+} from './cameraMoves';
 
 const DEG = THREE.MathUtils.degToRad;
 
@@ -19,7 +28,7 @@ const DEG = THREE.MathUtils.degToRad;
  * the core and the people gathered around it — and framing it as tightly as one
  * person would put the collaborators outside the shot.
  */
-const TEAM_FRAMING_RADIUS = 1.5;
+const TEAM_FRAMING_RADIUS = 0.5;
 
 /**
  * The camera rig.
@@ -79,21 +88,25 @@ export function CameraController() {
   }, []);
 
   /**
-   * Return to equilibrium.
+   * Step back out, one layer at a time.
    *
-   * Selection is released first when there is one: the viewer's mental model is
-   * a stack, and the escape gesture should step out one layer — back to the
-   * whole field — rather than dropping every layer at once.
+   * The viewer's mental model is a stack — the tesseract, then a dimensional
+   * layer, then a person inside it — and the escape gesture should climb one
+   * rung rather than dropping every layer at once. Changing the state is itself
+   * what sends the camera back.
    */
   const returnToRest = useCallback(() => {
     const store = useWorldStore.getState();
-    // Clearing the selection is itself what sends the camera back.
     if (store.focusedTeamId) {
       store.focusTeam(null);
       return;
     }
     if (store.focusedTraineeId) {
       store.focusTrainee(null);
+      return;
+    }
+    if (store.enteredMonth !== null) {
+      store.enterMonth(null);
       return;
     }
     resetViewRef.current();
@@ -113,10 +126,23 @@ export function CameraController() {
   const resetViewRef = useRef(resetView);
   resetViewRef.current = resetView;
 
+  /** Home goes all the way out, layer included, rather than one rung. */
+  const goHome = useCallback(() => {
+    const store = useWorldStore.getState();
+    store.focusTrainee(null);
+    store.focusTeam(null);
+    if (store.enteredMonth !== null) {
+      // Leaving the layer is itself what frames the overview.
+      store.enterMonth(null);
+      return;
+    }
+    resetViewRef.current();
+  }, []);
+
   const applyKeys = useCameraKeys(controlsRef, {
     rotateSpeed: CAMERA.KEY_ROTATE_SPEED,
     dollySpeed: CAMERA.KEY_DOLLY_SPEED,
-    onHome: resetView,
+    onHome: goHome,
     onEscape: returnToRest,
     onInput: noteInput,
   });
@@ -177,12 +203,46 @@ export function CameraController() {
   }, [phase, reducedMotion, runScripted]);
 
   /**
+   * The passage into and back out of a dimensional layer.
+   *
+   * Kept apart from selection because it is a different kind of move: selection
+   * frames a subject, this one crosses into somewhere. It also has to reset the
+   * near clamp in both directions — the global one holds the camera outside the
+   * whole structure, which is exactly the thing being suspended here.
+   */
+  const enteredMonth = useWorldStore((state) => state.enteredMonth);
+
+  useEffect(() => {
+    const controls = controlsRef.current;
+    if (!controls || phase !== 'ready') return;
+
+    if (enteredMonth === null) {
+      controls.minDistance = CAMERA.MIN_DISTANCE;
+      void runScripted(
+        applyFraming(
+          controls,
+          OVERVIEW,
+          DIMENSION.EXIT_SMOOTH_TIME,
+          !reducedMotion,
+        ),
+      );
+      return;
+    }
+
+    const half = SHELLS[DIMENSION.SHELL_OF_MONTH[enteredMonth]].half;
+    controls.minDistance = half * DIMENSION.INSIDE_MIN_DISTANCE_FACTOR;
+    void runScripted(enterDimension(controls, half, enteredMonth === BONDS.MONTH, !reducedMotion));
+  }, [enteredMonth, phase, reducedMotion, runScripted]);
+
+  /**
    * The camera answers to selection.
    *
    * Choosing a person moves the camera in to observe them; releasing the
-   * selection returns it to the whole structure. This lives in the camera rig
-   * rather than in the selection code so that everything which moves the camera
-   * shares one owner — and one definition of when a scripted move is running.
+   * selection returns it to the layer they are standing in, not to the whole
+   * structure, because that is the rung of the stack the viewer was on. This
+   * lives in the camera rig rather than in the selection code so that everything
+   * which moves the camera shares one owner — and one definition of when a
+   * scripted move is running.
    */
   const focusedTraineeId = useWorldStore((state) => state.focusedTraineeId);
   const focusedTeamId = useWorldStore((state) => state.focusedTeamId);
@@ -193,37 +253,74 @@ export function CameraController() {
     if (!controls || phase !== 'ready') return;
 
     if (!focusedTraineeId && !focusedTeamId) {
-      // Only pull the camera back if it had been sent in; otherwise clearing a
-      // selection would yank a viewer out of a view they set up themselves.
+      // Inside a layer, releasing a person returns to that layer's framing.
+      // Falling through to the overview here would eject the viewer from the
+      // dimension entirely, which is a rung further than they asked for.
+      if (enteredMonth !== null) {
+        const half = SHELLS[DIMENSION.SHELL_OF_MONTH[enteredMonth]].half;
+        controls.minDistance = half * DIMENSION.INSIDE_MIN_DISTANCE_FACTOR;
+        void runScripted(enterDimension(controls, half, enteredMonth === BONDS.MONTH, !reducedMotion));
+        return;
+      }
+      // Outside, only pull the camera back if it had been sent in; otherwise
+      // clearing a selection would yank a viewer out of a view they set up
+      // themselves.
       if (controls.minDistance !== CAMERA.MIN_DISTANCE) resetView();
       return;
     }
 
+    // Selection only means anything inside a layer; the branch above has
+    // already handled being outside one, and this narrows the type for the
+    // framing maths below.
+    if (enteredMonth === null) return;
+
     const store = useWorldStore.getState();
+    // Everything scales with the layer, so a person frames identically whichever
+    // month they are being observed in.
+    const half = SHELLS[DIMENSION.SHELL_OF_MONTH[enteredMonth]].half;
+    const scale = half / SHELLS[DIMENSION.SHELL_OF_MONTH[0]].half;
+
     // A project is framed wider than a person: the subject is the formation and
     // the members around it, so the shot has to hold the group.
     const target = focusedTeamId
       ? store.teamCentres?.get(focusedTeamId)
       : focusedTraineeId
-        ? store.traineePositions?.get(focusedTraineeId)
+        ? store.traineePositions?.get(orbKey(enteredMonth, focusedTraineeId))
         : undefined;
     if (!target) return;
 
-    const subjectRadius = focusedTeamId
-      ? TEAM_FRAMING_RADIUS
-      : ORBS.BASE_RADIUS + ORBS.RADIUS_VARIANCE;
+    const subjectRadius =
+      (focusedTeamId
+        ? TEAM_FRAMING_RADIUS
+        : ORBS.BASE_RADIUS + ORBS.RADIUS_VARIANCE) * scale;
 
-    controls.minDistance = CAMERA.FOCUS_MIN_DISTANCE;
+    // Only the people standing in this layer are obstacles; the other months
+    // are elsewhere in the tesseract and the camera is never near them.
+    const neighbours = trainees
+      .map((trainee) => store.traineePositions?.get(orbKey(enteredMonth, trainee.id)))
+      .filter((position): position is THREE.Vector3 => position !== undefined);
+
+    controls.minDistance = CAMERA.FOCUS_MIN_DISTANCE * scale;
     void runScripted(
       focusOn(
         controls,
         camera as THREE.PerspectiveCamera,
         target.clone(),
         subjectRadius,
-        store.traineePositions?.values(),
+        neighbours,
+        CAMERA.FOCUS_ORB_CLEARANCE * scale,
       ),
     );
-  }, [focusedTraineeId, focusedTeamId, phase, camera, resetView, runScripted]);
+  }, [
+    focusedTraineeId,
+    focusedTeamId,
+    enteredMonth,
+    phase,
+    camera,
+    reducedMotion,
+    resetView,
+    runScripted,
+  ]);
 
   useEffect(() => {
     const element = gl.domElement;
@@ -234,16 +331,19 @@ export function CameraController() {
     element.setAttribute('role', 'application');
     element.setAttribute(
       'aria-label',
-      'The Tesseract: a dimensional structure containing sixteen trainees. ' +
-        'Drag or use the arrow keys to orbit, plus and minus to move closer or ' +
-        'further. Click an orb to select that person, or step through them with ' +
-        'the left and right bracket keys. Escape releases the selection, and ' +
-        'Home returns to the opening view.',
+      'The Tesseract: a dimensional structure whose three nested layers are the ' +
+        'three months of the training, innermost first. Drag or use the arrow ' +
+        'keys to orbit, plus and minus to move closer or further. Press 1 or 2, ' +
+        'or click a box, to pass into that month, where the sixteen people ' +
+        'appear; Month 3 is not reachable yet. Inside, click an orb ' +
+        'to select that person or step through them with the left and right ' +
+        'bracket keys. Escape steps back out one layer at a time, and Home ' +
+        'returns to the opening view.',
     );
     element.style.outline = 'none';
 
     const onDoubleClick = () => {
-      resetView();
+      goHome();
       markInteracted();
     };
 
@@ -256,7 +356,7 @@ export function CameraController() {
       element.removeEventListener('wheel', noteInput);
       element.removeEventListener('dblclick', onDoubleClick);
     };
-  }, [gl, noteInput, resetView, markInteracted]);
+  }, [gl, noteInput, goHome, markInteracted]);
 
   useFrame((_, delta) => {
     const controls = controlsRef.current;
