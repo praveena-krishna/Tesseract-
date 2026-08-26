@@ -1,3 +1,10 @@
+import { useMemo } from 'react';
+import {
+  CHALLENGE_LABELS,
+  SEVERITY_LABELS,
+  TYPE_COLOUR,
+  challengesOf,
+} from '../data/challenges';
 import {
   MAX_CHALLENGES,
   teamById,
@@ -11,6 +18,7 @@ import {
 import type { MonthIndex } from '../data/world';
 import { resolveTrainee } from '../sim/whatIf';
 import { useWorldStore } from '../store/useWorldStore';
+import type { ChallengeStatus } from '../store/useWorldStore';
 
 /** Skills and challenges worth naming before the list becomes a wall. */
 const NAME_LIMIT = 6;
@@ -31,6 +39,8 @@ const NAME_LIMIT = 6;
  */
 export function Readout() {
   const focusedTraineeId = useWorldStore((state) => state.focusedTraineeId);
+  const hoveredTraineeId = useWorldStore((state) => state.hoveredTraineeId);
+  const lens = useWorldStore((state) => state.lens);
   const focusedTeamId = useWorldStore((state) => state.focusedTeamId);
   const enteredMonth = useWorldStore((state) => state.enteredMonth);
   const hoveredMonth = useWorldStore((state) => state.hoveredMonth);
@@ -40,10 +50,16 @@ export function Readout() {
   // anchored in the world. Opening a panel here as well would put a second,
   // louder answer on screen and make the artifact decoration next to it.
   if (enteredMonth !== null && focusedTeamId) return null;
-  if (enteredMonth !== null && focusedTraineeId) {
+  // Under the lens that is about difficulty, passing the pointer over somebody
+  // is enough to read them. A chosen person still outranks a hovered one, so
+  // sweeping across the month cannot steal the panel away from whoever is
+  // being examined.
+  const subject =
+    focusedTraineeId ?? (lens === 'challenges' ? hoveredTraineeId : null);
+  if (enteredMonth !== null && subject) {
     return (
       <TraineeReadout
-        traineeId={focusedTraineeId}
+        traineeId={subject}
         month={enteredMonth}
         whatIf={whatIf}
       />
@@ -149,6 +165,8 @@ function TraineeReadout({
         }
       />
 
+      <ChallengeRows traineeId={traineeId} />
+
       <Row
         label={`Challenges · ${state.challengeIds.length}`}
         value={challengeNames.join(', ') || 'None recorded'}
@@ -161,6 +179,75 @@ function TraineeReadout({
     </aside>
   );
 }
+
+/**
+ * What this person found hard, and the one gesture that resolves it.
+ *
+ * Only under the lens that is about difficulty: everywhere else this would be
+ * a column of trouble attached to somebody being read for another reason
+ * entirely. Each line is the difficulty itself, and choosing it is what marks
+ * it worked through — the knot beside their orb goes out, their vessel comes
+ * up brighter, and what they took from it is what the line then says.
+ */
+function ChallengeRows({ traineeId }: { traineeId: string }) {
+  const lens = useWorldStore((state) => state.lens);
+  const status = useWorldStore((state) => state.challengeStatus);
+  const advanceChallenge = useWorldStore((state) => state.advanceChallenge);
+
+  const records = useMemo(() => challengesOf(traineeId), [traineeId]);
+  if (lens !== 'challenges' || records.length === 0) return null;
+
+  const done = records.filter((r) => status[r.id] === 'overcome').length;
+
+  return (
+    <div className="readout__row">
+      <p className="readout__label">
+        {`Challenges · ${done} of ${records.length} overcome`}
+      </p>
+      <ul className="challenge-list">
+        {records.map((record) => {
+          const state = status[record.id] ?? 'not-started';
+          return (
+            <li key={record.id}>
+              <button
+                type="button"
+                className="challenge-list__item"
+                data-status={state}
+                onClick={() => advanceChallenge(record.id)}
+                title="Move this on: not started, in progress, overcome"
+              >
+                <span className="challenge-list__title">{record.title}</span>
+                <span
+                  className="challenge-list__kind"
+                  // The same tint the glass is cut in, so the panel and the
+                  // world are one key rather than two to reconcile.
+                  style={{ color: TYPE_COLOUR[record.type] }}
+                >
+                  <span
+                    className="challenge-list__swatch"
+                    style={{ background: TYPE_COLOUR[record.type] }}
+                    aria-hidden="true"
+                  />
+                  {CHALLENGE_LABELS[record.type]}
+                </span>
+                <span className="challenge-list__meta">
+                  {`${SEVERITY_LABELS[record.severity]} · ${STATUS_LABELS[state]}`}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+/** How far a difficulty has got, said in the words the brief asked for. */
+const STATUS_LABELS: Record<ChallengeStatus, string> = {
+  'not-started': 'Not started',
+  'in-progress': 'In progress',
+  overcome: 'Overcome',
+};
 
 function Row({
   label,

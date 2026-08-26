@@ -25,8 +25,8 @@ export function useSelectionKeys(orderedIds: string[]): void {
       // number keys are the only way in from the keyboard. Without one, a
       // keyboard user cannot reach a single person — and Month 1 is the
       // innermost, smallest box, so it is the hardest to hit with a pointer
-      // too. Month 3 is not wired yet.
-      const month = ['Digit1', 'Digit2'].indexOf(event.code);
+      // too.
+      const month = ['Digit1', 'Digit2', 'Digit3'].indexOf(event.code);
       if (month >= 0) {
         // Pressing the month you are already in leaves it, mirroring what
         // clicking its box does.

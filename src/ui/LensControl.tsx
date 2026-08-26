@@ -21,7 +21,7 @@ interface LensOption {
  * offering it.
  */
 const LENSES: LensOption[] = [
-  { id: 'people', label: 'People', title: 'The sixteen, individually', months: [0, 1] },
+  { id: 'people', label: 'People', title: 'The sixteen, individually', months: [0, 1, 2] },
   { id: 'classes', label: 'Classes', title: 'What each person liked most', months: [0] },
   { id: 'teams', label: 'Teams', title: 'Who gathered with whom', months: [1] },
   { id: 'projects', label: 'Projects', title: 'What each team built', months: [1] },
@@ -29,7 +29,7 @@ const LENSES: LensOption[] = [
     id: 'challenges',
     label: 'Challenges',
     title: 'What people found hard',
-    months: [0, 1],
+    months: [2],
   },
 ];
 

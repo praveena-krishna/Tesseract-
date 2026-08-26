@@ -5,12 +5,12 @@ import { useWorldStore } from '../store/useWorldStore';
 const MONTHS: MonthIndex[] = [0, 1, 2];
 
 /**
- * Which months are reachable. Month 3 is not built yet.
+ * Which months are reachable.
  *
- * Shown rather than hidden, and marked as not yet reached. A control that
- * silently omits the third month would say the training had two.
+ * All three: the third holds what people found hard, so there is now something
+ * inside it to travel to.
  */
-const REACHABLE = 2;
+const REACHABLE = 3;
 
 /**
  * The three months, as a way in and as a place-marker.

@@ -7,6 +7,8 @@ import { computeOrbPositions } from './orbLayout';
 import { orbKey } from './orbKey';
 import { TraineeLabel } from './TraineeLabel';
 import { LearningField } from './LearningField';
+import { ChallengeShards } from './ChallengeShards';
+import { challengesOf } from '../../data/challenges';
 import { SessionLabel } from './SessionLabel';
 import { useSelectionKeys } from '../../interaction/useSelectionKeys';
 import {
@@ -27,7 +29,7 @@ import { useWorldStore } from '../../store/useWorldStore';
 /**
  * Which layers hold people. Month 3 is not wired yet.
  */
-const LIVE_MONTHS = [0, 1] as const;
+const LIVE_MONTHS = [0, 1, 2] as const;
 
 /**
  * How hard each month's teams pull.
@@ -38,7 +40,9 @@ const LIVE_MONTHS = [0, 1] as const;
  * belongs with whom — no lines are drawn, because a line asserts a relationship
  * while being pulled across a room demonstrates one.
  */
-const COLLABORATION_BY_MONTH = [0, 1] as const;
+// The third month is about what each person found hard, which is theirs alone,
+// so nothing pulls them into teams there any more than in the first.
+const COLLABORATION_BY_MONTH = [0, 1, 0] as const;
 
 /**
  * Seconds the sixteen stand apart, untouched, after the camera has landed.
@@ -92,7 +96,7 @@ const TEAM_STANDOFF_FRACTION = 0.168;
  * actually travel. Bounded by the box — the outermost person plus their own
  * radius has to stay inside it.
  */
-const START_SPREAD_BY_MONTH = [1, 1.08] as const;
+const START_SPREAD_BY_MONTH = [1, 1.08, 1.08] as const;
 
 /**
  * The arrival of the sixteen, after the passage has landed.
@@ -347,6 +351,7 @@ export function TraineeField() {
       enteredMonth,
       whatIf,
       lens,
+      challengeStatus,
     } = useWorldStore.getState();
     const hasSelection = focusedTraineeId !== null || focusedTeamId !== null;
 
@@ -436,11 +441,23 @@ export function TraineeField() {
         // Under the challenges lens the people who met difficulty are the
         // subject; everyone else is context. Nobody disappears — a person who
         // had a clear three months is a reading of its own.
+        // Having worked something through leaves a person visibly changed, and
+        // it stays that way. This is not a highlight following the pointer — it
+        // is the growth, and growth does not undo itself when attention moves
+        // on to somebody else.
+        const carried =
+          lens === 'challenges' && live ? challengesOf(trainee.id) : [];
+        const grown =
+          carried.length > 0 &&
+          carried.every((record) => challengeStatus[record.id] === 'overcome');
+
         const emphasisTarget = attended
           ? ORBS.EMPHASIS_ATTENDED
-          : hasSelection && live
-            ? ORBS.EMPHASIS_RECEDED
-            : ORBS.EMPHASIS_NEUTRAL;
+          : grown
+            ? ORBS.EMPHASIS_ATTENDED
+            : hasSelection && live
+              ? ORBS.EMPHASIS_RECEDED
+              : ORBS.EMPHASIS_NEUTRAL;
 
         buffers.emphasisLevel[index] +=
           (emphasisTarget - buffers.emphasisLevel[index]) * ease;
@@ -465,9 +482,15 @@ export function TraineeField() {
         // hard. How much of a vessel is crossed is that person's own recorded
         // challenge load in this month, so nobody is cracked for effect and an
         // untroubled person shows nothing at all.
+        // The fissures follow the dummy challenge data, and close again as
+        // each one is worked through — so what the glass carries is only ever
+        // what is still open.
+        const stillOpen = carried.filter(
+          (record) => challengeStatus[record.id] !== 'overcome',
+        ).length;
         const cracksTarget =
           lens === 'challenges' && live
-            ? Math.min(1, state.challengeIds.length / MAX_CHALLENGES)
+            ? Math.min(1, stillOpen / MAX_CHALLENGES)
             : 0;
         buffers.cracksLevel[index] +=
           (cracksTarget - buffers.cracksLevel[index]) * slowEase;
@@ -771,6 +794,13 @@ export function TraineeField() {
         glass so the forms composite under it rather than over it.
       */}
       <LearningField positions={positions} />
+
+      {/*
+        What each person found hard, bound to that person's own orb. Drawn
+        after the vessels so a knot of trouble sits in front of the glass it
+        belongs to rather than behind it.
+      */}
+      <ChallengeShards positions={positions} />
 
       <instancedMesh
         ref={orbRef}

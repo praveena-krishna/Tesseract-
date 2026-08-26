@@ -287,6 +287,42 @@ export const PROJECTS_CONFIG = {
 /**
  * The third month: a difficulty around each person, and what came of it.
  */
+/**
+ * What each person found hard, in the third month.
+ *
+ * Distances are multiples of an orb's own radius, so a knot of trouble sits
+ * the same distance off the glass whichever layer its person is standing in.
+ */
+/**
+ * What each person found hard, in the third month.
+ *
+ * Distances are multiples of an orb's own radius, so a shard sits the same way
+ * against the glass whichever layer its person is standing in.
+ */
+/**
+ * What each person found hard, in the third month.
+ *
+ * Every distance is a multiple of an orb's own radius, so a fragment is caught
+ * the same way inside whichever vessel it belongs to.
+ */
+export const CHALLENGES = {
+  /** The month the difficulties belong to — the third, and only the third. */
+  MONTH: 2,
+  /**
+   * Half-length of a medium fragment, in orb radii, before severity scales it.
+   *
+   * Set so a medium piece is comfortably enclosed and a severe one reaches the
+   * surface and breaks through it. Size is carrying the reading here — how bad
+   * the problem was — so this is the number to move if the range stops being
+   * legible.
+   */
+  LENGTH: 0.3,
+  /** How much a fragment swells while its person is the one being read. */
+  ATTENDED_SWELL: 0.12,
+  /** Seconds for a difficulty to withdraw once it is worked through. */
+  RESOLVE_EASE: 0.7,
+} as const;
+
 export const CONNECTIONS = {
   /** Line width in pixels for outer→inner dimensional links. */
   WIDTH_PRIMARY: 1,
@@ -462,6 +498,13 @@ export const RENDER_ORDER = {
    */
   SESSIONS: 4,
   ORBS: 5,
+  /**
+   * The fragments are inside the vessels, so they are laid down first and the
+   * violet glass composites over them. Drawn after the orbs they would sit in
+   * front of the person instead of within them, which is the whole difference
+   * between glass caught in a crystal and an icon stuck on one.
+   */
+  CHALLENGES: 4,
   CORE: 6,
   PARTICLES: 7,
 } as const;

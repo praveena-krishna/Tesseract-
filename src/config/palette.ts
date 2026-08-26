@@ -82,6 +82,24 @@ export const PALETTE = {
    * darker than the glass around it, because a crack both blocks light and
    * scatters what gets past it.
    */
+  /**
+   * A difficulty, as unstable energy beside the person carrying it.
+   *
+   * Dark at its heart and agitated at its edge. A wholly dark thing on a dark
+   * ground is an invisible thing, so what makes it read is the churn: crimson
+   * and violet filaments that will not settle, against a body that swallows
+   * light.
+   */
+  UNSTABLE_CORE: '#140718',
+  UNSTABLE_EDGE: '#ff4f7d',
+  UNSTABLE_ARC: '#a566ff',
+  /**
+   * What is left once a difficulty has been worked through.
+   *
+   * Warm and steady where the trouble was cold and restless: the person did not
+   * merely lose a problem, they came away with something.
+   */
+  KNOWLEDGE: '#ffe3a6',
   ORB_FRACTURE: '#0b1424',
 
   /**

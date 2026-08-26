@@ -31,6 +31,9 @@ export type InteractionState =
  * legible. That is the difference between navigating a visualization and
  * switching between dashboards.
  */
+/** How far a person has got with one of their difficulties. */
+export type ChallengeStatus = 'not-started' | 'in-progress' | 'overcome';
+
 export type Lens = 'people' | 'teams' | 'projects' | 'classes' | 'challenges';
 
 /** The three-month temporal buckets the training data resolves into. */
@@ -69,6 +72,19 @@ interface WorldState {
    */
   hoveredSession: string | null;
   openedSession: string | null;
+
+  /**
+   * Where each difficulty has got to.
+   *
+   * Three states rather than a flag, because "not started" and "in progress"
+   * are different things to be looking at and the difference is most of what a
+   * viewer wants from this month. Keyed by record id rather than by person: one
+   * person can carry several, and having worked through the week they were
+   * stretched thin says nothing about the machine that failed.
+   *
+   * Anything absent from the map has not been started.
+   */
+  challengeStatus: Record<string, ChallengeStatus>;
 
   /**
    * Which layer the viewer has passed into, or null while they are outside
@@ -111,6 +127,9 @@ interface WorldState {
   setTraineePositions: (positions: Map<string, THREE.Vector3> | null) => void;
   setTeamCentres: (centres: Map<string, THREE.Vector3> | null) => void;
   markInteracted: () => void;
+
+  /** Moves one difficulty on: not started, then in progress, then overcome. */
+  advanceChallenge: (challengeId: string) => void;
 
   hoverSession: (key: string | null) => void;
   /** Opens a session to reveal its name, or closes the current one with null. */
@@ -156,6 +175,7 @@ export const useWorldStore = create<WorldState>((set) => ({
   focusedTraineeId: null,
   hoveredTeamId: null,
   focusedTeamId: null,
+  challengeStatus: {},
   hoveredSession: null,
   openedSession: null,
   hoveredMonth: null,
@@ -181,6 +201,18 @@ export const useWorldStore = create<WorldState>((set) => ({
   setTeamCentres: (teamCentres) => set({ teamCentres }),
   markInteracted: () =>
     set((state) => (state.hasInteracted ? state : { hasInteracted: true })),
+
+  advanceChallenge: (challengeId) =>
+    set((state) => {
+      const now = state.challengeStatus[challengeId] ?? 'not-started';
+      const next: ChallengeStatus =
+        now === 'not-started'
+          ? 'in-progress'
+          : now === 'in-progress'
+            ? 'overcome'
+            : 'not-started';
+      return { challengeStatus: { ...state.challengeStatus, [challengeId]: next } };
+    }),
 
   hoverSession: (key) =>
     set((state) => (state.hoveredSession === key ? state : { hoveredSession: key })),

@@ -728,3 +728,122 @@
   }
 }
 
+
+/* ---- What a person found hard, and the gesture that resolves it ---- */
+
+/*
+ * The one part of the readout that can be touched. Everything else in this
+ * panel reports; these lines are how a difficulty is marked worked through, so
+ * they have to take pointer events back from the panel that disowns them.
+ */
+.challenge-list {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: auto;
+}
+
+.challenge-list__item {
+  display: block;
+  width: 100%;
+  margin: 0 0 0.45rem;
+  padding: 0.35rem 0 0.35rem 0.6rem;
+  border: 0;
+  border-left: 1px solid var(--ui-dim);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 260ms ease-out,
+    opacity 260ms ease-out;
+}
+
+.challenge-list__item:hover {
+  border-left-color: var(--ui-text);
+}
+
+.challenge-list__item[data-overcome='true'] {
+  border-left-color: #ffe3a6;
+  opacity: 0.72;
+}
+
+.challenge-list__kind {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5rem;
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+}
+
+/*
+ * A worked-through difficulty stops being about its kind and starts being about
+ * what it left behind, so the line drops its colour for the warm one.
+ */
+.challenge-list__item[data-overcome='true'] .challenge-list__kind,
+.challenge-list__item[data-overcome='true'] .challenge-list__kind .challenge-list__swatch {
+  color: #ffe3a6;
+  background: #ffe3a6;
+}
+
+.challenge-list__swatch {
+  display: inline-block;
+  width: 0.34rem;
+  height: 0.34rem;
+  margin-right: 0.4rem;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.challenge-list__title {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.65rem;
+  line-height: 1.35;
+  color: var(--ui-text);
+}
+
+/*
+ * How far a difficulty has got. The bar at the left is the only state marker:
+ * absent while it has not been started, drawn while it is being worked on, warm
+ * once it is behind them.
+ */
+.challenge-list__item[data-status='not-started'] {
+  border-left-color: rgba(255, 255, 255, 0.14);
+}
+
+.challenge-list__item[data-status='in-progress'] {
+  border-left-color: var(--ui-text);
+}
+
+.challenge-list__item[data-status='overcome'] {
+  border-left-color: #ffe3a6;
+  opacity: 0.68;
+}
+
+.challenge-list__meta {
+  display: block;
+  margin-top: 0.16rem;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+}
+
+.challenge-list__item[data-status='overcome'] .challenge-list__meta {
+  color: #ffe3a6;
+}
+
+.challenge-list__item .challenge-list__title {
+  margin-top: 0;
+}
+
+.challenge-list__item .challenge-list__kind {
+  margin-top: 0.18rem;
+}
