@@ -305,6 +305,43 @@ export const PROJECTS_CONFIG = {
  * Every distance is a multiple of an orb's own radius, so a fragment is caught
  * the same way inside whichever vessel it belongs to.
  */
+/**
+ * What each person found hard, in the third month.
+ *
+ * Every distance is a multiple of an orb's own radius, so a fragment is caught
+ * the same way inside whichever vessel it belongs to.
+ */
+/**
+ * Knowledge gained, drawn as light gathering inside a person.
+ *
+ * Every number here is about restraint. The brief for this is a glow that is
+ * powerful at its strongest and still controlled — so the ceiling matters more
+ * than the gain, and the easing matters more than either. Nothing here is
+ * allowed to arrive quickly enough to read as a flash.
+ */
+export const GROWTH = {
+  /** Seconds for a change in what somebody knows to finish arriving. */
+  EASE: 2.4,
+  /** How much light the interior gives off at full growth. */
+  INNER: 0.55,
+  /** How much the rim lifts at full growth. */
+  OUTER: 0.22,
+  /** Seconds a mote of learning takes to travel in and be absorbed. */
+  TRAVEL: 1.8,
+  /** How far out it forms, in orb radii. */
+  FROM: 3.2,
+  /** Its size, in orb radii. */
+  SIZE: 0.16,
+  /**
+   * How brightly the sixteen together light the layer they stand in.
+   *
+   * Very low on purpose. This is meant to be felt rather than seen — the box
+   * should look warmer when the month has gone well, and nobody should be able
+   * to say which orb is doing it.
+   */
+  COLLECTIVE: 0.55,
+} as const;
+
 export const CHALLENGES = {
   /** The month the difficulties belong to — the third, and only the third. */
   MONTH: 2,

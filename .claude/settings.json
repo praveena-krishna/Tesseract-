@@ -1,0 +1,23 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_response.filePath // .tool_input.file_path' | { read -r f; \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/glsl-guard.sh\" \"$f\"; } 2>/dev/null || true",
+            "timeout": 15,
+            "statusMessage": "Checking shader source"
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_response.filePath // .tool_input.file_path' | { read -r f; \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/lint-edited.sh\" \"$f\"; } 2>/dev/null || true",
+            "timeout": 30,
+            "statusMessage": "Linting edited file"
+          }
+        ]
+      }
+    ]
+  }
+}

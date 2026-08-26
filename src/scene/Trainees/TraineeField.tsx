@@ -8,7 +8,10 @@ import { orbKey } from './orbKey';
 import { TraineeLabel } from './TraineeLabel';
 import { LearningField } from './LearningField';
 import { ChallengeShards } from './ChallengeShards';
+import { GrowthMotes } from './GrowthMotes';
+import { CollectiveGlow } from './CollectiveGlow';
 import { challengesOf } from '../../data/challenges';
+import { GROWTH_PER_CHALLENGE, baselineGrowth } from '../../data/growth';
 import { SessionLabel } from './SessionLabel';
 import { useSelectionKeys } from '../../interaction/useSelectionKeys';
 import {
@@ -23,7 +26,7 @@ import type { GravityBody } from '../../sim/gravity';
 import { buildTeamFormations, stepGravity } from '../../sim/gravity';
 import { PALETTE } from '../../config/palette';
 import { ORBS } from '../../config/orbs';
-import { DIMENSION, RENDER_ORDER, SHELLS } from '../../config/dimensions';
+import { DIMENSION, GROWTH, RENDER_ORDER, SHELLS } from '../../config/dimensions';
 import { useWorldStore } from '../../store/useWorldStore';
 
 /**
@@ -225,6 +228,8 @@ export function TraineeField() {
       uLightDir: { value: new THREE.Vector3(6, 8, 4).normalize() },
       uIor: { value: 1.45 },
       uFracture: { value: new THREE.Color(PALETTE.ORB_FRACTURE) },
+      uGrowthInner: { value: GROWTH.INNER },
+      uGrowthOuter: { value: GROWTH.OUTER },
       uOpacity: { value: 1 },
     }),
     [],
@@ -257,6 +262,9 @@ export function TraineeField() {
       cracksLevel: new Float32Array(count),
       turbulence: new Float32Array(count),
       cracks: new Float32Array(count),
+      growth: new Float32Array(count),
+      /** Eased per-person, indexed by trainee rather than by slot. */
+      growthLevel: new Float32Array(count),
       // One entry per orb across every layer, not per person. Sized from the
       // people alone this silently indexed off the end for half the field, and
       // an undefined slot resolves to no layer at all.
@@ -308,6 +316,7 @@ export function TraineeField() {
       set('aPresence', buffers.presence);
       if (full) {
         set('aCracks', buffers.cracks);
+        set('aGrowth', buffers.growth);
         set('aSeed', buffers.seeds);
         set('aTempo', buffers.tempos);
         set('aTurbulence', buffers.turbulence);
@@ -357,6 +366,7 @@ export function TraineeField() {
 
 
     const ease = reducedMotion ? 1 : 1 - Math.exp(-step / ORBS.EMPHASIS_EASE);
+    const growthEase = reducedMotion ? 1 : 1 - Math.exp(-step / GROWTH.EASE);
     const slowEase = reducedMotion ? 1 : 1 - Math.exp(-step / 0.85);
     const settled = transitionDepth() > 0.92;
 
@@ -494,6 +504,23 @@ export function TraineeField() {
             : 0;
         buffers.cracksLevel[index] +=
           (cracksTarget - buffers.cracksLevel[index]) * slowEase;
+
+        // What this person came away knowing: what the training gave them, plus
+        // whatever the viewer has since worked through with them. Eased on its
+        // own slow clock so it can only ever arrive as light gathering, never
+        // as a flash — a step change here would read as an explosion, which is
+        // the one thing this must not look like.
+        const gained = Math.min(
+          1,
+          baselineGrowth(trainee.id) +
+            carried.filter(
+              (record) => challengeStatus[record.id] === 'overcome',
+            ).length *
+              GROWTH_PER_CHALLENGE,
+        );
+        const growthTarget = live && lens === 'challenges' ? gained : 0;
+        buffers.growthLevel[index] +=
+          (growthTarget - buffers.growthLevel[index]) * growthEase;
 
         // Confidence sets the vessel's size, scaled to the layer it stands in
         // so a person looks the same in every month — which is what lets the
@@ -645,6 +672,7 @@ export function TraineeField() {
       buffers.tempos[slot] = buffers.tempos[index];
       buffers.turbulence[slot] = buffers.turbulenceLevel[index];
       buffers.cracks[slot] = buffers.cracksLevel[index];
+      buffers.growth[slot] = buffers.growthLevel[index];
     }
 
     orbs.instanceMatrix.needsUpdate = true;
@@ -664,6 +692,7 @@ export function TraineeField() {
       markUpdated(halos, name);
     }
     markUpdated(orbs, 'aCracks');
+    markUpdated(orbs, 'aGrowth');
     markUpdated(orbs, 'aSeed');
     markUpdated(orbs, 'aTempo');
     markUpdated(orbs, 'aTurbulence');
@@ -801,6 +830,15 @@ export function TraineeField() {
         belongs to rather than behind it.
       */}
       <ChallengeShards positions={positions} />
+
+      {/*
+        Learning arriving, and the light the sixteen give off together. Neither
+        draws anything permanent: the motes exist only while they are crossing,
+        and the collective light is a single lamp whose strength is the mean of
+        what everybody has gained.
+      */}
+      <GrowthMotes positions={positions} />
+      <CollectiveGlow />
 
       <instancedMesh
         ref={orbRef}

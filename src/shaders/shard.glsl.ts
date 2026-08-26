@@ -84,8 +84,9 @@ export const SHARD_FRAG = /* glsl */ `
     vec3 absorbed = mix(vec3(1.0), uTint, clamp(thickness * 0.85, 0.0, 1.0));
 
     // One hard specular per facet, so a turning fragment flashes face by face.
-    // Named halfVector, not half: half is a reserved word in GLSL and naming it that
-    // silently fails the whole program to compile, which draws nothing at all.
+    // Named halfVector, not half: half is a reserved word in GLSL and naming a
+    // variable that silently fails the whole program to compile, which draws
+    // nothing at all.
     vec3 halfVector = normalize(uLightDir + view);
     float spec = pow(max(dot(normal, halfVector), 0.0), 68.0);
     // And a broader sheen, which is the soft reflection of everything else.
@@ -97,15 +98,22 @@ export const SHARD_FRAG = /* glsl */ `
     float edge = min(min(vBary.x, vBary.y), vBary.z);
     float seam = 1.0 - smoothstep(0.0, 0.03, edge);
 
+    // Absorption alone leaves almost nothing to see: the scene behind a
+    // fragment is near-black, so taking colour out of it takes colour out of
+    // nothing. Real tinted glass in a dark room reads by the light it catches
+    // at its edges and faces, so the tint is carried there too — on the
+    // fresnel and along the cut — while the specular stays white and keeps it
+    // reading as a hard transparent solid rather than a coloured lamp.
     vec3 colour =
       absorbed * uAmbient * (0.4 + fresnel * 0.9) +
-      vec3(1.0) * (spec * 0.9 + sheen + seam * 0.28);
+      uTint * (fresnel * 0.85 + seam * 0.75 + 0.12) +
+      vec3(1.0) * (spec * 0.9 + sheen + seam * 0.22);
 
     // Coverage: nearly clear through the body so the violet of the vessel and
     // the person's own interior read straight through the glass, closing up at
     // the silhouette where real glass turns opaque.
     float alpha =
-      (0.14 + fresnel * 0.66 + seam * 0.3 + spec * 0.45) *
+      (0.22 + fresnel * 0.7 + seam * 0.42 + spec * 0.45) *
       vCharge *
       (0.86 + vAttention * 0.14);
 

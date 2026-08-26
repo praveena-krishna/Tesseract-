@@ -21,6 +21,7 @@ export const ORB_VERT = /* glsl */ `
   attribute float aTurbulence;
   attribute float aPresence;
   attribute float aCracks;
+  attribute float aGrowth;
 
   varying vec3 vNormal;
   varying vec3 vViewDir;
@@ -32,9 +33,11 @@ export const ORB_VERT = /* glsl */ `
   varying float vTurbulence;
   varying float vPresence;
   varying float vCracks;
+  varying float vGrowth;
 
   void main() {
     vCracks = aCracks;
+    vGrowth = aGrowth;
     vSeed = aSeed;
     vComplexity = aComplexity;
     vEmphasis = aEmphasis;
@@ -91,6 +94,8 @@ export const ORB_FRAG = /* glsl */ `
   uniform float uIor;
   uniform float uOpacity;
   uniform vec3 uFracture;
+  uniform float uGrowthInner;
+  uniform float uGrowthOuter;
 
   varying vec3 vNormal;
   varying vec3 vViewDir;
@@ -102,6 +107,7 @@ export const ORB_FRAG = /* glsl */ `
   varying float vTurbulence;
   varying float vPresence;
   varying float vCracks;
+  varying float vGrowth;
 
   // Multiply-and-fract hash rather than the usual fract(sin(dot(...))).
   //
@@ -261,6 +267,17 @@ export const ORB_FRAG = /* glsl */ `
       glowColor * interior * 0.95 * energyGain +
       uRim * rim * 0.5 * edgeGain +
       uSpecular * specular * 0.9;
+
+    // Knowledge gained, added as light and as light only.
+    //
+    // It deliberately does not touch the interior's density or the shell's
+    // coverage. Both of those feed alpha, and driving them fogs the vessel
+    // until there is no glass left to look through — which is the warning
+    // three comments above this one, arrived at the hard way. Weighting the
+    // inner term by the interior keeps the light inside the body of the person
+    // rather than on its surface, without making the body any thicker.
+    color += glowColor * interior * vGrowth * uGrowthInner;
+    color += uRim * rim * vGrowth * uGrowthOuter;
 
     // A fissure both blocks light and scatters what gets past it, so it darkens
     // the body and catches a cold edge rather than being drawn on top.

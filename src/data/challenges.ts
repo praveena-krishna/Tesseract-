@@ -79,32 +79,36 @@ export const SEVERITY_SCALE: Record<Severity, number> = {
 };
 
 /**
- * The tint the glass takes out of what is behind it.
+ * The colour each kind of glass is.
  *
- * Deliberately pale and desaturated. These are read through violet crystal by
- * absorption rather than emission, so a saturated hue here would come back as a
- * coloured lamp — which is exactly the neon-marker look this replaced. Kept
- * this close together they still separate, because a fragment is seen against
- * the same violet every time and the eye compares them to each other.
+ * Light rather than dark, and mild rather than saturated. Dark tints were
+ * invisible: these are read against deep violet crystal in a near-black room,
+ * so a fragment darker than its surroundings has nothing to separate it from
+ * them. Every one of these is high in value and moderate in saturation — the
+ * colour of tinted glass held up to a lamp, not of a warning light.
+ *
+ * The hues are spread right around the wheel so that eight of them can sit on
+ * one person and still be told apart at a glance.
  */
 export const TYPE_COLOUR: Record<ChallengeType, string> = {
-  time: '#e0a3a8',
-  tooling: '#a3b6dd',
-  communication: '#e0bda0',
-  understanding: '#a8ccab',
-  environment: '#ddc79c',
-  technical: '#a2c9cc',
-  confidence: '#b8a8d6',
-  attendance: '#d9a9c6',
+  time: '#ffa6ab',
+  tooling: '#93c9ff',
+  communication: '#ffc39b',
+  understanding: '#a3e6b4',
+  environment: '#ffdd97',
+  technical: '#96e8e0',
+  confidence: '#c6b0ff',
+  attendance: '#ffabdf',
 };
 
 /**
  * How each kind is cut, and how far into the vessel it sits.
  *
  * `points` is how many scattered points the fragment's hull is taken over —
- * fewer gives a blunter, chunkier piece, more gives a splintered one. `depth`
- * is where its centre rests, as a fraction of the orb's radius, and it sits
- * near one on purpose: a fragment whose centre is at the shell has half of
+ * fewer gives a blunter, chunkier piece, more gives a splintered one.
+ *
+ * `depth` is where its centre rests, as a fraction of the orb's radius, and it
+ * sits near one on purpose: a fragment whose centre is at the shell has half of
  * itself driven into the crystal and half still standing out of it, which is
  * what having struck reads as. Set well under one they float in the middle of
  * the orb like debris that was always there, which says nothing happened.
