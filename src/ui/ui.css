@@ -27,26 +27,26 @@
 .veil__title {
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: 0.9375rem;
-  letter-spacing: 0.3em;
+  font-size: 1.0625rem;
+  letter-spacing: 0.22em;
   color: var(--ui-text);
-  text-indent: 0.3em;
+  text-indent: 0.22em;
   animation: veil-track 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .veil__status {
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.625rem;
-  letter-spacing: 0.3em;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
   color: var(--ui-dim);
-  text-indent: 0.3em;
+  text-indent: 0.22em;
   animation: veil-breathe 2.4s ease-in-out infinite;
 }
 
 @keyframes veil-track {
   from {
-    letter-spacing: 0.3em;
+    letter-spacing: 0.22em;
     opacity: 0.6;
   }
   to {
@@ -90,7 +90,7 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   letter-spacing: 0.35em;
   color: var(--ui-text);
   text-indent: 0.35em;
@@ -108,7 +108,7 @@
   margin: 0;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   letter-spacing: 0.25em;
   color: var(--ui-dim);
   text-indent: 0.25em;
@@ -121,10 +121,10 @@
   bottom: 2rem;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.5rem;
-  letter-spacing: 0.3em;
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
   color: var(--ui-dim);
-  text-indent: 0.3em;
+  text-indent: 0.22em;
   opacity: 0.7;
   transition: opacity 800ms ease-out;
 }
@@ -170,7 +170,7 @@
 .session-label__name {
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   letter-spacing: 0.2em;
   text-indent: 0.2em;
   text-transform: uppercase;
@@ -189,7 +189,7 @@
   margin-top: 0.3rem;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   letter-spacing: 0.09em;
   color: var(--ui-dim);
 }
@@ -233,7 +233,7 @@
 .project-label__name {
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   letter-spacing: 0.22em;
   text-indent: 0.22em;
   text-transform: uppercase;
@@ -251,7 +251,7 @@
   margin-top: 0.55rem;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   line-height: 1.55;
   letter-spacing: 0.03em;
   color: var(--ui-text);
@@ -263,7 +263,7 @@
   font-family: var(--font-body);
   font-weight: 300;
   font-style: italic;
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   line-height: 1.5;
   letter-spacing: 0.04em;
   color: var(--ui-dim);
@@ -274,9 +274,9 @@
   white-space: nowrap;
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: 0.6875rem;
-  letter-spacing: 0.26em;
-  text-indent: 0.26em;
+  font-size: 0.8125rem;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
   text-transform: uppercase;
   color: var(--ui-dim);
   /* Keeps the type legible where it crosses a bright orb or a lit strut. */
@@ -366,15 +366,15 @@
 .time-control__label {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 0.6875rem;
-  letter-spacing: 0.3em;
-  text-indent: 0.3em;
+  font-size: 0.8125rem;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
 }
 
 .time-control__title {
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.5rem;
+  font-size: 0.625rem;
   letter-spacing: 0.22em;
   text-indent: 0.22em;
   text-transform: uppercase;
@@ -420,9 +420,9 @@
   cursor: pointer;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.5625rem;
-  letter-spacing: 0.24em;
-  text-indent: 0.24em;
+  font-size: 0.6875rem;
+  letter-spacing: 0.19em;
+  text-indent: 0.19em;
   text-transform: uppercase;
   color: var(--ui-dim);
   transition: color 400ms ease-out, opacity 400ms ease-out;
@@ -474,7 +474,7 @@
   cursor: pointer;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.28em;
   text-indent: 0.28em;
   text-transform: uppercase;
@@ -517,7 +517,7 @@
 .whatif__name {
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ui-dim);
@@ -530,7 +530,7 @@
   background: rgba(5, 6, 10, 0.9);
   color: var(--ui-text);
   font-family: var(--font-body);
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   letter-spacing: 0.05em;
 }
 
@@ -543,7 +543,7 @@
   min-width: 2.4rem;
   text-align: right;
   font-family: var(--font-body);
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   color: var(--ui-dim);
   font-variant-numeric: tabular-nums;
 }
@@ -557,7 +557,7 @@
   cursor: pointer;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ui-dim);
@@ -590,9 +590,9 @@
   margin: 0 0 0.4rem;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.5rem;
-  letter-spacing: 0.3em;
-  text-indent: 0.3em;
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
   text-transform: uppercase;
   color: var(--ui-dim);
 }
@@ -601,7 +601,7 @@
   margin: 0 0 1.1rem;
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: 1rem;
+  font-size: 1.125rem;
   letter-spacing: 0.14em;
   color: var(--ui-text);
 }
@@ -609,7 +609,7 @@
 .readout__flag {
   margin: -0.6rem 0 1rem;
   font-family: var(--font-body);
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.1em;
   color: #9d86e8;
 }
@@ -622,8 +622,8 @@
   margin: 0 0 0.2rem;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.5rem;
-  letter-spacing: 0.24em;
+  font-size: 0.625rem;
+  letter-spacing: 0.19em;
   text-transform: uppercase;
   color: var(--ui-dim);
 }
@@ -632,7 +632,7 @@
   margin: 0;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   line-height: 1.6;
   color: rgba(230, 235, 242, 0.86);
 }
@@ -641,7 +641,7 @@
   margin: 0.15rem 0 0;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   font-style: italic;
   line-height: 1.5;
   color: rgba(90, 100, 114, 0.9);
@@ -692,7 +692,7 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: 0.9375rem;
+  font-size: 1.0625rem;
   letter-spacing: 0.42em;
   color: var(--ui-text);
   text-indent: 0.42em;
@@ -703,7 +703,7 @@
   margin: 0;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   line-height: 1.9;
   letter-spacing: 0.14em;
   color: var(--ui-dim);
@@ -771,9 +771,9 @@
   display: block;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.5rem;
-  letter-spacing: 0.24em;
-  text-indent: 0.24em;
+  font-size: 0.625rem;
+  letter-spacing: 0.19em;
+  text-indent: 0.19em;
   text-transform: uppercase;
   color: var(--ui-dim);
 }
@@ -802,7 +802,7 @@
   margin-top: 0.2rem;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   line-height: 1.35;
   color: var(--ui-text);
 }
@@ -830,7 +830,7 @@
   margin-top: 0.16rem;
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.5rem;
+  font-size: 0.625rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ui-dim);
@@ -846,4 +846,232 @@
 
 .challenge-list__item .challenge-list__kind {
   margin-top: 0.18rem;
+}
+
+/* ---- The key to the classes ---- */
+
+/*
+ * A key rather than a caption. Fifteen classes are drawn at once and neither
+ * their shapes nor their colours are memorable at that count, so they are named
+ * together — the question this month raises is comparative, and that cannot be
+ * read off one label at a time.
+ */
+.legend {
+  position: fixed;
+  top: 50%;
+  right: 2rem;
+  z-index: 10;
+  width: 14.5rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  animation: readout-in 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.legend__title {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+}
+
+.legend__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend__item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.15rem;
+  transition: opacity 260ms ease-out;
+}
+
+/* Picking one out dims the rest, so the key answers the pointer. */
+.legend__item[data-attended='false'] {
+  opacity: 0.28;
+}
+
+/*
+ * The class's own form, rendered small. Sized so a silhouette is still
+ * readable — below about this it is a coloured smudge and the shape stops
+ * carrying anything the hue was not already saying.
+ */
+.legend__form {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  user-select: none;
+}
+
+.legend__name {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  color: var(--ui-text);
+}
+
+/* A second heading inside one key, for the reading carried by size. */
+.legend__title--second {
+  margin-top: 0.85rem;
+}
+
+/*
+ * The size key, drawn at the ratios the world draws. Three swatches chosen to
+ * look tidy would misstate the one thing this section exists to say.
+ */
+.legend__list--sizes .legend__item {
+  margin-bottom: 0.22rem;
+}
+
+.legend__size {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.legend__size-mark {
+  display: block;
+  border-radius: 50%;
+  background: var(--ui-text);
+  opacity: 0.85;
+}
+
+/* ---- Keeping the type readable over the world ---- */
+
+/*
+ * Every overlay sits on a moving 3D scene, so there is no such thing as a
+ * background to set the type against: a label that reads cleanly over the void
+ * can cross a lit orb, a bloomed corner node or the knowledge core a second
+ * later and lose its edges entirely. A shadow the same near-black as the
+ * background gives each glyph its own contrast wherever it happens to be, and
+ * costs nothing where the scene is already dark.
+ */
+.readout,
+.legend,
+.lens-control,
+.time-control,
+.world-ui,
+.project-label,
+.session-label,
+.challenge-label {
+  text-shadow:
+    0 1px 3px rgba(3, 5, 10, 0.95),
+    0 0 12px rgba(3, 5, 10, 0.8);
+}
+
+/*
+ * A pool of shade under the two overlays that carry information.
+ *
+ * The glyph shadow above is enough over the void and not enough over a lit
+ * vessel: a dim label crossing the bright side of an orb keeps its outline and
+ * loses its contrast entirely. This darkens whatever the type happens to be
+ * lying on instead of relying on the scene to be dark there.
+ *
+ * A radial fade rather than a bordered card, and deliberately. An edged
+ * rectangle would be a panel floating in front of the world, which is the one
+ * thing this world does not have — where this simply makes the space behind the
+ * words deeper, the way the far side of the field already is.
+ */
+.readout,
+.legend {
+  box-sizing: content-box;
+  padding: 1.2rem 1.35rem;
+  background: radial-gradient(
+    116% 72% at 50% 50%,
+    rgba(4, 5, 9, 0.88) 0%,
+    rgba(4, 5, 9, 0.7) 44%,
+    rgba(4, 5, 9, 0) 76%
+  );
+}
+
+/* Pulled back by the padding so the type starts where it did before. */
+.readout {
+  margin-left: -1.35rem;
+}
+
+.legend {
+  margin-right: -1.35rem;
+}
+
+/* ---- Asking the key a comparative question ---- */
+
+/*
+ * The keys answer a question about one person by default. This is the control
+ * that asks the other one — which class did most of them like, what did most
+ * of them struggle with — and it sits on the key it changes rather than in a
+ * bar of its own, because it is a way of reading the key and not a separate
+ * feature of the world.
+ */
+.legend__head {
+  display: flex;
+  /* Held to one line each side: a title that wraps pushes the control out of
+     line with it and the pair stops reading as one row. */
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  white-space: nowrap;
+}
+
+.legend__toggle {
+  pointer-events: auto;
+  padding: 0 0 0.1rem;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: none;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+  cursor: pointer;
+  transition:
+    color 260ms ease-out,
+    border-color 260ms ease-out;
+}
+
+.legend__toggle:hover,
+.legend__toggle[aria-pressed='true'] {
+  color: var(--ui-text);
+  border-bottom-color: var(--ui-text);
+}
+
+/* What the numbers in the ranked key are counting. */
+.legend__note {
+  margin: -0.3rem 0 0.6rem;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5625rem;
+  letter-spacing: 0.06em;
+  color: var(--ui-dim);
+}
+
+/*
+ * The tally, held in its own column.
+ *
+ * Pushed to the far edge and set in figures of one width, so the counts form a
+ * straight column the eye can run down. Ranked entries whose numbers do not
+ * line up have to be read one at a time, which is the whole thing a ranking is
+ * meant to save the reader from doing.
+ */
+.legend__count {
+  margin-left: auto;
+  padding-left: 0.5rem;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-text);
 }

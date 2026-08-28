@@ -362,15 +362,38 @@ export const GROWTH = {
    */
   ARRIVAL_EASE: 0.16,
   /**
+   * How much of the glow is kept under the lens about difficulty.
+   *
+   * Well under one. There the subject is the glass caught in a person, and a
+   * vessel lit as brightly as it is under the knowledge lens simply washes its
+   * own contents out — the light and the fragments compete for the same pixels,
+   * and the fragments are what that lens exists to show.
+   */
+  CHALLENGE_GLOW: 0.28,
+  /**
    * How much light the interior gives off at full growth.
    *
    * Safe to push: this adds colour and nothing else, touching neither the
    * interior's density nor the shell's coverage. Wired into density instead, it
    * fogged the vessels into smoke — that failure is no longer reachable.
    */
-  INNER: 0.95,
-  /** How much the rim lifts at full growth. */
-  OUTER: 0.4,
+  INNER: 2.4,
+  /**
+   * How much the limb lifts at full growth.
+   *
+   * This is the main term now. A lit sphere is brightest where its surface has
+   * turned away and the line of sight passes through the most of it, so the
+   * growth reads at the edge and the body stays darker than its own rim.
+   */
+  OUTER: 4.2,
+  /**
+   * How far what a person has gained bleeds out past their own surface.
+   *
+   * The soft atmosphere around a lit body. Without it the vessel is a brighter
+   * shell rather than something giving light off into the space around it,
+   * which is the whole difference the reference turns on.
+   */
+  HALO: 3.2,
   /** Seconds a mote of learning takes to travel in and be absorbed. */
   TRAVEL: 1.8,
   /** How far out it forms, in orb radii. */
@@ -385,6 +408,27 @@ export const GROWTH = {
    * to say which orb is doing it.
    */
   COLLECTIVE: 0.55,
+
+  /* ---- The sparkles a lit person is surrounded by ---- */
+
+  /** How many motes hang around each person. */
+  SPARKLES_PER_PERSON: 26,
+  /** Nearest they orbit, in orb radii. */
+  SPARKLE_NEAR: 1.25,
+  /** Furthest they orbit, in orb radii. */
+  SPARKLE_FAR: 2.4,
+  /** Point size in pixels at one world unit of distance. */
+  SPARKLE_SIZE: 190,
+  /** Radians per second they turn about their person. */
+  SPARKLE_DRIFT: 0.14,
+  /**
+   * Overall strength.
+   *
+   * Additive and unattenuated, like the halo, so this is the safety valve: if
+   * the field blooms out and buries the people it is meant to decorate, this is
+   * the number to pull rather than the count or the size.
+   */
+  SPARKLE_OPACITY: 0.9,
 } as const;
 
 export const CHALLENGES = {
@@ -398,11 +442,85 @@ export const CHALLENGES = {
    * the problem was — so this is the number to move if the range stops being
    * legible.
    */
-  LENGTH: 0.3,
+  LENGTH: 0.44,
+  /**
+   * How far out a fragment forms before it flies in, in orb radii.
+   *
+   * Well outside the vessel it is bound for, so the piece is seen to arrive
+   * from somewhere rather than fading up already lodged. A difficulty is
+   * something that happened *to* a person, and that is a claim about direction
+   * as much as about position.
+   */
+  FLY_FROM: 7,
+  /** Seconds one fragment takes to cross and strike. */
+  FLY_TIME: 1.15,
+  /** Seconds between one person's fragments, so they land in sequence. */
+  FLY_STAGGER: 0.16,
+  /** How far it rebounds at the moment of contact, in orb radii. */
+  FLY_RECOIL: 0.16,
   /** How much a fragment swells while its person is the one being read. */
   ATTENDED_SWELL: 0.12,
   /** Seconds for a difficulty to withdraw once it is worked through. */
   RESOLVE_EASE: 0.7,
+} as const;
+
+/**
+ * The four-dimensional turn the structure makes when a month is chosen.
+ *
+ * A tesseract taken through a full revolution in a plane involving the fourth
+ * axis passes through the point where its innermost cell has swelled out past
+ * its outermost, then returns to exactly the configuration it started from. So
+ * the resting shape is never altered by this — it departs from the approved
+ * figure and comes back to it, and between month changes the projection is
+ * doing nothing at all.
+ */
+export const HYPER_TURN = {
+  /** Seconds one revolution takes. Slow: this is meant to be watched. */
+  DURATION: 7,
+
+  /**
+   * Distance of the viewpoint along the fourth axis. Comfortably past any
+   * corner, so the projection can never pass through the eye and invert.
+   */
+  EYE: 2.6,
+
+  /**
+   * How far out along the fourth axis a shell sits.
+   *
+   * This decides whether the turn is worth watching. A half revolution swaps
+   * the outermost shell with the innermost, and how far each travels goes as
+   * the square of the ratio between their projected depths — so below about
+   * one, the innermost swells only until it meets the outermost and the three
+   * merely merge into a single cube before separating again. Past that it
+   * carries on through and finishes outside, which is the crossing the figure
+   * is turning inside out to show. Kept only a little past the threshold: the
+   * further past it goes, the more violently the shells shear on the way, and
+   * a turn that cannot be followed communicates nothing.
+   */
+  DEPTH: 1,
+
+  /**
+   * How far the figure draws in at the quarter turns.
+   *
+   * Holding its reach constant is not enough to hold it inside the frame,
+   * because the camera is a perspective one: a corner swung toward the viewer
+   * projects larger than the same corner swung away, so the figure can grow on
+   * screen while its measured size does not change. It is eased in slightly
+   * where the corners come nearest, and back out to full size by the time it
+   * has come to rest.
+   */
+  INSET: 0.18,
+
+  /**
+   * How far through the turn the camera is released to move.
+   *
+   * The passage takes a couple of seconds, so releasing it at the start put the
+   * viewer inside the box a third of the way through — looking at struts from
+   * within, where the figure turning itself inside out is invisible. Late
+   * enough that the inversion has been seen, early enough that the last of the
+   * turn carries the viewer inward rather than finishing after they arrive.
+   */
+  RELEASE: 0.66,
 } as const;
 
 export const CONNECTIONS = {

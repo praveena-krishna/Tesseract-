@@ -5,6 +5,9 @@ import { TesseractScene } from './scene/TesseractScene';
 import { LoadingVeil } from './ui/LoadingVeil';
 import { WorldUI } from './ui/WorldUI';
 import { Readout } from './ui/Readout';
+import { ClassLegend } from './ui/ClassLegend';
+import { ChallengeLegend } from './ui/ChallengeLegend';
+import { ProjectLegend } from './ui/ProjectLegend';
 import { TimeControl } from './ui/TimeControl';
 import { LensControl } from './ui/LensControl';
 import { WebGLFallback } from './ui/WebGLFallback';
@@ -88,6 +91,9 @@ export default function App() {
 
       <WorldUI />
       <Readout />
+      <ClassLegend />
+      <ChallengeLegend />
+      <ProjectLegend />
       <TimeControl />
       <LensControl />
       {/*

@@ -100,3 +100,6 @@ export function lensApplies(lens: Lens, month: number | null): boolean {
 
 /** The layer whose story is collaboration, re-exported so callers agree. */
 export const TEAM_MONTH = BONDS.MONTH;
+
+/** The month the classes belong to, so the key knows when to stand. */
+export const CLASSES_MONTH = 0;

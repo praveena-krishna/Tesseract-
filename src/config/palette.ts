@@ -132,8 +132,8 @@ export const PALETTE = {
   PARTICLE: '#c2e8f0',
 
   /** Interface typography. */
-  UI_TEXT: '#e6ebf2',
-  UI_DIM: '#5a6472',
+  UI_TEXT: '#f1f5fa',
+  UI_DIM: '#94a2b4',
 
   /** Lighting rig. */
   LIGHT_KEY: '#e8eef6',

@@ -65,9 +65,6 @@ export function SessionLabel() {
           {subject.primary && (
             <p className="session-label__rank">liked most by {subject.person}</p>
           )}
-          {opened && subject.reading && (
-            <p className="session-label__reading">{subject.reading}</p>
-          )}
           {opened && subject.more && (
             <p className="session-label__note">{subject.more}</p>
           )}

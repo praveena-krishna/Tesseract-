@@ -147,6 +147,19 @@ interface WorldState {
   /** Passes into a dimensional layer, or back out when given null. */
   enterMonth: (month: MonthIndex | null) => void;
 
+  /**
+   * Whether the keys are showing the whole cohort ranked rather than answering
+   * whoever is being pointed at.
+   *
+   * Off by default and deliberately. The standing question in this world is
+   * about a person — what they liked, what they ran into — and a ranked table
+   * of all sixteen answers a different question entirely. It is here for the
+   * moment somebody asks the comparative one out loud: which class did most
+   * people like, what did most people struggle with.
+   */
+  ranked: boolean;
+  toggleRanked: () => void;
+
   hoverTrainee: (id: string | null) => void;
   focusTrainee: (id: string | null) => void;
   hoverTeam: (id: string | null) => void;
@@ -176,6 +189,8 @@ export const useWorldStore = create<WorldState>((set) => ({
   phase: 'initializing',
   reducedMotion: false,
   interaction: 'IDLE',
+
+  ranked: false,
 
   hoveredTraineeId: null,
   focusedTraineeId: null,
@@ -270,6 +285,8 @@ export const useWorldStore = create<WorldState>((set) => ({
       };
     }),
 
+  toggleRanked: () => set((state) => ({ ranked: !state.ranked })),
+
   focusTrainee: (id) =>
     set((state) => {
       if (state.focusedTraineeId === id) return state;
@@ -345,3 +362,16 @@ export const useWorldStore = create<WorldState>((set) => ({
       interaction: 'IDLE',
     }),
 }));
+
+if (import.meta.env.DEV) {
+  /**
+   * The store itself, so a headless run can choose somebody without having to
+   * hit a moving orb with the mouse.
+   *
+   * Picking is the thing least suited to being driven from a script here: the
+   * vessels drift, the camera drifts with them, and a click aimed at where one
+   * was a second ago silently lands on nothing — which reads in a test result
+   * as the feature being broken rather than the aim being off.
+   */
+  (window as unknown as Record<string, unknown>).__world = useWorldStore;
+}

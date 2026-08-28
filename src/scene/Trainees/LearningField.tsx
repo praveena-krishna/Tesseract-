@@ -6,7 +6,7 @@ import { SESSION_MOTION, buildSessionGeometry } from './sessionForms';
 import { orbKey } from './orbKey';
 import { learningByPerson, SESSIONS_IN_USE } from '../../data/classes';
 import { trainees } from '../../data/world';
-import { PALETTE } from '../../config/palette';
+import { classColour } from '../../data/classColours';
 import { ORBS } from '../../config/orbs';
 import { RENDER_ORDER } from '../../config/dimensions';
 import { useWorldStore } from '../../store/useWorldStore';
@@ -180,23 +180,25 @@ function SessionForm({
 
   const geometry = useMemo(() => buildSessionGeometry(classId), [classId]);
 
+  // One material per class, so each carries its own colour. Shape alone could
+  // not separate fifteen of these at the size they are drawn.
   const material = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: new THREE.Color(PALETTE.SESSION_FORM),
+        color: new THREE.Color(classColour(classId)),
         // Not metal. The people are glass and the structure is machined steel;
         // these have to belong to the same universe without being mistaken for
         // either, so they take a bright dielectric with a strong emissive floor
         // — objects lit from within, like the things they stand for.
         metalness: 0.18,
         roughness: 0.3,
-        emissive: new THREE.Color(PALETTE.SESSION_EMISSIVE),
+        emissive: new THREE.Color(classColour(classId)),
         emissiveIntensity: 0.45,
         transparent: true,
         opacity: 1,
         depthWrite: false,
       }),
-    [],
+    [classId],
   );
 
   useEffect(
@@ -293,22 +295,26 @@ function SessionForm({
       const someoneElseFocused =
         (hoveredSession !== null || openedSession !== null) && !isHovered && !isOpen;
 
+      // The classes are shown when the classes are asked for, and at no other
+      // time. Pointing at somebody is not asking — under any other lens the
+      // question is about the people themselves, and filling their vessels
+      // with objects the moment the pointer crosses them answers a question
+      // nobody put. Nothing here appears on hover alone.
       let target = 0;
-      if (live) {
+      if (live && lens === 'classes') {
         if (isHovered || isOpen) target = 1;
+        // Within the lens, pointing at somebody does bring their own forward —
+        // the question has already been asked, and this only says whose.
         else if (attendedPerson) target = someoneElseFocused ? ORBS.SESSION_RECEDED : 0.85;
-        // Under the classes lens the whole cohort's interiors come up at once,
-        // because the question being asked is what the group responded to
-        // rather than what one person did.
-        else if (lens === 'classes') target = 0.7;
         // Once a person has been chosen, everybody else's sessions withdraw
         // completely rather than merely dimming. The claim being made is "this
         // is *their* learning experience", and sixteen half-lit rings behind
         // the subject contradict it.
         else if (focusedTraineeId !== null) target = 0;
-        // With the world about something else entirely, they are gone.
-        else if (lens !== 'people') target = 0;
-        else target = ORBS.SESSION_IDLE_PRESENCE;
+        // Otherwise the whole cohort's interiors come up at once, because the
+        // question the lens asks is what the group responded to rather than
+        // what one person did.
+        else target = 0.7;
       }
 
       levels[i] += (target - levels[i]) * ease;

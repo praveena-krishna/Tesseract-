@@ -81,24 +81,25 @@ export const SEVERITY_SCALE: Record<Severity, number> = {
 /**
  * The colour each kind of glass is.
  *
- * Light rather than dark, and mild rather than saturated. Dark tints were
- * invisible: these are read against deep violet crystal in a near-black room,
- * so a fragment darker than its surroundings has nothing to separate it from
- * them. Every one of these is high in value and moderate in saturation — the
- * colour of tinted glass held up to a lamp, not of a warning light.
+ * Saturated and hot, not pale. An earlier pass had these as light pastels on
+ * the reasoning that they are read through violet crystal and anything dark
+ * arrives muddy — which is true, and is why these stay high in value. But light
+ * *and* washed out reads as decoration, and a difficulty is not decorative.
+ * Holding the value and pushing the chroma keeps them legible through the glass
+ * while making them look like something that would cut.
  *
- * The hues are spread right around the wheel so that eight of them can sit on
- * one person and still be told apart at a glance.
+ * The hues stay spread right around the wheel so eight of them can sit on one
+ * person and still be told apart.
  */
 export const TYPE_COLOUR: Record<ChallengeType, string> = {
-  time: '#ffa6ab',
-  tooling: '#93c9ff',
-  communication: '#ffc39b',
-  understanding: '#a3e6b4',
-  environment: '#ffdd97',
-  technical: '#96e8e0',
-  confidence: '#c6b0ff',
-  attendance: '#ffabdf',
+  time: '#ff2d55',
+  tooling: '#2f8bff',
+  communication: '#ff6a1f',
+  understanding: '#35d24a',
+  environment: '#ffb400',
+  technical: '#0fd6d6',
+  confidence: '#8b3dff',
+  attendance: '#ff2fa0',
 };
 
 /**

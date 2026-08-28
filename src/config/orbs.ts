@@ -77,8 +77,13 @@ export const ORBS = {
 
   /** Amplitude of each orb's slow wander around its anchor point, in world units. */
   DRIFT: 0.025,
-  /** Breathing scale range, as a fraction of the orb's radius. */
-  BREATH: 0.045,
+  /**
+   * Breathing scale range, as a fraction of the orb's radius.
+   *
+   * Trimmed a little along with the jitter. Sixteen vessels all swelling is a
+   * lot of movement at once; the breath should be noticed rather than watched.
+   */
+  BREATH: 0.034,
   /** Seconds per breath, before per-orb variation. */
   BREATH_PERIOD: 7.5,
   /** Multiplier range applied to the breath period per orb, giving each its own tempo. */
@@ -128,8 +133,15 @@ export const ORBS = {
   REPULSION: 14,
   /** Velocity retained per frame at 60fps. Heavy, so the field settles. */
   DAMPING: 0.86,
-  /** Jitter amplitude from unresolved difficulty. */
-  TURBULENCE: 1.6,
+  /**
+   * Jitter amplitude from unresolved difficulty.
+   *
+   * Eased back from 1.6: at that level the field read as agitated rather than
+   * as people under strain, and the motion competed with the light for
+   * attention. Still well clear of zero — a person carrying unresolved
+   * difficulty should not sit perfectly still.
+   */
+  TURBULENCE: 1.05,
 
   /* ---- The sessions a person liked, held inside their vessel ---- */
 

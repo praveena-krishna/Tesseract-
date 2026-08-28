@@ -9,6 +9,7 @@ import { TraineeLabel } from './TraineeLabel';
 import { LearningField } from './LearningField';
 import { ChallengeShards } from './ChallengeShards';
 import { GrowthMotes } from './GrowthMotes';
+import { OrbSparkles } from './OrbSparkles';
 import { CollectiveGlow } from './CollectiveGlow';
 import { KnowledgeCore } from '../Knowledge/KnowledgeCore';
 import { DataFlows } from '../Knowledge/DataFlows';
@@ -242,6 +243,7 @@ export function TraineeField() {
     () => ({
       uColor: { value: new THREE.Color(PALETTE.ORB_HALO) },
       uOpacity: { value: ORBS.HALO_OPACITY },
+      uGrowthHalo: { value: GROWTH.HALO },
     }),
     [],
   );
@@ -317,6 +319,9 @@ export function TraineeField() {
       set('aComplexity', buffers.complexity);
       set('aEmphasis', buffers.emphasis);
       set('aPresence', buffers.presence);
+      // The halo carries growth as well as the glass does: the outward bleed is
+      // where a lit body actually reads as lit.
+      set('aGrowth', buffers.growth);
       if (full) {
         set('aCracks', buffers.cracks);
         set('aGrowth', buffers.growth);
@@ -538,7 +543,8 @@ export function TraineeField() {
           : lens === 'databricks'
             ? arrivalAt(trainee.id)
             : lens === 'challenges'
-              ? gained
+              // Held back so the glass inside can be read against it.
+              ? gained * GROWTH.CHALLENGE_GLOW
               : 0;
         buffers.growthLevel[index] +=
           (growthTarget - buffers.growthLevel[index]) *
@@ -709,7 +715,7 @@ export function TraineeField() {
 
     // The render loop starts before the effect that attaches these, so the
     // first frames legitimately find them absent.
-    for (const name of ['aComplexity', 'aEmphasis', 'aPresence']) {
+    for (const name of ['aComplexity', 'aEmphasis', 'aPresence', 'aGrowth']) {
       markUpdated(orbs, name);
       markUpdated(halos, name);
     }
@@ -860,6 +866,7 @@ export function TraineeField() {
         what everybody has gained.
       */}
       <GrowthMotes positions={positions} />
+      <OrbSparkles positions={positions} />
       <CollectiveGlow />
 
       {/*

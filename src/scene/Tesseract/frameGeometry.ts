@@ -139,3 +139,23 @@ export function buildNodeGeometry(half: number, node: number): THREE.BufferGeome
   merged.computeBoundingSphere();
   return merged;
 }
+
+/**
+ * One strut, one unit long on Y and centred on the origin.
+ *
+ * The merged builders above bake the corner positions into their vertices,
+ * which is right for a structure that never moves. A shell that is being turned
+ * through four dimensions has corners that move every frame, so its members
+ * have to be placed at draw time instead — this is the piece they are placed
+ * from, stretched along Y to whatever the edge currently spans.
+ */
+export function buildUnitStrut(strut: number): THREE.BufferGeometry {
+  const radius = strut * BEVEL_RATIO;
+  return new RoundedBoxGeometry(strut, 1, strut, BEVEL_SEGMENTS, radius);
+}
+
+/** One corner block, centred on the origin, for the same reason. */
+export function buildUnitNode(node: number): THREE.BufferGeometry {
+  const radius = node * BEVEL_RATIO;
+  return new RoundedBoxGeometry(node, node, node, BEVEL_SEGMENTS, radius);
+}

@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
-import { buildNodeGeometry, buildStrutGeometry } from './frameGeometry';
+import { EDGES, buildUnitNode, buildUnitStrut } from './frameGeometry';
+import { hyperCorners } from './hyperRotation';
+import { hyperAngle } from '../../sim/hyperTurn';
 import { applyFrameMaterial } from '../../shaders/frameFresnel';
 import type { PatchedMaterial } from '../../shaders/frameFresnel';
 import { PALETTE } from '../../config/palette';
@@ -54,13 +56,28 @@ export function Shell({ spec, index }: ShellProps) {
   const withdrawn = useRef(0);
   const groupRef = useRef<THREE.Group>(null);
 
-  const strutGeometry = useMemo(
-    () => buildStrutGeometry(spec.half, spec.strut, spec.node),
-    [spec.half, spec.strut, spec.node],
-  );
-  const nodeGeometry = useMemo(
-    () => buildNodeGeometry(spec.half, spec.node),
-    [spec.half, spec.node],
+  // One member and one joint, placed at draw time rather than baked in. The
+  // corners move whenever the structure is turning through the fourth
+  // dimension, so their positions cannot live in the vertices.
+  const strutGeometry = useMemo(() => buildUnitStrut(spec.strut), [spec.strut]);
+  const nodeGeometry = useMemo(() => buildUnitNode(spec.node), [spec.node]);
+
+  const strutsRef = useRef<THREE.InstancedMesh>(null);
+  const nodesRef = useRef<THREE.InstancedMesh>(null);
+
+  /** Live corners, and the scratch a frame's worth of placement needs. */
+  const frame = useMemo(
+    () => ({
+      corners: [] as THREE.Vector3[],
+      matrix: new THREE.Matrix4(),
+      position: new THREE.Vector3(),
+      quaternion: new THREE.Quaternion(),
+      scale: new THREE.Vector3(),
+      axis: new THREE.Vector3(),
+      up: new THREE.Vector3(0, 1, 0),
+      lastAngle: Number.NaN,
+    }),
+    [],
   );
 
   /** Resting rim strength. Hover and the passage add to it at runtime. */
@@ -169,6 +186,45 @@ export function Shell({ spec, index }: ShellProps) {
         presence;
     }
 
+    // Place the members from the current corners. Skipped entirely while the
+    // angle has not moved, which is every frame outside a month change — the
+    // structure is static at rest and should cost nothing to leave that way.
+    const angle = hyperAngle();
+    const struts = strutsRef.current;
+    const nodes = nodesRef.current;
+    if (struts && nodes && angle !== frame.lastAngle) {
+      frame.lastAngle = angle;
+      hyperCorners(spec.half, index, angle, frame.corners);
+
+      for (let i = 0; i < EDGES.length; i++) {
+        const [a, b] = EDGES[i];
+        const start = frame.corners[a];
+        const end = frame.corners[b];
+
+        frame.position.addVectors(start, end).multiplyScalar(0.5);
+        frame.axis.subVectors(end, start);
+        const span = frame.axis.length();
+        frame.axis.divideScalar(Math.max(span, 1e-6));
+        frame.quaternion.setFromUnitVectors(frame.up, frame.axis);
+        // Inset by the joint size so members meet the corner blocks cleanly
+        // instead of running through them, exactly as the baked version did.
+        frame.scale.set(1, Math.max(0.001, span - spec.node), 1);
+
+        frame.matrix.compose(frame.position, frame.quaternion, frame.scale);
+        struts.setMatrixAt(i, frame.matrix);
+      }
+      struts.instanceMatrix.needsUpdate = true;
+
+      for (let i = 0; i < frame.corners.length; i++) {
+        frame.matrix.identity().setPosition(frame.corners[i]);
+        nodes.setMatrixAt(i, frame.matrix);
+      }
+      nodes.instanceMatrix.needsUpdate = true;
+
+      struts.computeBoundingSphere();
+      nodes.computeBoundingSphere();
+    }
+
     nodeMaterial.emissiveIntensity =
       ((TIMINGS.NODE_EMISSIVE_MIN +
         (TIMINGS.NODE_EMISSIVE_MAX - TIMINGS.NODE_EMISSIVE_MIN) * wave) *
@@ -181,8 +237,16 @@ export function Shell({ spec, index }: ShellProps) {
 
   return (
     <group ref={groupRef} renderOrder={RENDER_ORDER.FRAMES}>
-      <mesh geometry={strutGeometry} material={strutMaterial} />
-      <mesh geometry={nodeGeometry} material={nodeMaterial} />
+      <instancedMesh
+        ref={strutsRef}
+        args={[strutGeometry, strutMaterial, EDGES.length]}
+        frustumCulled={false}
+      />
+      <instancedMesh
+        ref={nodesRef}
+        args={[nodeGeometry, nodeMaterial, 8]}
+        frustumCulled={false}
+      />
     </group>
   );
 }

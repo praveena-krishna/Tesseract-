@@ -30,15 +30,18 @@ export function buildShard(seed: number, points = 9): THREE.BufferGeometry {
   for (let i = 0; i < points; i++) {
     // Squashed flat and drawn out lengthways: a shard is a sliver off a
     // surface, not a lump.
+    // Drawn out further and squashed harder than before. A stubby fragment is
+    // a pebble; a long thin one is a blade, and the difference is most of
+    // whether these look like something you would not want in you.
     const x = (random() * 2 - 1) * 1.0;
-    const y = (random() * 2 - 1) * 0.52;
-    const z = (random() * 2 - 1) * 0.16;
+    const y = (random() * 2 - 1) * 0.38;
+    const z = (random() * 2 - 1) * 0.1;
     cloud.push(new THREE.Vector3(x, y, z));
   }
 
   // A couple of points pushed well out along the long axis, so the hull comes
   // to a genuine point at one end instead of rounding off into a lozenge.
-  cloud.push(new THREE.Vector3(1.35 + random() * 0.35, (random() - 0.5) * 0.2, (random() - 0.5) * 0.08));
+  cloud.push(new THREE.Vector3(1.7 + random() * 0.5, (random() - 0.5) * 0.12, (random() - 0.5) * 0.05));
   cloud.push(new THREE.Vector3(-1.1 - random() * 0.3, (random() - 0.5) * 0.35, (random() - 0.5) * 0.1));
 
   const hull = new ConvexGeometry(cloud);

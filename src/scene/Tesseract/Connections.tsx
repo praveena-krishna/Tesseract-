@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { cubeVertices } from './frameGeometry';
+import { hyperCorners } from './hyperRotation';
+import { hyperAngle } from '../../sim/hyperTurn';
 import { PALETTE } from '../../config/palette';
 import { CONNECTIONS, RENDER_ORDER, SHELL_FADE, SHELLS } from '../../config/dimensions';
 import { TIMINGS } from '../../config/timings';
@@ -21,6 +23,12 @@ function pairVertices(outerHalf: number, innerHalf: number): LinkPair[] {
 
 /** How far the faded end of a link is dimmed relative to its bright end. */
 const FADE_FLOOR = 0.12;
+
+/** Which shell each tier of links spans, outer index first. */
+const TIERS = [
+  [0, 1],
+  [1, 2],
+] as const;
 
 /**
  * The dimensional links between corresponding vertices of the nested shells.
@@ -93,6 +101,17 @@ export function Connections() {
 
   const vertexPoint = useMemo(() => new THREE.Vector3(), []);
 
+  /**
+   * Where each shell's corners actually are this frame.
+   *
+   * The links are the four-dimensional displacement made visible, so they are
+   * the one thing that must not be left behind when the figure turns. Rebuilt
+   * from the same projection the shells use, which is what keeps a link's ends
+   * welded to the corners it joins rather than to the corners' resting places.
+   */
+  const live = useMemo(() => SHELLS.map(() => [] as THREE.Vector3[]), []);
+  const turned = useRef(Number.NaN);
+
   const signalGeometry = useMemo(() => {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute(
@@ -120,6 +139,26 @@ export function Connections() {
       | THREE.BufferAttribute
       | undefined;
 
+    const angle = hyperAngle();
+    if (linkPositions && angle !== turned.current) {
+      turned.current = angle;
+      for (let shell = 0; shell < SHELLS.length; shell++) {
+        hyperCorners(SHELLS[shell].half, shell, angle, live[shell]);
+      }
+
+      let cursor = 0;
+      for (const [outerShell, innerShell] of TIERS) {
+        for (let i = 0; i < live[outerShell].length; i++) {
+          const outer = live[outerShell][i];
+          const inner = live[innerShell][i];
+          linkPositions.setXYZ(cursor, outer.x, outer.y, outer.z);
+          linkPositions.setXYZ(cursor + 1, inner.x, inner.y, inner.z);
+          cursor += 2;
+        }
+      }
+      linkPositions.needsUpdate = true;
+    }
+
     if (linkColors && linkPositions) {
       for (let i = 0; i < linkColors.count; i++) {
         const presence = THREE.MathUtils.smoothstep(
@@ -140,7 +179,8 @@ export function Connections() {
     const time = reducedMotion ? 0 : clock.elapsedTime;
 
     for (let i = 0; i < CONNECTIONS.SIGNAL_COUNT; i++) {
-      const pair = primary[i];
+      const outer = live[TIERS[0][0]][i];
+      const inner = live[TIERS[0][1]][i];
       // Stagger each signal across the loop so they never travel as one wave.
       const offset = i / CONNECTIONS.SIGNAL_COUNT;
       const t = (((time / TIMINGS.SIGNAL_PERIOD + offset) % 1) + 1) % 1;
@@ -148,9 +188,9 @@ export function Connections() {
 
       positions.setXYZ(
         i,
-        THREE.MathUtils.lerp(pair.outer.x, pair.inner.x, eased),
-        THREE.MathUtils.lerp(pair.outer.y, pair.inner.y, eased),
-        THREE.MathUtils.lerp(pair.outer.z, pair.inner.z, eased),
+        THREE.MathUtils.lerp(outer.x, inner.x, eased),
+        THREE.MathUtils.lerp(outer.y, inner.y, eased),
+        THREE.MathUtils.lerp(outer.z, inner.z, eased),
       );
     }
 

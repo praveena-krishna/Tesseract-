@@ -95,8 +95,14 @@ export const SHARD_FRAG = /* glsl */ `
     // The cut. The narrowest barycentric is the distance to the nearest facet
     // edge; a real broken edge catches light along a hairline, so this stays
     // narrow and white rather than becoming a coloured outline.
+    // Narrower than before, and harder. A wide soft seam reads as a bevel —
+    // something finished and handled. A hairline that goes almost straight from
+    // dark to white reads as a fracture, which is what these actually are.
     float edge = min(min(vBary.x, vBary.y), vBary.z);
-    float seam = 1.0 - smoothstep(0.0, 0.03, edge);
+    float seam = 1.0 - smoothstep(0.0, 0.016, edge);
+    // A second, wider band under it, so an edge has a hot line and a falloff
+    // rather than being a single stripe laid on the surface.
+    float bleed = 1.0 - smoothstep(0.0, 0.09, edge);
 
     // Absorption alone leaves almost nothing to see: the scene behind a
     // fragment is near-black, so taking colour out of it takes colour out of
@@ -105,15 +111,18 @@ export const SHARD_FRAG = /* glsl */ `
     // fresnel and along the cut — while the specular stays white and keeps it
     // reading as a hard transparent solid rather than a coloured lamp.
     vec3 colour =
-      absorbed * uAmbient * (0.4 + fresnel * 0.9) +
-      uTint * (fresnel * 0.85 + seam * 0.75 + 0.12) +
-      vec3(1.0) * (spec * 0.9 + sheen + seam * 0.22);
+      absorbed * uAmbient * (0.32 + fresnel * 0.8) +
+      uTint * (fresnel * 1.5 + bleed * 0.9 + seam * 1.8 + 0.2) +
+      vec3(1.0) * (spec * 1.25 + sheen + seam * 0.55);
 
     // Coverage: nearly clear through the body so the violet of the vessel and
     // the person's own interior read straight through the glass, closing up at
     // the silhouette where real glass turns opaque.
+    // A higher floor than glass strictly wants. These are read through a lit
+    // violet vessel, and a fragment that is honest about how transparent it is
+    // simply is not there.
     float alpha =
-      (0.22 + fresnel * 0.7 + seam * 0.42 + spec * 0.45) *
+      (0.34 + fresnel * 0.78 + bleed * 0.3 + seam * 0.6 + spec * 0.5) *
       vCharge *
       (0.86 + vAttention * 0.14);
 

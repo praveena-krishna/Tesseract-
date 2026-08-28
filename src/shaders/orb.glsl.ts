@@ -272,12 +272,22 @@ export const ORB_FRAG = /* glsl */ `
     //
     // It deliberately does not touch the interior's density or the shell's
     // coverage. Both of those feed alpha, and driving them fogs the vessel
-    // until there is no glass left to look through — which is the warning
-    // three comments above this one, arrived at the hard way. Weighting the
-    // inner term by the interior keeps the light inside the body of the person
-    // rather than on its surface, without making the body any thicker.
+    // until there is no glass left to look through — the warning three comments
+    // above this one, arrived at the hard way.
+    //
+    // Weighted to the rim rather than the middle. A lit sphere is brightest at
+    // its limb, where the line of sight passes through the most of it and the
+    // surface has turned away — the body stays darker than its own edge. Piling
+    // the light into the interior instead gives an evenly lit ball, which reads
+    // as a painted disc rather than as something glowing.
+    float limb = pow(1.0 - facing, 3.2);
+    color += uRim * limb * vGrowth * uGrowthOuter;
+    // White at the very edge, so the brightest part of the vessel is a hot line
+    // around it rather than a wash of its own colour.
+    color += vec3(1.0) * pow(limb, 2.0) * vGrowth * uGrowthOuter * 0.55;
+    // And a little inside it, kept low: enough that the body is not dead, far
+    // short of filling it.
     color += glowColor * interior * vGrowth * uGrowthInner;
-    color += uRim * rim * vGrowth * uGrowthOuter;
 
     // A fissure both blocks light and scatters what gets past it, so it darkens
     // the body and catches a cold edge rather than being drawn on top.
@@ -320,6 +330,9 @@ export const HALO_VERT = /* glsl */ `
   attribute float aComplexity;
   attribute float aEmphasis;
   attribute float aPresence;
+  attribute float aGrowth;
+
+  uniform float uGrowthHalo;
 
   varying vec2 vUv;
   varying float vIntensity;
@@ -336,10 +349,17 @@ export const HALO_VERT = /* glsl */ `
     // halo must genuinely drop back, not merely dim a little.
     vIntensity = (0.3 + aComplexity * 0.5) * (0.1 + aEmphasis * 0.9) * aPresence;
 
+    // What somebody has come away with bleeds out past their own surface. This
+    // is the soft atmosphere around a lit body, and it is the part that makes a
+    // glow read as light leaving the thing rather than as a brighter shell.
+    vIntensity += aGrowth * uGrowthHalo * aPresence;
+
     // Instance translation and scale, orientation discarded: the quad is
     // rebuilt facing the camera in view space.
     vec3 center = vec3(instanceMatrix[3]);
-    float scale = length(vec3(instanceMatrix[0]));
+    // Reaching further as it strengthens, so the bleed widens rather than
+    // merely brightening inside a fixed circle.
+    float scale = length(vec3(instanceMatrix[0])) * (1.0 + aGrowth * 0.34);
 
     vec4 mvCenter = modelViewMatrix * vec4(center, 1.0);
     mvCenter.xy += position.xy * scale;

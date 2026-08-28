@@ -190,6 +190,17 @@ export function ChallengeShards({
     return ORBS.BASE_RADIUS * (half / baseHalf);
   }, []);
 
+  /**
+   * Seconds since the lens was asked for.
+   *
+   * The flight is timed against this rather than against each fragment's own
+   * progress, so a person carrying three is struck three separate times in
+   * sequence instead of once by everything at once. Reset when the lens is left,
+   * so choosing it again plays the arrival again rather than revealing a set of
+   * fragments that were quietly already in place.
+   */
+  const since = useRef(0);
+
   const charge = useMemo(() => new Float32Array(pieces.length).fill(1), [pieces.length]);
   const attention = useMemo(() => new Float32Array(pieces.length), [pieces.length]);
   const scratch = useMemo(() => ({ screen: new THREE.Vector3() }), []);
@@ -204,6 +215,9 @@ export function ChallengeShards({
     const live =
       store.enteredMonth === CHALLENGES.MONTH && store.lens === 'challenges';
     const ease = reducedMotion ? 1 : 1 - Math.exp(-step / CHALLENGES.RESOLVE_EASE);
+
+    if (live) since.current += step;
+    else since.current = 0;
 
     group.visible = live;
 
@@ -249,10 +263,33 @@ export function ChallengeShards({
       child.visible = true;
 
       const radius = orbRadius;
-      child.position
-        .copy(centre)
-        .addScaledVector(shard.direction, radius * shard.depth);
+
+      // The flight in. Eased sharply at the end so the last of the approach
+      // reads as an impact rather than a drift, and staggered per fragment so a
+      // person is struck several times rather than once.
+      const flight = reducedMotion
+        ? 1
+        : Math.min(
+            1,
+            Math.max(0, since.current - i * CHALLENGES.FLY_STAGGER) /
+              CHALLENGES.FLY_TIME,
+          );
+      const eased = 1 - Math.pow(1 - flight, 4);
+      let depth = CHALLENGES.FLY_FROM + (shard.depth - CHALLENGES.FLY_FROM) * eased;
+
+      // A rebound at the moment of contact: the piece bites, kicks back, and
+      // settles into where it struck.
+      if (flight > 0.86 && flight < 1) {
+        depth += Math.sin(((flight - 0.86) / 0.14) * Math.PI) * CHALLENGES.FLY_RECOIL;
+      }
+
+      child.position.copy(centre).addScaledVector(shard.direction, radius * depth);
       child.quaternion.copy(shard.tilt);
+      // Tumbling while it travels, still once it has struck. Glass in flight
+      // turns; glass embedded in a crystal does not.
+      if (!reducedMotion && flight < 1) {
+        child.rotateOnAxis(TUMBLE_AXIS, (1 - flight) * time * 2.4);
+      }
       const size = radius * CHALLENGES.LENGTH * shard.scale;
       child.scale.setScalar(size);
 
@@ -293,3 +330,6 @@ export function ChallengeShards({
     </group>
   );
 }
+
+/** The axis a fragment tumbles about while it is still in the air. */
+const TUMBLE_AXIS = new THREE.Vector3(0.4, 1, 0.2).normalize();

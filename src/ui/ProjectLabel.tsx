@@ -46,14 +46,13 @@ export function ProjectLabel() {
   return (
     <group ref={groupRef}>
       <Html center transform={false} zIndexRange={[11, 0]} pointerEvents="none">
+        {/*
+          The name and nothing more. What the project is and how to read its
+          figure are said at the side, where the text is still and does not sit
+          on top of the thing it is describing.
+        */}
         <div className="project-label" data-opened={opened}>
           <p className="project-label__name">{project.name}</p>
-          {opened && (
-            <>
-              <p className="project-label__description">{project.description}</p>
-              <p className="project-label__reading">{project.reading}</p>
-            </>
-          )}
         </div>
       </Html>
     </group>
