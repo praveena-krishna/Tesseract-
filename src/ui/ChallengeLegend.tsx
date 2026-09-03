@@ -13,6 +13,7 @@ import { traineeById } from '../data/world';
 import type { ChallengeStatus } from '../store/useWorldStore';
 import { challengeIcon } from './challengeIcons';
 import { LegendModes } from './LegendModes';
+import { LegendCloseButton } from './LegendKeyTab';
 import { CHALLENGES } from '../config/dimensions';
 import { useWorldStore } from '../store/useWorldStore';
 
@@ -100,6 +101,7 @@ export function ChallengeLegend() {
   const focusedTraineeId = useWorldStore((state) => state.focusedTraineeId);
   const hoveredTraineeId = useWorldStore((state) => state.hoveredTraineeId);
   const ranked = useWorldStore((state) => state.ranked);
+  const legendOpen = useWorldStore((state) => state.legendOpen);
   const challengeStatus = useWorldStore((state) => state.challengeStatus);
   const advanceChallenge = useWorldStore((state) => state.advanceChallenge);
 
@@ -190,6 +192,9 @@ export function ChallengeLegend() {
 
   if (lens !== 'challenges' || enteredMonth !== CHALLENGES.MONTH) return null;
 
+  // Asked for rather than assumed, exactly as the classes key is.
+  if (!legendOpen) return null;
+
   return (
     <aside className="legend" aria-label="Challenges">
       <div className="legend__head">
@@ -200,6 +205,7 @@ export function ChallengeLegend() {
               ? `${traineeById.get(subject)?.name ?? 'They'} · difficulties`
               : 'Kind of difficulty'}
         </p>
+        <LegendCloseButton />
       </div>
 
       <LegendModes

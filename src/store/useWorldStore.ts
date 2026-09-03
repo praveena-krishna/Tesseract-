@@ -190,6 +190,21 @@ interface WorldState {
    */
   setRanked: (ranked: boolean) => void;
 
+  /**
+   * Whether the key for the current lens is open.
+   *
+   * Closed to begin with, and it stays closed until it is asked for. The keys
+   * for the classes and the difficulties are the two long ones — sixteen rows
+   * and seven — and standing them open by default puts a column of type beside
+   * the world before anybody has asked what the forms and colours mean. The
+   * question comes first; the answer should not arrive before it.
+   *
+   * One flag rather than one per key, because only one key is ever on screen —
+   * they are gated by lens and month, and no two apply at once.
+   */
+  legendOpen: boolean;
+  setLegendOpen: (open: boolean) => void;
+
   hoverTrainee: (id: string | null) => void;
   focusTrainee: (id: string | null) => void;
   /**
@@ -230,6 +245,7 @@ export const useWorldStore = create<WorldState>((set) => ({
   interaction: 'IDLE',
 
   ranked: false,
+  legendOpen: false,
 
   hoveredTraineeId: null,
   focusedTraineeId: null,
@@ -332,6 +348,9 @@ export const useWorldStore = create<WorldState>((set) => ({
     }),
 
   setRanked: (ranked) => set((state) => (state.ranked === ranked ? state : { ranked })),
+
+  setLegendOpen: (legendOpen) =>
+    set((state) => (state.legendOpen === legendOpen ? state : { legendOpen })),
 
   focusTrainee: (id) =>
     set((state) => {

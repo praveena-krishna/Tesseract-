@@ -4,6 +4,7 @@ import { classIcon } from './classIcons';
 import { skillById, traineeById } from '../data/world';
 import { CLASSES_MONTH } from './LensControl';
 import { LegendModes } from './LegendModes';
+import { LegendCloseButton } from './LegendKeyTab';
 import { useWorldStore } from '../store/useWorldStore';
 
 /** A row of the key: a class, and in the ranked view how many liked it. */
@@ -37,6 +38,7 @@ export function ClassLegend() {
   const focusedTraineeId = useWorldStore((state) => state.focusedTraineeId);
   const hoveredTraineeId = useWorldStore((state) => state.hoveredTraineeId);
   const ranked = useWorldStore((state) => state.ranked);
+  const legendOpen = useWorldStore((state) => state.legendOpen);
 
   /** Which class the pointer is on, so the key can answer it. */
   const attended = (openedSession ?? hoveredSession)?.split(':')[1] ?? null;
@@ -103,6 +105,11 @@ export function ClassLegend() {
 
   if (lens !== 'classes' || enteredMonth !== CLASSES_MONTH) return null;
 
+  // Asked for rather than assumed. The control that asks lives at the foot of
+  // the screen and is mounted separately, so it stands whether this is open or
+  // not; until it is, the world is left alone.
+  if (!legendOpen) return null;
+
   return (
     <aside className="legend" aria-label="Classes">
       <div className="legend__head">
@@ -113,6 +120,7 @@ export function ClassLegend() {
               ? `${traineeById.get(subject)?.name ?? 'They'} · liked most`
               : 'Classes'}
         </p>
+        <LegendCloseButton />
       </div>
 
       <LegendModes

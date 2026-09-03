@@ -3,6 +3,7 @@ import type { Rating } from '../data/ratings';
 import { traineeById } from '../data/world';
 import { MEDALLION } from '../config/dimensions';
 import { useWorldStore } from '../store/useWorldStore';
+import { LegendCloseButton } from './LegendKeyTab';
 
 /** The four weights, thinnest first, as the scale reads. */
 const STEPS: Exclude<Rating, null>[] = [1, 2, 3, 4];
@@ -21,6 +22,7 @@ const STEPS: Exclude<Rating, null>[] = [1, 2, 3, 4];
  */
 export function RatingLegend() {
   const lens = useWorldStore((state) => state.lens);
+  const legendOpen = useWorldStore((state) => state.legendOpen);
   const enteredMonth = useWorldStore((state) => state.enteredMonth);
   const focusedTraineeId = useWorldStore((state) => state.focusedTraineeId);
   const hoveredTraineeId = useWorldStore((state) => state.hoveredTraineeId);
@@ -32,10 +34,14 @@ export function RatingLegend() {
 
   if (lens !== 'databricks' || enteredMonth !== MEDALLION.MONTH) return null;
 
+  // Asked for, like the other two keys.
+  if (!legendOpen) return null;
+
   return (
     <aside className="legend" aria-label="What each person's line means">
       <div className="legend__head">
         <p className="legend__title">How thick a person&rsquo;s line runs</p>
+        <LegendCloseButton />
       </div>
       <p className="legend__note">their rating, out of {RATING_MAX}</p>
 

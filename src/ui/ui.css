@@ -1009,9 +1009,10 @@
  */
 .legend__head {
   display: flex;
-  /* Held to one line: a heading that wraps pushes what follows out of line with
-     it and the block stops reading as one head. */
+  /* Held to one line each side: a heading that wraps pushes the way out of line
+     with it and the pair stops reading as one head. */
   align-items: baseline;
+  justify-content: space-between;
   gap: 0.75rem;
   white-space: nowrap;
 }
@@ -1330,7 +1331,13 @@
 .legend {
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 7rem);
+  /*
+   * Held short of the full window on purpose. The key is anchored at its own
+   * middle, so its ceiling decides both ends at once — and the bottom end has
+   * to stop above the sound control in the corner beneath it. Four rems of that
+   * is clearance rather than taste; the list simply scrolls a little sooner.
+   */
+  max-height: calc(100vh - 11rem);
 }
 
 /*
@@ -1491,18 +1498,23 @@
 /* ---- The score's only control ---- */
 
 /*
- * Top left, opposite the search, in the one corner nothing else claims.
+ * Bottom right, out of the left column entirely.
  *
- * Deliberately the smallest permanent thing on screen. The soundtrack is the
- * room the visualization sits in, and a control that announced itself would
- * make it the subject; this is meant to be findable when it is wanted and
- * invisible the rest of the time.
+ * The left side is spoken for from top to bottom — the masthead names the piece
+ * at the top, the readout answers for whatever is chosen in the middle, and the
+ * hint sits at the foot. Anything placed there covers one of them. The
+ * bottom-right corner is the one the counterfactual panel was reserved for, and
+ * that panel is not mounted, so it is genuinely free.
+ *
+ * It sits above the key in the stack, so on the rare full-height key the button
+ * stays pressable rather than being swallowed by it — and the key's own ceiling
+ * is held clear of this corner so the two never actually meet.
  */
 .sound-toggle {
   position: fixed;
-  top: 2rem;
-  left: 2rem;
-  z-index: 12;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 14;
   opacity: 0;
   /* Unreachable while it is invisible: an opacity of nothing still takes clicks. */
   pointer-events: none;
@@ -1514,30 +1526,51 @@
   pointer-events: auto;
 }
 
+/*
+ * Set at full strength, and given an edge to press.
+ *
+ * It was the smallest and dimmest thing on screen and went unfound, which for
+ * the one control that silences the piece is the wrong way round. Still one
+ * word in the same typographic language as every other control — it is simply
+ * legible now, and looks like something that can be clicked.
+ */
 .sound-toggle__button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  padding: 0;
-  border: 0;
-  background: none;
+  /* Fixed, so "SOUND" and "SILENT" do not move the key button beside it, and so
+     that button's offset from the corner can be a constant. */
+  min-width: 7rem;
+  padding: 0.35rem 0.7rem 0.35rem 0.55rem;
+  border: 1px solid rgba(148, 162, 180, 0.28);
+  background: rgba(4, 5, 9, 0.55);
   font-family: var(--font-body);
   font-weight: 300;
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.2em;
   text-indent: 0.2em;
   text-transform: uppercase;
-  color: var(--ui-dim);
+  color: var(--ui-text);
   cursor: pointer;
   text-shadow:
     0 1px 4px rgba(3, 5, 10, 0.98),
     0 0 10px rgba(3, 5, 10, 0.95);
-  transition: color 260ms ease-out;
+  transition:
+    color 260ms ease-out,
+    border-color 260ms ease-out;
 }
 
 .sound-toggle__button:hover,
 .sound-toggle__button:focus-visible {
   color: var(--ui-text);
+  border-color: var(--ui-text);
+}
+
+/* Silenced reads as off: the word greys back and the meter lies flat. */
+.sound-toggle__button[aria-pressed='false'] {
+  color: var(--ui-dim);
+  border-color: rgba(148, 162, 180, 0.18);
 }
 
 /*
@@ -1623,4 +1656,88 @@
 .audio-audit__value {
   color: var(--ui-text);
   overflow-wrap: anywhere;
+}
+
+/* ---- A key that is asked for ---- */
+
+/*
+ * The button that opens a key, at the foot of the screen beside the sound.
+ *
+ * Those two belong together: they are the controls that change how the world is
+ * *read* rather than where you are in it, so there is one corner to look in for
+ * either. The sound control holds a fixed width, which is what lets this sit a
+ * predictable distance to its left however the two words differ in length.
+ *
+ * Out in the middle of the right edge — where this used to be — it was easy to
+ * miss, and it sat in the same place the key itself opens, so pressing it made
+ * it disappear under the thing it had just opened.
+ */
+.legend-tab {
+  position: fixed;
+  bottom: 2rem;
+  right: 9.75rem;
+  z-index: 14;
+}
+
+.legend-tab__button {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid rgba(148, 162, 180, 0.3);
+  background: rgba(4, 5, 9, 0.55);
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+  text-transform: uppercase;
+  color: var(--ui-text);
+  cursor: pointer;
+  text-shadow:
+    0 1px 4px rgba(3, 5, 10, 0.98),
+    0 0 10px rgba(3, 5, 10, 0.95);
+  transition:
+    border-color 260ms ease-out,
+    background 260ms ease-out;
+}
+
+.legend-tab__button:hover,
+.legend-tab__button:focus-visible {
+  border-color: var(--ui-text);
+  background: rgba(4, 5, 9, 0.8);
+}
+
+/*
+ * Lit while its key is open, so the button reports the state it controls.
+ *
+ * Without this the only way to know whether pressing it will open or close
+ * something is to look at the other side of the screen for the panel.
+ */
+.legend-tab__button[aria-pressed='true'] {
+  border-color: var(--ui-text);
+  background: rgba(223, 229, 238, 0.14);
+}
+
+/* The way back out, in the head of the open key. */
+.legend-tab__close {
+  flex: none;
+  padding: 0 0 0.15rem;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: none;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    color 260ms ease-out,
+    border-color 260ms ease-out;
+}
+
+.legend-tab__close:hover,
+.legend-tab__close:focus-visible {
+  color: var(--ui-text);
+  border-bottom-color: var(--ui-text);
 }

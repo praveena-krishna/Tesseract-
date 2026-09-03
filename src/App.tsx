@@ -13,6 +13,7 @@ import { TimeControl } from './ui/TimeControl';
 import { LensControl } from './ui/LensControl';
 import { PeopleSearch } from './ui/PeopleSearch';
 import { SoundToggle } from './ui/SoundToggle';
+import { LegendKeyControl } from './ui/LegendKeyControl';
 import { AudioAudit } from './ui/AudioAudit';
 import { WebGLFallback } from './ui/WebGLFallback';
 import { useReducedMotion } from './interaction/useReducedMotion';
@@ -106,6 +107,7 @@ export default function App() {
       <TimeControl />
       <LensControl />
       <PeopleSearch />
+      <LegendKeyControl />
       <SoundToggle />
       <AudioAudit />
       {/*
