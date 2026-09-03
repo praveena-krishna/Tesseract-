@@ -2,12 +2,13 @@
   "_meta": {
     "project": "The Odyssey",
     "generatedFrom": [
+      "Trainees data.csv",
       "Daily tracking.csv",
       "Our Training Journey(Sheet1).csv",
       "Training Feedback — Your Honest Voice(Sheet1).csv"
     ],
     "peopleCount": 16,
-    "note": "See DATA-NOTES.md for what is real vs. placeholder and the known gaps (person<->project, person<->AI tool, person<->week links)."
+    "note": "Trainees data.csv is the authority for three things, and they are read from it and nowhere else: the classes each person named (people[].skillIds, skills[].popularity, and the journeySurvey.interestTopics copy of the same answer), the difficulties they named (challenges[], and journeySurvey.toughestTopics), and their rating of the Databricks class, which lives in src/data/ratings.ts. The earlier survey exports had asked those two questions too and their answers have been replaced rather than kept alongside, so the file holds one reading of each fact. Everything else — confidence, team ratings, the weekly logs, the project rosters — still comes from those exports and carries the gaps noted in README.md."
   },
   "people": [
     {
@@ -196,7 +197,11 @@
         "learnFrequency": "Almost every day",
         "toughestTopics": [
           "Backend (Nextjs)",
-          "Web/Mobile Application"
+          "Web/Mobile Application",
+          "Time management",
+          "Scheduling/Timeline",
+          "Repeated topics",
+          "Long discussions"
         ],
         "toughestDifficulty": "2",
         "stuckAction": "Tried to solve it myself",
@@ -256,12 +261,8 @@
       "source": "real",
       "skillIds": [
         "ai-topics",
-        "data-visualization",
         "database",
-        "databricks",
-        "git",
-        "group-project",
-        "self-learning-by-trainee-members"
+        "databricks"
       ],
       "projectIdsSource": "authoritative team roster (provided directly by the user)"
     },
@@ -299,7 +300,10 @@
       },
       "source": "real",
       "skillIds": [
-        "ai-topics"
+        "ai-topics",
+        "data-visualization",
+        "databricks",
+        "git"
       ],
       "projectIdsSource": "authoritative team roster (provided directly by the user)"
     },
@@ -341,7 +345,11 @@
           "Data Visualization",
           "Devops",
           "Web/Mobile Application",
-          "Cybersecurity"
+          "Cybersecurity",
+          "Teamwork",
+          "Waiting time",
+          "Understanding concepts",
+          "Topic switching"
         ],
         "toughestDifficulty": "3",
         "stuckAction": "Searched online",
@@ -416,7 +424,6 @@
         "group-project",
         "iot",
         "linux",
-        "self-learning-by-trainee-members",
         "testing",
         "ui-ux",
         "web-mobile-application"
@@ -566,7 +573,6 @@
           "Improve problem-solving skills"
         ],
         "interestTopics": [
-          "Databricks",
           "AI Topics"
         ],
         "learnFrequency": "Sometimes | Almost every day",
@@ -600,8 +606,7 @@
       "feedbackSurvey": null,
       "source": "real",
       "skillIds": [
-        "ai-topics",
-        "databricks"
+        "ai-topics"
       ],
       "projectIdsSource": "authoritative team roster (provided directly by the user)"
     },
@@ -641,7 +646,13 @@
           "Data Visualization",
           "Cybersecurity",
           "Devops",
-          "Data Visualization Project"
+          "Understanding concepts",
+          "Training pace",
+          "Technical issues",
+          "Waiting time",
+          "Long discussions",
+          "Repeated topics",
+          "Assignments"
         ],
         "toughestDifficulty": "3",
         "stuckAction": "Asked a teammate",
@@ -823,7 +834,13 @@
           "Devops",
           "Testing",
           "IoT",
-          "Backend (Nextjs)"
+          "Backend (Nextjs)",
+          "Understanding concepts",
+          "Training content",
+          "Time management",
+          "Technical issues",
+          "Long discussions",
+          "Topic switching"
         ],
         "toughestDifficulty": "3",
         "stuckAction": "Took a break and came back later",
@@ -945,7 +962,9 @@
         "learnFrequency": "Several times a week",
         "toughestTopics": [
           "Devops",
-          "Testing"
+          "Testing",
+          "Technical issues",
+          "Repeated topics"
         ],
         "toughestDifficulty": "3",
         "stuckAction": "Tried to solve it myself",
@@ -1042,7 +1061,10 @@
         "learnFrequency": "Several times a week",
         "toughestTopics": [
           "Backend (Nextjs)",
-          "Devops"
+          "Devops",
+          "Training pace",
+          "Assignments",
+          "Long discussions"
         ],
         "toughestDifficulty": "2",
         "stuckAction": "Tried to solve it myself",
@@ -1102,13 +1124,10 @@
       },
       "source": "real",
       "skillIds": [
-        "ai-topics",
         "cybersecurity",
         "data-visualization",
-        "database",
         "databricks",
         "devops",
-        "git",
         "group-project",
         "linux",
         "self-learning-by-trainee-members",
@@ -1147,7 +1166,10 @@
         ],
         "learnFrequency": "Almost every day",
         "toughestTopics": [
-          "Data Visualization"
+          "Data Visualization",
+          "Time management",
+          "Group activities",
+          "Concept explanation"
         ],
         "toughestDifficulty": "2",
         "stuckAction": "Took a break and came back later",
@@ -1202,7 +1224,6 @@
       "source": "real",
       "skillIds": [
         "ai-topics",
-        "data-visualization",
         "databricks",
         "group-project",
         "web-mobile-application"
@@ -1240,7 +1261,9 @@
         "learnFrequency": "Almost every day",
         "toughestTopics": [
           "Data Visualization Project",
-          "Data Visualization"
+          "Data Visualization",
+          "Assignments",
+          "Lack of Practical Sessions"
         ],
         "toughestDifficulty": "4",
         "stuckAction": "Tried to solve it myself",
@@ -1339,7 +1362,10 @@
         ],
         "learnFrequency": "Almost every day",
         "toughestTopics": [
-          "Backend (Nextjs)"
+          "Backend (Nextjs)",
+          "Understanding concepts",
+          "Training content",
+          "Assignments"
         ],
         "toughestDifficulty": "3",
         "stuckAction": "Searched online",
@@ -1398,12 +1424,8 @@
       "source": "real",
       "skillIds": [
         "ai-topics",
-        "database",
-        "git",
         "group-project",
-        "linux",
-        "self-learning-by-trainee-members",
-        "web-mobile-application"
+        "linux"
       ],
       "projectIdsSource": "authoritative team roster (provided directly by the user)"
     },
@@ -1428,11 +1450,21 @@
         ],
         "interestTopics": [
           "AI Topics",
-          "Databricks"
+          "Web/Mobile Application",
+          "Databricks",
+          "Git",
+          "Data Visualization",
+          "Database",
+          "Data Visualization Project",
+          "Group Project",
+          "Self Learning by Trainee members"
         ],
         "learnFrequency": "Almost every day",
         "toughestTopics": [
-          "Databricks"
+          "Understanding concepts",
+          "Technical issues",
+          "Long discussions",
+          "Scheduling/Timeline"
         ],
         "toughestDifficulty": "3",
         "stuckAction": "Searched online; Asked a teammate; Asked the trainer",
@@ -1464,16 +1496,22 @@
       },
       "feedbackSurvey": null,
       "placeholderFields": [
-        "toughestTopics",
         "toughestDifficulty",
         "challengingActivity",
         "trainingSuggestions",
         "favoriteMemory"
       ],
-      "source": "manually collected directly from the user (not from the CSV files) for most fields; the fields listed in placeholderFields were filled in with a placeholder guess at the user's request and are excluded from the global challenge/frequency counts until the user replaces them with her real answers",
+      "source": "manually collected directly from the user (not from the CSV files) for most fields; her classes and difficulties now come from Trainees data.csv like everyone else, and the fields still listed in placeholderFields were filled in with a placeholder guess at the user’s request and are excluded from the global counts until she replaces them with her real answers",
       "skillIds": [
         "ai-topics",
-        "databricks"
+        "data-visualization",
+        "data-visualization-project",
+        "database",
+        "databricks",
+        "git",
+        "group-project",
+        "self-learning-by-trainee-members",
+        "web-mobile-application"
       ],
       "projectIdsSource": "authoritative team roster (provided directly by the user)"
     }
@@ -1550,7 +1588,7 @@
     {
       "id": "ai-topics",
       "name": "AI Topics",
-      "popularity": 15,
+      "popularity": 14,
       "source": "survey (Our Training Journey / Training Feedback)"
     },
     {
@@ -1568,19 +1606,19 @@
     {
       "id": "database",
       "name": "Database",
-      "popularity": 10,
+      "popularity": 9,
       "source": "survey (Our Training Journey / Training Feedback)"
     },
     {
       "id": "self-learning-by-trainee-members",
       "name": "Self Learning by Trainee members",
-      "popularity": 10,
+      "popularity": 8,
       "source": "survey (Our Training Journey / Training Feedback)"
     },
     {
       "id": "git",
       "name": "Git",
-      "popularity": 9,
+      "popularity": 8,
       "source": "survey (Our Training Journey / Training Feedback)"
     },
     {
@@ -1634,7 +1672,7 @@
     {
       "id": "data-visualization-project",
       "name": "Data Visualization Project",
-      "popularity": 4,
+      "popularity": 5,
       "source": "survey (Our Training Journey / Training Feedback)"
     },
     {
@@ -1731,7 +1769,7 @@
       ],
       "size": 8,
       "sourceSurveys": [
-        "journey_aha_moment"
+        "trainees_csv"
       ]
     },
     {
@@ -1740,13 +1778,14 @@
       "affectedPersonIds": [
         "P01",
         "P02",
+        "P04",
         "P08",
         "P10",
         "P11"
       ],
-      "size": 5,
+      "size": 6,
       "sourceSurveys": [
-        "journey_aha_moment"
+        "trainees_csv"
       ]
     },
     {
@@ -1761,21 +1800,21 @@
       ],
       "size": 5,
       "sourceSurveys": [
-        "journey_aha_moment"
+        "trainees_csv"
       ]
     },
     {
-      "id": "web-mobile-application",
-      "name": "Web/Mobile Application",
+      "id": "assignments",
+      "name": "Assignments",
       "affectedPersonIds": [
-        "P01",
-        "P03",
-        "P05",
-        "P09"
+        "P08",
+        "P12",
+        "P14",
+        "P15"
       ],
       "size": 4,
       "sourceSurveys": [
-        "journey_aha_moment"
+        "trainees_csv"
       ]
     },
     {
@@ -1789,21 +1828,80 @@
       ],
       "size": 4,
       "sourceSurveys": [
-        "journey_aha_moment"
+        "trainees_csv"
       ]
     },
     {
-      "id": "understanding-the-concepts",
-      "name": "Understanding the concepts",
+      "id": "long-discussions",
+      "name": "Long discussions",
+      "affectedPersonIds": [
+        "P03",
+        "P08",
+        "P10",
+        "P12",
+        "P16"
+      ],
+      "size": 5,
+      "sourceSurveys": [
+        "trainees_csv"
+      ]
+    },
+    {
+      "id": "repeated-topics",
+      "name": "Repeated topics",
+      "affectedPersonIds": [
+        "P03",
+        "P04",
+        "P08",
+        "P11"
+      ],
+      "size": 4,
+      "sourceSurveys": [
+        "trainees_csv"
+      ]
+    },
+    {
+      "id": "technical-issues",
+      "name": "Technical issues",
+      "affectedPersonIds": [
+        "P04",
+        "P08",
+        "P10",
+        "P11",
+        "P16"
+      ],
+      "size": 5,
+      "sourceSurveys": [
+        "trainees_csv"
+      ]
+    },
+    {
+      "id": "understanding-concepts",
+      "name": "Understanding concepts",
       "affectedPersonIds": [
         "P05",
         "P08",
         "P10",
-        "P15"
+        "P15",
+        "P16"
+      ],
+      "size": 5,
+      "sourceSurveys": [
+        "trainees_csv"
+      ]
+    },
+    {
+      "id": "web-mobile-application",
+      "name": "Web/Mobile Application",
+      "affectedPersonIds": [
+        "P01",
+        "P03",
+        "P05",
+        "P09"
       ],
       "size": 4,
       "sourceSurveys": [
-        "feedback_biggest_difficulty"
+        "trainees_csv"
       ]
     },
     {
@@ -1816,20 +1914,20 @@
       ],
       "size": 3,
       "sourceSurveys": [
-        "journey_aha_moment"
+        "trainees_csv"
       ]
     },
     {
-      "id": "technical-issues",
-      "name": "Technical issues",
+      "id": "iot",
+      "name": "IoT",
       "affectedPersonIds": [
         "P04",
-        "P08",
-        "P11"
+        "P09",
+        "P10"
       ],
       "size": 3,
       "sourceSurveys": [
-        "feedback_biggest_difficulty"
+        "trainees_csv"
       ]
     },
     {
@@ -1837,69 +1935,72 @@
       "name": "Time management",
       "affectedPersonIds": [
         "P03",
+        "P10",
+        "P13"
+      ],
+      "size": 3,
+      "sourceSurveys": [
+        "trainees_csv"
+      ]
+    },
+    {
+      "id": "concept-explanation",
+      "name": "Concept explanation",
+      "affectedPersonIds": [
+        "P04",
         "P13"
       ],
       "size": 2,
       "sourceSurveys": [
-        "feedback_biggest_difficulty"
+        "trainees_csv"
       ]
     },
     {
-      "id": "data-visualization-project",
-      "name": "Data Visualization Project",
+      "id": "topic-switching",
+      "name": "Topic switching",
       "affectedPersonIds": [
-        "P08",
-        "P14"
+        "P05",
+        "P10"
       ],
       "size": 2,
       "sourceSurveys": [
-        "journey_aha_moment"
+        "trainees_csv"
       ]
     },
     {
-      "id": "keeping-up-with-the-training-pace",
-      "name": "Keeping up with the training pace",
+      "id": "training-content",
+      "name": "Training content",
+      "affectedPersonIds": [
+        "P10",
+        "P15"
+      ],
+      "size": 2,
+      "sourceSurveys": [
+        "trainees_csv"
+      ]
+    },
+    {
+      "id": "training-pace",
+      "name": "Training pace",
       "affectedPersonIds": [
         "P08",
         "P12"
       ],
       "size": 2,
       "sourceSurveys": [
-        "feedback_biggest_difficulty"
+        "trainees_csv"
       ]
     },
     {
-      "id": "iot",
-      "name": "IoT",
+      "id": "waiting-time",
+      "name": "Waiting time",
       "affectedPersonIds": [
-        "P09",
-        "P10"
+        "P05",
+        "P08"
       ],
       "size": 2,
       "sourceSurveys": [
-        "journey_aha_moment"
-      ]
-    },
-    {
-      "id": "teamwork",
-      "name": "Teamwork",
-      "affectedPersonIds": [
-        "P05"
-      ],
-      "size": 1,
-      "sourceSurveys": [
-        "feedback_biggest_difficulty"
-      ]
-    },
-    {
-      "id": "self-learning-by-trainee-members",
-      "name": "Self Learning by Trainee members",
-      "affectedPersonIds": [
-        "P07"
-      ],
-      "size": 1,
-      "sourceSurveys": [
-        "journey_aha_moment"
+        "trainees_csv"
       ]
     },
     {
@@ -1910,7 +2011,40 @@
       ],
       "size": 1,
       "sourceSurveys": [
-        "journey_aha_moment"
+        "trainees_csv"
+      ]
+    },
+    {
+      "id": "data-visualization-project",
+      "name": "Data Visualization Project",
+      "affectedPersonIds": [
+        "P14"
+      ],
+      "size": 1,
+      "sourceSurveys": [
+        "trainees_csv"
+      ]
+    },
+    {
+      "id": "group-activities",
+      "name": "Group activities",
+      "affectedPersonIds": [
+        "P13"
+      ],
+      "size": 1,
+      "sourceSurveys": [
+        "trainees_csv"
+      ]
+    },
+    {
+      "id": "lack-of-practical-sessions",
+      "name": "Lack of Practical Sessions",
+      "affectedPersonIds": [
+        "P14"
+      ],
+      "size": 1,
+      "sourceSurveys": [
+        "trainees_csv"
       ]
     },
     {
@@ -1921,18 +2055,41 @@
       ],
       "size": 1,
       "sourceSurveys": [
-        "journey_aha_moment"
+        "trainees_csv"
       ]
     },
     {
-      "id": "assignments",
-      "name": "Assignments",
+      "id": "scheduling-timeline",
+      "name": "Scheduling/Timeline",
       "affectedPersonIds": [
-        "P14"
+        "P03",
+        "P16"
+      ],
+      "size": 2,
+      "sourceSurveys": [
+        "trainees_csv"
+      ]
+    },
+    {
+      "id": "self-learning-by-trainee-members",
+      "name": "Self Learning by Trainee members",
+      "affectedPersonIds": [
+        "P07"
       ],
       "size": 1,
       "sourceSurveys": [
-        "feedback_biggest_difficulty"
+        "trainees_csv"
+      ]
+    },
+    {
+      "id": "teamwork",
+      "name": "Teamwork",
+      "affectedPersonIds": [
+        "P05"
+      ],
+      "size": 1,
+      "sourceSurveys": [
+        "trainees_csv"
       ]
     }
   ],

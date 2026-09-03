@@ -4,7 +4,7 @@ import {
   advanceTransition,
   setTransitionTarget,
 } from '../../sim/dimensionalTransition';
-import { advanceHyperTurn, hyperProgress, startHyperTurn } from '../../sim/hyperTurn';
+import { advanceHyperTurn, hyperReleased, startHyperTurn } from '../../sim/hyperTurn';
 import { HYPER_TURN } from '../../config/dimensions';
 import { useWorldStore } from '../../store/useWorldStore';
 
@@ -27,11 +27,11 @@ export function DimensionalTransition() {
    * Where the camera is being asked to go, held back until the turn has been
    * seen.
    *
-   * The passage takes 2.4 seconds and the turn 5.5, so firing both at once put
-   * the viewer inside the box a third of the way through — looking at struts
-   * from within, where the figure turning itself inside out is invisible. The
-   * whole point of the turn is that it is watched from outside, so the camera
-   * waits for most of it before it moves.
+   * The passage takes 2.4 seconds and a revolution seven, so firing both at
+   * once put the viewer inside the box a third of the way through — looking at
+   * struts from within, where the figure turning itself inside out is
+   * invisible. The whole point of the turn is that it is watched from outside,
+   * so the camera waits for most of the final revolution before it moves.
    */
   const pending = useRef<number | null>(null);
 
@@ -61,7 +61,14 @@ export function DimensionalTransition() {
     // two months is the same event as far as the figure is concerned, and it is
     // the move most worth showing, since it is the one where the viewer has to
     // understand that the two boxes are the same object at different depths.
-    startHyperTurn();
+    //
+    // Once for each month boundary crossed. From outside the viewer counts as
+    // standing at the outermost month, since nothing has had to turn to put
+    // them there — so the first entry into the innermost box is two crossings
+    // and turns twice, and this is the only place that knows both ends of the
+    // move.
+    const origin = from ?? HYPER_TURN.OUTSIDE_MONTH;
+    startHyperTurn(Math.abs(enteredMonth - origin));
 
     // Coming from another month means the viewer is already inside, where the
     // turn cannot be seen at all. So they are withdrawn first and sent back in
@@ -74,9 +81,9 @@ export function DimensionalTransition() {
   useFrame((_, delta) => {
     advanceHyperTurn(delta, reducedMotion);
 
-    // Released once the turn is most of the way through, so the last of it
-    // carries the viewer inward rather than finishing after they arrive.
-    if (pending.current !== null && (reducedMotion || hyperProgress() > HYPER_TURN.RELEASE)) {
+    // Released once the last revolution is most of the way through, so the end
+    // of it carries the viewer inward rather than finishing after they arrive.
+    if (pending.current !== null && (reducedMotion || hyperReleased())) {
       setTransitionTarget(pending.current);
       pending.current = null;
     }

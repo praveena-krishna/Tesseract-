@@ -110,8 +110,41 @@ export const ORBS = {
   /** Scale added to an orb at full emphasis, as a fraction of its radius. */
   ATTENDED_SWELL: 0.16,
 
+  /*
+   * Being found by name.
+   *
+   * Selecting somebody already lifts them clear of the field, but a person
+   * reached for by name has not been seen yet — the viewer does not know which
+   * of sixteen vessels the camera is travelling toward, so the arrival has to
+   * announce itself rather than simply be true once it is over. The pulse
+   * therefore overshoots the attended state and falls back into it, which is
+   * the difference between watching somebody be picked out and finding them
+   * already picked out.
+   *
+   * Temporary on purpose. A permanent beacon would make a searched person read
+   * as a different kind of thing from one chosen by clicking, and they are not.
+   */
+  EMPHASIS_FOUND: 1.95,
+  /** Extra radius at the peak of the pulse, on top of the attended swell. */
+  FOUND_SWELL: 0.14,
+  /** Seconds the pulse takes to fall back to an ordinary selection. */
+  FOUND_DURATION: 2.6,
+
   /** Pointer radius multiplier for picking, so small orbs stay easy to hit. */
   PICK_PADDING: 1.25,
+
+  /**
+   * How far above a vessel its name floats, in radii of that vessel.
+   *
+   * Two values, because the camera is at two quite different distances. From a
+   * layer's own framing the orbs are small and the name wants clear air above
+   * them. Once the camera has come in to observe somebody, that same lift is
+   * most of a screen height and carries the name off the top of the frame
+   * entirely — so the observed distance gets its own, tighter one, which lands
+   * just clear of the vessel's silhouette instead.
+   */
+  LABEL_LIFT: 2.1,
+  LABEL_LIFT_FOCUSED: 1.25,
 
   /* ---- Gravity ---- */
 

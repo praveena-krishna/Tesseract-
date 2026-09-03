@@ -3,6 +3,7 @@ import { learningByPerson, SHOWN_PER_PERSON } from '../data/classes';
 import { classIcon } from './classIcons';
 import { skillById, traineeById } from '../data/world';
 import { CLASSES_MONTH } from './LensControl';
+import { LegendModes } from './LegendModes';
 import { useWorldStore } from '../store/useWorldStore';
 
 /** A row of the key: a class, and in the ranked view how many liked it. */
@@ -15,10 +16,10 @@ interface ClassEntry {
 /**
  * The key to the classes.
  *
- * Fifteen classes appear across the sixteen people, each drawn as its own form
- * in its own colour. Neither channel is memorable on its own at that count — a
- * viewer cannot hold fifteen silhouettes or fifteen hues in their head — so the
- * world names them instead of expecting anybody to learn them.
+ * All sixteen classes appear across the sixteen people, each drawn as its own
+ * form in its own colour. Neither channel is memorable on its own at that
+ * count — a viewer cannot hold sixteen silhouettes or sixteen hues in their
+ * head — so the world names them instead of expecting anybody to learn them.
  *
  * A key rather than a caption on purpose. Naming one class at a time as the
  * pointer finds it says nothing about the other fourteen, and the question this
@@ -36,7 +37,6 @@ export function ClassLegend() {
   const focusedTraineeId = useWorldStore((state) => state.focusedTraineeId);
   const hoveredTraineeId = useWorldStore((state) => state.hoveredTraineeId);
   const ranked = useWorldStore((state) => state.ranked);
-  const toggleRanked = useWorldStore((state) => state.toggleRanked);
 
   /** Which class the pointer is on, so the key can answer it. */
   const attended = (openedSession ?? hoveredSession)?.split(':')[1] ?? null;
@@ -58,16 +58,19 @@ export function ClassLegend() {
    * Counted in people rather than in sessions, so the figure answers the
    * question somebody actually asks out loud — how many of them liked this —
    * and stays comparable with the difficulty ranking, which counts the same
-   * way. Only the sessions the world actually draws are counted, so the key
-   * cannot claim a popularity the orbs do not show.
+   * way.
+   *
+   * Counted from every class each person named, not from the five their orb
+   * has room to draw. Three of them named all sixteen, so counting only what is
+   * drawn would report the cap rather than the cohort and would put the rarest
+   * classes at the top, which is the reverse of what the ranking is for.
    */
   const ranking = useMemo(() => {
     const tally = new Map<string, number>();
     for (const [, profile] of learningByPerson) {
-      const theirs = new Set(
-        profile.sessions.slice(0, SHOWN_PER_PERSON).map((session) => session.classId),
-      );
-      for (const classId of theirs) tally.set(classId, (tally.get(classId) ?? 0) + 1);
+      for (const classId of profile.liked) {
+        tally.set(classId, (tally.get(classId) ?? 0) + 1);
+      }
     }
     return [...tally]
       .map(([id, count]) => ({ id, count, name: skillById.get(id)?.name ?? id }))
@@ -77,7 +80,7 @@ export function ClassLegend() {
 
   const classes = useMemo(() => {
     const shown = new Set<string>();
-    // Pointing at somebody narrows the key to what *they* liked. Fifteen
+    // Pointing at somebody narrows the key to what *they* liked. Sixteen
     // entries with fourteen greyed out still makes the reader find the two that
     // are not; showing only theirs answers the question outright, and the full
     // list is one pointer movement away.
@@ -110,16 +113,12 @@ export function ClassLegend() {
               ? `${traineeById.get(subject)?.name ?? 'They'} · liked most`
               : 'Classes'}
         </p>
-        <button
-          type="button"
-          className="legend__toggle"
-          aria-pressed={ranked}
-          onClick={toggleRanked}
-          title="Rank every class by how many people liked it"
-        >
-          Overall
-        </button>
       </div>
+
+      <LegendModes
+        personTitle="What the person you are pointing at liked"
+        cohortTitle="Rank every class by how many people liked it"
+      />
 
       {ranked && <p className="legend__note">how many of the 16 liked it</p>}
       <ul className="legend__list">

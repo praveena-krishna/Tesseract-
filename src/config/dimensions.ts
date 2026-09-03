@@ -348,6 +348,41 @@ export const MEDALLION = {
   PULSES: 3,
   /** How much a person's glass fragments fade once knowledge has come in. */
   SHARD_FADE: 0.62,
+
+  /* ---- The rating, carried by the weight of a person's line ---- */
+
+  /**
+   * Gap between two strands of one beam, in world units.
+   *
+   * WebGL will not draw a thick line, so weight is made of several thin ones
+   * run parallel. This is the whole of the effect: too tight and four strands
+   * merge into one hairline that says nothing, too loose and they read as four
+   * separate lines to four separate places rather than as one heavy beam.
+   */
+  STRAND_GAP: 0.055,
+
+  /**
+   * How brightly every vessel burns under the lens about knowledge.
+   *
+   * One figure for all sixteen, and that is the point. Brightness used to vary
+   * per person, which put a second channel alongside the beam saying the same
+   * kind of thing in a way the eye cannot compare precisely. The line carries
+   * the rating now; the vessels are simply lit, equally, so nothing competes
+   * with it or contradicts it.
+   */
+  EQUAL_GLOW: 0.62,
+
+  /**
+   * How present the beams are once the lens has settled.
+   *
+   * Raised from the half it sat at. The lines were written as connective
+   * tissue, deliberately faint so they never competed with the people or the
+   * core — which was right while they only joined two things together. They
+   * carry the rating now, and they are the only thing distinguishing the
+   * sixteen in this month, so a weight nobody can quite make out is a reading
+   * nobody can take.
+   */
+  LINE_OPACITY: 0.82,
 } as const;
 
 export const GROWTH = {
@@ -429,6 +464,29 @@ export const GROWTH = {
    * the number to pull rather than the count or the size.
    */
   SPARKLE_OPACITY: 0.9,
+
+  /* ---- Holding the vessels still ---- */
+
+  /**
+   * What a sparkle sits at once the field stops catching the light.
+   *
+   * Mid-range rather than at either end. The animated twinkle is a sharpened
+   * sine, so it spends most of its cycle near dark — freezing the clock alone
+   * would leave roughly half the motes invisible and the field would appear to
+   * thin out rather than to settle. Every mote holds this instead, so the same
+   * number of them are there, steadily.
+   */
+  SPARKLE_STEADY: 0.55,
+
+  /**
+   * Seconds the vessels take to come to rest when the lens about knowledge is
+   * chosen.
+   *
+   * Eased rather than switched. Motion that stops on a frame reads as a dropped
+   * frame; motion that decelerates reads as something settling, which is what
+   * this is meant to look like.
+   */
+  STILL_EASE: 1.1,
 } as const;
 
 export const CHALLENGES = {
@@ -473,10 +531,45 @@ export const CHALLENGES = {
  * the resting shape is never altered by this — it departs from the approved
  * figure and comes back to it, and between month changes the projection is
  * doing nothing at all.
+ *
+ * It makes one such revolution for every month boundary the move crosses. The
+ * months are the nested shells in order, so the count is the distance between
+ * them, and the turn stops being a fixed flourish played whenever a month is
+ * chosen and becomes the figure showing how far through itself the viewer has
+ * just travelled.
  */
 export const HYPER_TURN = {
-  /** Seconds one revolution takes. Slow: this is meant to be watched. */
+  /**
+   * Seconds one revolution takes. Slow: this is meant to be watched.
+   *
+   * A move turns once for every month boundary it crosses and holds this rate
+   * throughout, so the whole journey lasts this multiplied by the number of
+   * revolutions and a two-month jump runs for fourteen seconds. That is the
+   * point of it — the length of the turn is how the structure says how far you
+   * went — but it is also the only knob that shortens it, since dividing the
+   * rate by the distance instead would make every move the same length again.
+   */
   DURATION: 7,
+
+  /**
+   * The month index the viewer counts as standing at while outside.
+   *
+   * Month 3 is the outermost shell, so someone who has entered nothing at all
+   * is already at its depth: the structure has not had to turn to put them
+   * there. Entering Month 3 from here is therefore no distance and entering
+   * Month 1 is two, which is what makes the first click into the innermost box
+   * cross the two boundaries it visibly passes through.
+   */
+  OUTSIDE_MONTH: 2,
+
+  /**
+   * The fewest revolutions any entry makes.
+   *
+   * Without a floor the zero-distance cases — the overview into Month 3 — would
+   * arrive with no turn at all, and an entry that simply cuts to the inside is
+   * the one thing the whole passage exists to avoid.
+   */
+  MIN_TURNS: 1,
 
   /**
    * Distance of the viewpoint along the fourth axis. Comfortably past any
@@ -512,13 +605,18 @@ export const HYPER_TURN = {
   INSET: 0.18,
 
   /**
-   * How far through the turn the camera is released to move.
+   * How far through the *final* revolution the camera is released to move.
    *
    * The passage takes a couple of seconds, so releasing it at the start put the
    * viewer inside the box a third of the way through — looking at struts from
    * within, where the figure turning itself inside out is invisible. Late
    * enough that the inversion has been seen, early enough that the last of the
    * turn carries the viewer inward rather than finishing after they arrive.
+   *
+   * Measured against the last revolution rather than the move as a whole,
+   * because a two-month jump read against the whole would send the viewer
+   * inward midway through the second inversion — the fraction would be the
+   * same and the moment would be wrong.
    */
   RELEASE: 0.66,
 } as const;

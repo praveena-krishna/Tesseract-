@@ -28,8 +28,18 @@ at roughly 1 FPS, which is fine for draw-call counts and state but useless for a
 two things defeat screenshot diffing outright: film grain resamples every frame, and idle camera
 drift keeps the azimuth moving. Assert against the `?debug` readout if you must assert.
 
+`README.md`'s Verification section says the opposite — that puppeteer-core screenshots are good for
+judging appearance. It is stale and this file overrides it; nothing in the tree uses puppeteer-core.
+The `/show` skill performs the handover described above.
+
 URL flags: `?debug` shows frame timing, draw calls, geometry/program counts and camera framing;
 `?nogl` forces the no-WebGL fallback.
+
+## Editing hooks
+
+Every `Write`/`Edit` fires `.claude/hooks/glsl-guard.sh` and `.claude/hooks/lint-edited.sh` (oxlint
+on the single edited file, errors only — warnings are dropped because the `useFrame` mutation
+convention trips oxlint's immutability rule across nearly every scene file). Both need `jq` on PATH.
 
 ## Git
 
@@ -46,7 +56,10 @@ do constrain how code must be written:
 
 ## Conventions
 
-- **Every constant lives in `src/config/`.** No magic numbers anywhere else.
+- **Every constant lives in `src/config/`.** No magic numbers anywhere else. `index.ts` is a
+  partial barrel — `ORBS`, `TEAMS`, `MEDALLION`, `GROWTH`, `CHALLENGES`, `DIMENSION`, `BONDS`,
+  `PROJECTS_CONFIG`, `SHELL_FADE` and `HYPER_TURN` are not in it. Import those from the file itself
+  (`../config/dimensions`, `../config/orbs`), never from `../config`.
 - **High-frequency work mutates refs, buffers and uniforms inside `useFrame`.** Never React state —
   a value that changes per frame must not re-render the tree.
 - **Missing data is shown as missing, never fabricated.** `src/data/README.md` documents the gaps:
@@ -54,9 +67,19 @@ do constrain how code must be written:
   null, do not coerce to 0), `P16` carries `placeholderFields`, and two people double-submitted so
   some answers are joined with `" | "` and must be split before numeric parsing. The middle month's
   confidence is interpolated and must be labelled as such wherever it is shown.
-- `src/data/odyssey.json` is the single copy of the dataset. Do not add a second one.
-- `src/data/README.md` and `src/data/types.ts` still say nothing is wired into the scene. That is
-  stale — the scene renders from `src/data/` today.
+- `src/data/odyssey.json` is the single copy of the dataset. Do not add a second one. The classes,
+  the challenges and the Databricks ratings in it come from `Trainees data.csv` at the repository
+  root, which is the cohort sheet and the authority for all three.
+- **Challenge impact is the one figure nobody supplied.** The sheet records what each person
+  struggled with and never how badly, so the fragment sizes come from `IMPACT_OF` in
+  `src/data/challenges.ts` — a judgement, labelled as one in the key on screen. Do not present it
+  as recorded.
+- **In the Databricks lens every vessel glows at the same brightness.** Brightness carries no data;
+  that was built and rejected. A person's rating is the weight of their line to the knowledge core —
+  one thin strand per point out of four, since WebGL ignores `linewidth` — and an unrated person has
+  no line at all rather than the thinnest one. `src/data/ratings.ts` holds them; the cohort's real
+  answers cluster hard (twelve threes, two fours, two twos), so a nearly uniform field of beams is
+  correct rather than a bug.
 
 ## WebGL gotchas
 
@@ -66,6 +89,10 @@ These are not guessable and each one has cost a debugging session:
   its comments silently terminates the literal. `half` is a reserved word — using it as a variable
   name fails the whole program to compile, and a material whose shader will not compile draws
   nothing at all rather than erroring loudly.
+- **A varying must be declared exactly once per stage, and read only in a stage that declares it.**
+  Either mistake fails the program silently. `.claude/hooks/glsl-guard.sh` catches this on every
+  edit to a `.glsl.ts` file — but not in `src/shaders/frameFresnel.ts`, which holds shader source
+  under a name the guard does not match.
 - **`InstancedMesh` caches its bounding sphere on first use and never refreshes it.** Anything that
   moves must call `computeBoundingSphere()` each frame or raycasting silently stops hitting it.
 - **A vertex shader gets 16 attribute slots**, and each attribute takes a whole slot whatever its

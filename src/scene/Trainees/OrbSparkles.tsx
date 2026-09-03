@@ -3,14 +3,13 @@ import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { SPARKLE_FRAG, SPARKLE_VERT } from '../../shaders/sparkle.glsl';
 import { orbKey } from './orbKey';
-import { challengesOf } from '../../data/challenges';
-import { GROWTH_PER_CHALLENGE, baselineGrowth } from '../../data/growth';
 import { trainees } from '../../data/world';
 import { PALETTE } from '../../config/palette';
 import {
   CHALLENGES,
   DIMENSION,
   GROWTH,
+  MEDALLION,
   RENDER_ORDER,
   SHELLS,
 } from '../../config/dimensions';
@@ -99,6 +98,8 @@ export function OrbSparkles({
         fragmentShader: SPARKLE_FRAG,
         uniforms: {
           uTime: { value: 0 },
+          uTwinkling: { value: 0 },
+          uSteady: { value: GROWTH.SPARKLE_STEADY },
           uSize: { value: GROWTH.SPARKLE_SIZE },
           uColor: { value: new THREE.Color(PALETTE.KNOWLEDGE) },
           uCore: { value: new THREE.Color('#ffffff') },
@@ -132,11 +133,19 @@ export function OrbSparkles({
   );
   const lit = useMemo(() => new Float32Array(trainees.length), []);
 
-  useFrame(({ clock }, delta) => {
+  useFrame((_, delta) => {
     const points = pointsRef.current;
     if (!points) return;
 
-    const time = reducedMotion ? 3 : clock.elapsedTime;
+    // Held, not running.
+    //
+    // These motes exist under one lens only — the one about knowledge — and
+    // that is the lens where a person's brightness has to read as a fixed
+    // quantity. Orbiting motes are motion sitting directly on the vessel they
+    // decorate, which is exactly where stillness was asked for. A constant
+    // leaves them scattered where their own seeds put them, so the field keeps
+    // its spread and loses its movement.
+    const time = 3;
     const step = Math.min(delta, 0.1);
     const store = useWorldStore.getState();
     // The sparkles belong to the lens about knowledge, not the one about
@@ -158,12 +167,8 @@ export function OrbSparkles({
         ? positions.get(orbKey(CHALLENGES.MONTH, personId))
         : undefined;
 
-      const done = challengesOf(personId).filter(
-        (record) => store.challengeStatus[record.id] === 'overcome',
-      ).length;
-      const gained = centre
-        ? Math.min(1, baselineGrowth(personId) + done * GROWTH_PER_CHALLENGE)
-        : 0;
+      // The same for everybody: the motes say a person is lit, not how much.
+      const gained = centre ? MEDALLION.EQUAL_GLOW : 0;
       lit[p] += (gained - lit[p]) * ease;
       brightest = Math.max(brightest, lit[p]);
 
@@ -199,6 +204,11 @@ export function OrbSparkles({
     geometry.computeBoundingSphere();
 
     material.uniforms.uTime.value = time;
+    // The motes hold one brightness each rather than catching the light in
+    // turn. Sharpened as the twinkle is, a field of them flickers, and this
+    // lens is the one where a person's glow has to be read as a steady
+    // quantity — light that comes and goes says the quantity is changing.
+    material.uniforms.uTwinkling.value = 0;
     material.uniforms.uOpacity.value = GROWTH.SPARKLE_OPACITY;
     points.visible = brightest > 0.01;
   });

@@ -1,11 +1,10 @@
 /**
  * Shape of the training dataset the world will be built from.
  *
- * Reserved for the next phase — nothing renders from these yet. They are
- * declared now so the visual systems that follow can be written against a fixed
- * contract instead of against whatever the JSON happens to contain.
+ * The contract the visual systems are written against, so they depend on a
+ * fixed shape rather than on whatever the JSON happens to contain.
  *
- * Source: 16 trainees, 5 project teams, 25 skills, 17 challenges and 10 logged
+ * Source: 16 trainees, 5 project teams, 25 skills, 26 challenges and 10 logged
  * weeks that bucket into the three months.
  */
 

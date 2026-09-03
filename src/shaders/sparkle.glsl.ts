@@ -16,6 +16,14 @@
 export const SPARKLE_VERT = /* glsl */ `
   uniform float uTime;
   uniform float uSize;
+  /**
+   * How much the field is still catching the light: 1 twinkles, 0 holds steady.
+   *
+   * A blend rather than a switch, so the motes can be brought to rest over a
+   * second instead of stopping between one frame and the next.
+   */
+  uniform float uTwinkling;
+  uniform float uSteady;
 
   /** x: own rate, y: own phase, z: how lit this person is, w: spare. */
   attribute vec4 aSpark;
@@ -31,7 +39,12 @@ export const SPARKLE_VERT = /* glsl */ `
     float t = sin(uTime * aSpark.x + aSpark.y * 6.2831853);
     // Sharpened, so a sparkle is mostly dark and briefly bright — the shape of
     // a catch of light rather than a sine fading up and down.
-    vTwinkle = pow(max(0.0, t), 4.0);
+    //
+    // Which is the right shape for scattered light and the wrong one for a
+    // steady glow: sharpened this hard, a mote is off far more of the time than
+    // it is on, and a field of them reads as flickering. Where the vessels are
+    // asked to hold still, each mote settles on one brightness and keeps it.
+    vTwinkle = mix(uSteady, pow(max(0.0, t), 4.0), uTwinkling);
 
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
     gl_PointSize = uSize * (0.35 + vTwinkle) * aSpark.z * (1.0 / -mvPosition.z);

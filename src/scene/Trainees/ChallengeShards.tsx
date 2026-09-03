@@ -47,6 +47,8 @@ function entryAttitude(direction: THREE.Vector3, index: number): THREE.Quaternio
 interface Shard extends ChallengeRecord {
   /** The orb it is caught in. Every fragment belongs to one person, only. */
   orb: string;
+  /** Which of that person's fragments this is, and how many they carry. */
+  ordinal: number;
   /** Fixed direction from that orb's centre, so it never wanders. */
   direction: THREE.Vector3;
   /** How far along that line it rests, as a fraction of the orb's radius. */
@@ -91,15 +93,25 @@ export function ChallengeShards({
   const groupRef = useRef<THREE.Group>(null);
 
   const shards = useMemo<Shard[]>(() => {
+    // How many each person carries, so the directions can be spread over that
+    // person's own set. Sized off a constant instead, anybody carrying more
+    // than the constant allows lands past the pole, where the band collapses to
+    // nothing and every one of their remaining fragments points straight down.
+    const load = new Map<string, number>();
+    for (const record of CHALLENGE_RECORDS) {
+      load.set(record.personId, (load.get(record.personId) ?? 0) + 1);
+    }
+
     const seen = new Map<string, number>();
     return CHALLENGE_RECORDS.map((record, index) => {
       const ordinal = seen.get(record.personId) ?? 0;
       seen.set(record.personId, ordinal + 1);
+      const carried = load.get(record.personId) ?? 1;
 
       // Spread through the volume by the golden angle, so a person carrying
       // three has them at three unrelated angles rather than in a row.
       const golden = Math.PI * (3 - Math.sqrt(5));
-      const y = 1 - (2 * (ordinal + 0.5)) / 4;
+      const y = 1 - (2 * (ordinal + 0.5)) / carried;
       const band = Math.sqrt(Math.max(0, 1 - y * y));
       const theta = golden * ordinal + index * 1.13;
 
@@ -113,6 +125,7 @@ export function ChallengeShards({
       return {
         ...record,
         orb: orbKey(CHALLENGES.MONTH, record.personId),
+        ordinal,
         direction: new THREE.Vector3(
           Math.cos(theta) * band,
           y,
@@ -201,6 +214,16 @@ export function ChallengeShards({
    */
   const since = useRef(0);
 
+  /**
+   * How many of each person's difficulties have been worked through.
+   *
+   * Rebuilt once a frame and reused by every fragment. Asking each fragment to
+   * scan the whole record set for its own person is seventy-four passes over
+   * seventy-four records every frame for an answer that is the same for
+   * everybody in a vessel.
+   */
+  const overcomeByPerson = useMemo(() => new Map<string, number>(), []);
+
   const charge = useMemo(() => new Float32Array(pieces.length).fill(1), [pieces.length]);
   const attention = useMemo(() => new Float32Array(pieces.length), [pieces.length]);
   const scratch = useMemo(() => ({ screen: new THREE.Vector3() }), []);
@@ -221,6 +244,17 @@ export function ChallengeShards({
 
     group.visible = live;
 
+    overcomeByPerson.clear();
+    if (live) {
+      for (const record of CHALLENGE_RECORDS) {
+        if (store.challengeStatus[record.id] !== 'overcome') continue;
+        overcomeByPerson.set(
+          record.personId,
+          (overcomeByPerson.get(record.personId) ?? 0) + 1,
+        );
+      }
+    }
+
     for (let i = 0; i < pieces.length; i++) {
       const { shard, material } = pieces[i];
       const child = group.children[i] as THREE.Mesh | undefined;
@@ -238,12 +272,7 @@ export function ChallengeShards({
         ? Math.min(
             1,
             baselineGrowth(shard.personId) +
-              CHALLENGE_RECORDS.filter(
-                (record) =>
-                  record.personId === shard.personId &&
-                  store.challengeStatus[record.id] === 'overcome',
-              ).length *
-                GROWTH_PER_CHALLENGE,
+              (overcomeByPerson.get(shard.personId) ?? 0) * GROWTH_PER_CHALLENGE,
           )
         : 0;
       const chargeTo =
@@ -267,11 +296,16 @@ export function ChallengeShards({
       // The flight in. Eased sharply at the end so the last of the approach
       // reads as an impact rather than a drift, and staggered per fragment so a
       // person is struck several times rather than once.
+      // Staggered by the fragment's place in its own person's set rather than
+      // by its place in all seventy-four, so every vessel is struck several
+      // times over the same couple of seconds. Off the global index the last
+      // person in the data would not be hit until twelve seconds in, by which
+      // time nobody is still watching for it.
       const flight = reducedMotion
         ? 1
         : Math.min(
             1,
-            Math.max(0, since.current - i * CHALLENGES.FLY_STAGGER) /
+            Math.max(0, since.current - shard.ordinal * CHALLENGES.FLY_STAGGER) /
               CHALLENGES.FLY_TIME,
           );
       const eased = 1 - Math.pow(1 - flight, 4);

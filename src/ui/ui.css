@@ -729,125 +729,6 @@
 }
 
 
-/* ---- What a person found hard, and the gesture that resolves it ---- */
-
-/*
- * The one part of the readout that can be touched. Everything else in this
- * panel reports; these lines are how a difficulty is marked worked through, so
- * they have to take pointer events back from the panel that disowns them.
- */
-.challenge-list {
-  margin: 0.5rem 0 0;
-  padding: 0;
-  list-style: none;
-  pointer-events: auto;
-}
-
-.challenge-list__item {
-  display: block;
-  width: 100%;
-  margin: 0 0 0.45rem;
-  padding: 0.35rem 0 0.35rem 0.6rem;
-  border: 0;
-  border-left: 1px solid var(--ui-dim);
-  background: none;
-  text-align: left;
-  cursor: pointer;
-  transition:
-    border-color 260ms ease-out,
-    opacity 260ms ease-out;
-}
-
-.challenge-list__item:hover {
-  border-left-color: var(--ui-text);
-}
-
-.challenge-list__item[data-overcome='true'] {
-  border-left-color: #ffe3a6;
-  opacity: 0.72;
-}
-
-.challenge-list__kind {
-  display: block;
-  font-family: var(--font-body);
-  font-weight: 300;
-  font-size: 0.625rem;
-  letter-spacing: 0.19em;
-  text-indent: 0.19em;
-  text-transform: uppercase;
-  color: var(--ui-dim);
-}
-
-/*
- * A worked-through difficulty stops being about its kind and starts being about
- * what it left behind, so the line drops its colour for the warm one.
- */
-.challenge-list__item[data-overcome='true'] .challenge-list__kind,
-.challenge-list__item[data-overcome='true'] .challenge-list__kind .challenge-list__swatch {
-  color: #ffe3a6;
-  background: #ffe3a6;
-}
-
-.challenge-list__swatch {
-  display: inline-block;
-  width: 0.34rem;
-  height: 0.34rem;
-  margin-right: 0.4rem;
-  border-radius: 50%;
-  vertical-align: middle;
-}
-
-.challenge-list__title {
-  display: block;
-  margin-top: 0.2rem;
-  font-family: var(--font-body);
-  font-weight: 300;
-  font-size: 0.75rem;
-  line-height: 1.35;
-  color: var(--ui-text);
-}
-
-/*
- * How far a difficulty has got. The bar at the left is the only state marker:
- * absent while it has not been started, drawn while it is being worked on, warm
- * once it is behind them.
- */
-.challenge-list__item[data-status='not-started'] {
-  border-left-color: rgba(255, 255, 255, 0.14);
-}
-
-.challenge-list__item[data-status='in-progress'] {
-  border-left-color: var(--ui-text);
-}
-
-.challenge-list__item[data-status='overcome'] {
-  border-left-color: #ffe3a6;
-  opacity: 0.68;
-}
-
-.challenge-list__meta {
-  display: block;
-  margin-top: 0.16rem;
-  font-family: var(--font-body);
-  font-weight: 300;
-  font-size: 0.625rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ui-dim);
-}
-
-.challenge-list__item[data-status='overcome'] .challenge-list__meta {
-  color: #ffe3a6;
-}
-
-.challenge-list__item .challenge-list__title {
-  margin-top: 0;
-}
-
-.challenge-list__item .challenge-list__kind {
-  margin-top: 0.18rem;
-}
-
 /* ---- The key to the classes ---- */
 
 /*
@@ -867,6 +748,16 @@
   animation: readout-in 500ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.legend__title,
+.legend__note {
+  /* Deeper than the shared overlay shadow: these two are small, and they are
+     the ones that end up outside the shade when a key runs long. */
+  text-shadow:
+    0 1px 4px rgba(3, 5, 10, 0.98),
+    0 0 10px rgba(3, 5, 10, 0.95),
+    0 0 18px rgba(3, 5, 10, 0.8);
+}
+
 .legend__title {
   margin: 0 0 0.55rem;
   font-family: var(--font-body);
@@ -875,7 +766,10 @@
   letter-spacing: 0.22em;
   text-indent: 0.22em;
   text-transform: uppercase;
-  color: var(--ui-dim);
+  /* Full strength, not the dim used for secondary type. This line names what
+     the key is currently answering, and at the dim value it was the least
+     legible thing in a key it is supposed to be the heading of. */
+  color: var(--ui-text);
 }
 
 .legend__list {
@@ -890,6 +784,12 @@
   gap: 0.45rem;
   margin-bottom: 0.15rem;
   transition: opacity 260ms ease-out;
+}
+
+/* A row carrying a second line reads from its top, not from its middle. */
+.legend__item:has(.legend__under) {
+  align-items: flex-start;
+  margin-bottom: 0.4rem;
 }
 
 /* Picking one out dims the rest, so the key answers the pointer. */
@@ -919,6 +819,46 @@
   color: var(--ui-text);
 }
 
+/*
+ * The two lines of a row, stacked.
+ *
+ * `min-width: 0` is what lets the second line be trimmed rather than pushing
+ * the count off the end of the key — a flex child will not shrink below its
+ * content without it.
+ */
+.legend__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.06rem;
+  min-width: 0;
+}
+
+/*
+ * What falls under a kind.
+ *
+ * A colour and a phrase like "a subject was hard" say nothing on their own, so
+ * every row names the answers gathered under it. Dimmer and smaller than the
+ * kind itself: it is there to be read once, when the viewer is working out what
+ * the row means, and then to stay out of the way.
+ */
+.legend__under {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.625rem;
+  letter-spacing: 0.045em;
+  line-height: 1.25;
+  color: var(--ui-dim);
+  text-shadow: 0 1px 3px rgba(3, 5, 10, 0.95), 0 0 8px rgba(3, 5, 10, 0.85);
+  /*
+   * Wrapped rather than trimmed. Cut off at the edge of the key this line loses
+   * the very names it exists to give — "Assignments, Training content, Lack
+   * of…" tells the viewer nothing the row's own title did not. Two lines of
+   * small type cost less than that.
+   */
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
 /* A second heading inside one key, for the reading carried by size. */
 .legend__title--second {
   margin-top: 0.85rem;
@@ -928,17 +868,53 @@
  * The size key, drawn at the ratios the world draws. Three swatches chosen to
  * look tidy would misstate the one thing this section exists to say.
  */
-.legend__list--sizes .legend__item {
-  margin-bottom: 0.22rem;
+/*
+ * The size key, as one line.
+ *
+ * It used to be three rows under a heading of their own — a third of the panel
+ * spent on a constant that never changes with the pointer. Worse, being marked
+ * up as a `.legend__list` made it a second scroll area competing with the real
+ * list for height, so it ended up showing a clipped "Medium" behind a scrollbar
+ * of its own, which reads as a rendering fault rather than as a key.
+ */
+.legend__sizes {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 0.8rem;
 }
 
+.legend__size-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.legend__size-name {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.625rem;
+  letter-spacing: 0.06em;
+  color: var(--ui-dim);
+}
+
+/* The heading of a one-line key sits on the line rather than above it. */
+.legend__title--inline {
+  margin: 0 0.1rem 0 0;
+}
+
+/*
+ * Only as wide as the largest mark. The stacked version reserved a full row
+ * height per swatch to keep three left edges aligned; on one line there is no
+ * column to align to, and the reserved space just pushes the labels apart.
+ */
 .legend__size {
   flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 0.95rem;
+  height: 0.95rem;
 }
 
 .legend__size-mark {
@@ -996,6 +972,23 @@
   );
 }
 
+/*
+ * The key's own heading has to survive leaving the pool of shade.
+ *
+ * The fade is centred and reaches nothing at the edges, which is the whole
+ * point of it — an edged rectangle would be a panel floating in front of the
+ * world, and this world has none. Asking the comparative question makes the key
+ * three times longer, so its heading ends up out at the transparent edge, over
+ * whatever the world is drawing there. Set in the dim grey used for secondary
+ * type it simply vanished against a lit strut, which reads as the ranked view
+ * having failed to appear at all.
+ *
+ * The fix is contrast in the type, not more shade behind it: the two readings
+ * under the heading were always legible in the same spot, because the one you
+ * are in is set at full strength. So the heading is too, and the glyph shadow
+ * every overlay carries does the rest.
+ */
+
 /* Pulled back by the padding so the type starts where it did before. */
 .readout {
   margin-left: -1.35rem;
@@ -1008,25 +1001,41 @@
 /* ---- Asking the key a comparative question ---- */
 
 /*
- * The keys answer a question about one person by default. This is the control
- * that asks the other one — which class did most of them like, what did most
- * of them struggle with — and it sits on the key it changes rather than in a
- * bar of its own, because it is a way of reading the key and not a separate
- * feature of the world.
+ * The keys answer a question about one person by default. Underneath the
+ * heading is the control that asks the other one — which class did most of
+ * them like, what did most of them struggle with — and it sits on the key it
+ * changes rather than in a bar of its own, because it is a way of reading the
+ * key and not a separate feature of the world.
  */
 .legend__head {
   display: flex;
-  /* Held to one line each side: a title that wraps pushes the control out of
-     line with it and the pair stops reading as one row. */
+  /* Held to one line: a heading that wraps pushes what follows out of line with
+     it and the block stops reading as one head. */
   align-items: baseline;
-  justify-content: space-between;
   gap: 0.75rem;
   white-space: nowrap;
 }
 
-.legend__toggle {
+/*
+ * Both readings, side by side, both always pressable.
+ *
+ * This was one button that renamed itself, sitting at the far end of the head
+ * from a heading that renamed itself at the same moment. The pair looked like
+ * tabs, so the heading got clicked and nothing happened — and since the heading
+ * was the half that named the reading you were in, the half that actually
+ * worked was the one that looked like a label. Two buttons, and the question of
+ * which one is live is answered by which one is lit rather than by which word
+ * is showing.
+ */
+.legend__modes {
+  display: flex;
+  gap: 1.1rem;
+  margin: 0.45rem 0 0.75rem;
   pointer-events: auto;
-  padding: 0 0 0.1rem;
+}
+
+.legend__mode {
+  padding: 0 0 0.15rem;
   border: 0;
   border-bottom: 1px solid transparent;
   background: none;
@@ -1042,10 +1051,16 @@
     border-color 260ms ease-out;
 }
 
-.legend__toggle:hover,
-.legend__toggle[aria-pressed='true'] {
+.legend__mode:hover,
+.legend__mode:focus-visible {
+  color: var(--ui-text);
+}
+
+/* The reading you are in. Lit and underlined, and no longer a thing to press. */
+.legend__mode[aria-pressed='true'] {
   color: var(--ui-text);
   border-bottom-color: var(--ui-text);
+  cursor: default;
 }
 
 /* What the numbers in the ranked key are counting. */
@@ -1074,4 +1089,538 @@
   font-size: 0.6875rem;
   font-variant-numeric: tabular-nums;
   color: var(--ui-text);
+}
+
+/* ---- Finding one person among sixteen ---- */
+
+/*
+ * A mark, in the same language as every other one, that opens a list of names.
+ *
+ * It sits opposite the masthead and above the keys, where nothing else in the
+ * interface stands, so it never has to compete with a legend or a readout for
+ * the same edge. Collapsed by default: sixteen names permanently beside the
+ * world would be a directory with a visualization next to it.
+ */
+.people-search {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+  opacity: 0;
+  /* Invisible during the veil, and unreachable with it: an opacity of nothing
+     still takes clicks. */
+  pointer-events: none;
+  transition: opacity var(--ui-fade, 600ms) ease-out;
+}
+
+.people-search[data-visible='true'] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.people-search__toggle {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.6875rem;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+  transition: color 400ms ease-out;
+}
+
+.people-search__toggle:hover,
+.people-search__toggle:focus-visible,
+.people-search[data-open='true'] .people-search__toggle {
+  color: var(--ui-text);
+  outline: none;
+}
+
+/* The faintest possible container: enough to hold a list, not enough to become
+   a card sitting on top of the world. Matched to the counterfactual panel so
+   the two read as the same kind of thing. */
+.people-search__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 16.5rem;
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid rgba(90, 100, 114, 0.22);
+  background: rgba(5, 6, 10, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.people-search__field {
+  width: 100%;
+  padding: 0.35rem 0 0.4rem;
+  border: 0;
+  /* A rule rather than a box: the interface has no input chrome anywhere else. */
+  border-bottom: 1px solid rgba(90, 100, 114, 0.35);
+  background: none;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  color: var(--ui-text);
+  transition: border-color 300ms ease-out;
+}
+
+.people-search__field:focus {
+  outline: none;
+  border-bottom-color: var(--ui-text);
+}
+
+.people-search__field::placeholder {
+  color: var(--ui-dim);
+  opacity: 0.65;
+}
+
+/*
+ * Sixteen names fit; a filtered list is shorter still. The cap is here for the
+ * short window, not the long list — the panel must not grow down past the keys
+ * on a laptop screen.
+ */
+.people-search__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 15.5rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 162, 180, 0.35) transparent;
+}
+
+.people-search__person {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.28rem 0.3rem;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 200ms ease-out;
+}
+
+/* One highlight for both ways of pointing, so the keyboard and the pointer are
+   visibly driving the same list rather than two that happen to agree. */
+.people-search__person[data-cursor='true'] {
+  background: rgba(125, 106, 201, 0.16);
+}
+
+.people-search__person:focus-visible {
+  outline: none;
+  background: rgba(125, 106, 201, 0.16);
+}
+
+.people-search__name {
+  flex: none;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--ui-text);
+}
+
+/* Whoever is currently being observed is marked in the list too, so the panel
+   answers the world rather than sitting beside it. */
+.people-search__person[data-chosen='true'] .people-search__name {
+  color: #b9a4f0;
+}
+
+/*
+ * Truncated rather than wrapped. The name is what is being scanned for and has
+ * to hold one line; the project is context, and half of "AI Companion & Movie
+ * Studio" is still enough to tell it from the other four.
+ */
+.people-search__project {
+  flex: 0 1 auto;
+  min-width: 0;
+  margin-left: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ui-dim);
+}
+
+.people-search__empty {
+  padding: 0.4rem 0.3rem;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--ui-dim);
+}
+
+.people-search__foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.15rem;
+  border-top: 1px solid rgba(90, 100, 114, 0.18);
+}
+
+.people-search__count,
+.people-search__reset {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+}
+
+.people-search__count {
+  padding: 0.5rem 0 0.15rem;
+}
+
+.people-search__reset {
+  padding: 0.5rem 0 0.15rem;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: none;
+  cursor: pointer;
+  transition:
+    color 260ms ease-out,
+    border-color 260ms ease-out;
+}
+
+.people-search__reset:hover:not(:disabled),
+.people-search__reset:focus-visible:not(:disabled) {
+  outline: none;
+  color: var(--ui-text);
+  border-bottom-color: var(--ui-text);
+}
+
+.people-search__reset:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ---- Keeping the way back reachable ---- */
+
+/*
+ * The key is anchored at its own middle, and asking it a comparative question
+ * makes it much longer — fifteen classes rather than the handful one person
+ * liked. With nothing capping its height it simply grew past the top of the
+ * window, taking its heading with it, and the heading is where the control that
+ * switches the reading back lives. There was then no way to get out of the
+ * ranked view at all.
+ *
+ * So the key is a column with a ceiling now: the heading is pinned, and only
+ * the list beneath it scrolls. The way back cannot leave the screen however
+ * long the reading runs.
+ */
+.legend {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 7rem);
+}
+
+/*
+ * Everything except the list holds its size; the list gives up height first.
+ *
+ * The size key is named here rather than left to the default because it was the
+ * bug: when two children could both shrink, an over-long panel took the height
+ * out of both in proportion, and a three-row constant ended up cropped behind a
+ * scrollbar next to a list that had plenty of room to lose instead.
+ */
+.legend__head,
+.legend__modes,
+.legend__note,
+.legend__title--second,
+.legend__sizes {
+  flex: none;
+}
+
+.legend__list {
+  min-height: 0;
+  overflow-y: auto;
+  /* The key as a whole ignores the pointer so the world stays reachable
+     through it; the part that has to be scrolled takes it back — and with it
+     the rows inside, which are buttons once a person has been chosen. */
+  pointer-events: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 162, 180, 0.35) transparent;
+}
+
+/* ---- A row that can be worked through ---- */
+
+/*
+ * The body of every row, live or not.
+ *
+ * A button rather than a list item with a button in it: the whole row is the
+ * target, so there is nothing to aim at. Reset to nothing and given the layout
+ * `.legend__item` carries elsewhere, so that the four other keys — which have
+ * no interactive rows — are untouched.
+ */
+.legend__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+}
+
+.legend__row--live {
+  cursor: pointer;
+  transition: opacity 260ms ease-out;
+}
+
+/* The only hover affordance a row needs: what it says comes up to full. */
+.legend__row--live:hover .legend__under {
+  color: var(--ui-text);
+}
+
+/*
+ * What is true of this row on the right: how many met it, how big it was, and
+ * how far it has got. Stacked so a long kind name keeps the full width of the
+ * panel to wrap into rather than being squeezed by three figures beside it.
+ */
+.legend__meta {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  padding-left: 0.5rem;
+  text-align: right;
+}
+
+.legend__meta .legend__count {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.legend__severity,
+.legend__status {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ui-dim);
+}
+
+/*
+ * A difficulty that has moved. The warm tone is what "behind them" already
+ * means in this month, and a row that is done steps back rather than
+ * disappearing — they still came through it.
+ */
+.legend__status {
+  color: var(--ui-text);
+}
+
+.legend__item[data-status='overcome'] .legend__status {
+  color: #ffe3a6;
+}
+
+.legend__item[data-status='overcome'] {
+  opacity: 0.55;
+}
+
+/* ---- What the weight of a person's line means ---- */
+
+.legend__list--weights .legend__item {
+  gap: 0.6rem;
+  margin-bottom: 0.42rem;
+}
+
+/*
+ * The strands, drawn as the world draws them.
+ *
+ * A fixed box so the four rows keep a straight left edge, with the strands
+ * stacked inside it and centred — the beam out there thickens about its own
+ * axis rather than growing downward, and the key has to say the same.
+ */
+.weight-key__mark {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1px;
+  width: 2.6rem;
+  height: 1.1rem;
+}
+
+.weight-key__strand {
+  height: 1px;
+  background: var(--ui-text);
+  opacity: 0.75;
+}
+
+/* A closing line under a key, set apart from the rows above it. */
+.legend__note--foot {
+  margin: 0.65rem 0 0;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(90, 100, 114, 0.18);
+  line-height: 1.45;
+}
+
+/* Whoever is being pointed at, and what their own rating is. */
+.legend__detail {
+  margin-top: 0.7rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(90, 100, 114, 0.2);
+}
+
+/* ---- The score's only control ---- */
+
+/*
+ * Top left, opposite the search, in the one corner nothing else claims.
+ *
+ * Deliberately the smallest permanent thing on screen. The soundtrack is the
+ * room the visualization sits in, and a control that announced itself would
+ * make it the subject; this is meant to be findable when it is wanted and
+ * invisible the rest of the time.
+ */
+.sound-toggle {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  z-index: 12;
+  opacity: 0;
+  /* Unreachable while it is invisible: an opacity of nothing still takes clicks. */
+  pointer-events: none;
+  transition: opacity var(--ui-fade, 600ms) ease-out;
+}
+
+.sound-toggle[data-visible='true'] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sound-toggle__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.5625rem;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+  text-transform: uppercase;
+  color: var(--ui-dim);
+  cursor: pointer;
+  text-shadow:
+    0 1px 4px rgba(3, 5, 10, 0.98),
+    0 0 10px rgba(3, 5, 10, 0.95);
+  transition: color 260ms ease-out;
+}
+
+.sound-toggle__button:hover,
+.sound-toggle__button:focus-visible {
+  color: var(--ui-text);
+}
+
+/*
+ * Three strokes, standing when the score is running and lying flat when it is
+ * not. A level meter rather than a speaker glyph: this world has no icons in it
+ * anywhere else, and one would arrive looking like it came from another piece
+ * of software.
+ */
+.sound-toggle__mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.11rem;
+  height: 0.55rem;
+}
+
+.sound-toggle__mark i {
+  width: 1px;
+  height: 0.16rem;
+  background: currentColor;
+  transition: height 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sound-toggle__mark[data-on='true'] i:nth-child(1) {
+  height: 0.3rem;
+}
+
+.sound-toggle__mark[data-on='true'] i:nth-child(2) {
+  height: 0.55rem;
+}
+
+.sound-toggle__mark[data-on='true'] i:nth-child(3) {
+  height: 0.38rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sound-toggle__mark i {
+    transition: none;
+  }
+}
+
+/* ---- The audio readout, under ?auditsound only ---- */
+
+/*
+ * Bottom left, in the corner the debug frame counter does not use, and set in
+ * the same monospaced language as the rest of the instrumentation. It is not
+ * part of the world and does not pretend to be.
+ */
+.audio-audit {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 30;
+  min-width: 22rem;
+  max-width: 30rem;
+  padding: 0.6rem 0.75rem;
+  background: rgba(3, 5, 10, 0.82);
+  border: 1px solid rgba(148, 162, 180, 0.18);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.625rem;
+  line-height: 1.5;
+  color: var(--ui-dim);
+  pointer-events: none;
+}
+
+.audio-audit__title {
+  margin: 0 0 0.35rem;
+  color: var(--ui-text);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.audio-audit__row {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.audio-audit__key {
+  flex: none;
+  width: 5.5rem;
+  color: rgba(148, 162, 180, 0.65);
+}
+
+.audio-audit__value {
+  color: var(--ui-text);
+  overflow-wrap: anywhere;
 }

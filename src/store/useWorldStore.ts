@@ -93,6 +93,31 @@ interface WorldState {
   challengeStatus: Record<string, ChallengeStatus>;
 
   /**
+   * The person the search last reached for, and the moment it did.
+   *
+   * Separate from the selection because it says something the selection cannot:
+   * that this person was arrived at rather than clicked on. Somebody reached
+   * for by name has not been seen yet — the viewer does not know which of
+   * sixteen vessels the camera is travelling toward — so the arrival has to
+   * announce itself, and then stop. The stamp is what lets it stop: the pulse
+   * is read off elapsed time in the render loop rather than being wound down
+   * by a timer that would have to be cancelled every time the choice changed.
+   */
+  foundTraineeId: string | null;
+  foundStamp: number;
+
+  /**
+   * Somebody chosen from outside a layer, held until they exist to be chosen.
+   *
+   * The people belong to the inside of a month, and passing into one is a
+   * journey rather than a switch. Focusing on arrival at the far end of it
+   * would send the camera to a vessel that has not resolved yet, which reads as
+   * the search having failed to find them. `TraineeField` takes this up at the
+   * one moment that cannot be predicted from here: when the person is on screen.
+   */
+  pendingFindId: string | null;
+
+  /**
    * Which layer the viewer has passed into, or null while they are outside
    * looking at the whole structure.
    *
@@ -158,10 +183,24 @@ interface WorldState {
    * people like, what did most people struggle with.
    */
   ranked: boolean;
-  toggleRanked: () => void;
+  /**
+   * Set rather than toggled, because the control is two named options rather
+   * than one switch. A viewer who clicks the reading they are already in should
+   * stay where they are, not be thrown into the other one.
+   */
+  setRanked: (ranked: boolean) => void;
 
   hoverTrainee: (id: string | null) => void;
   focusTrainee: (id: string | null) => void;
+  /**
+   * Reaches for one person by name, from wherever the viewer currently is.
+   *
+   * Distinct from `focusTrainee` in the two things a name-based search has to
+   * do that a click never does: it may have to enter a layer first, because the
+   * person named is not on screen to be clicked, and it marks the arrival so
+   * the world can show which vessel was found.
+   */
+  findTrainee: (id: string) => void;
   hoverTeam: (id: string | null) => void;
   focusTeam: (id: string | null) => void;
   /** Steps the selection through the field; used by keyboard navigation. */
@@ -200,6 +239,9 @@ export const useWorldStore = create<WorldState>((set) => ({
   hoveredSession: null,
   openedSession: null,
   hoveredMonth: null,
+  foundTraineeId: null,
+  foundStamp: 0,
+  pendingFindId: null,
   // The world opens on the people. Everything else in it is something that
   // happened to them, so they are what the first look should be about.
   lens: 'people',
@@ -271,6 +313,10 @@ export const useWorldStore = create<WorldState>((set) => ({
         // describing a person the viewer can no longer see.
         focusedTraineeId: month === null ? null : state.focusedTraineeId,
         focusedTeamId: month === null ? null : state.focusedTeamId,
+        // A search still travelling toward its layer is abandoned if the viewer
+        // leaves before it lands; taking it up afterwards would drag them back
+        // into a month they had just stepped out of.
+        pendingFindId: month === null ? null : state.pendingFindId,
         hoveredMonth: null,
         hasInteracted: true,
       };
@@ -285,18 +331,46 @@ export const useWorldStore = create<WorldState>((set) => ({
       };
     }),
 
-  toggleRanked: () => set((state) => ({ ranked: !state.ranked })),
+  setRanked: (ranked) => set((state) => (state.ranked === ranked ? state : { ranked })),
 
   focusTrainee: (id) =>
     set((state) => {
       if (state.focusedTraineeId === id) return state;
       return {
         focusedTraineeId: id,
+        // Choosing by hand is not being found by name, and must not inherit the
+        // arrival that belonged to a search.
+        foundTraineeId: null,
         // A person and their project are different subjects; choosing one
         // releases the other rather than stacking two focuses at once.
         focusedTeamId: null,
         // A session belongs to whoever was selected when it was opened; moving
         // to somebody else must not leave their neighbour's label standing.
+        openedSession: null,
+        hoveredSession: null,
+        interaction: deriveInteraction(state.hoveredTraineeId, id, null),
+        hasInteracted: true,
+      };
+    }),
+
+  findTrainee: (id) =>
+    set((state) => {
+      // Nobody is standing anywhere until a layer has been entered, so reaching
+      // for a person from outside passes into the first month — where the
+      // sixteen are individuals, which is the subject a search by name asks
+      // about — and leaves the choice waiting to be taken up on arrival.
+      if (state.enteredMonth === null) {
+        return { enteredMonth: 0, hoveredMonth: null, pendingFindId: id, hasInteracted: true };
+      }
+
+      return {
+        pendingFindId: null,
+        foundTraineeId: id,
+        foundStamp: performance.now(),
+        focusedTraineeId: id,
+        // Same reasoning as choosing by hand: a person and their project are
+        // different subjects, and one releases the other.
+        focusedTeamId: null,
         openedSession: null,
         hoveredSession: null,
         interaction: deriveInteraction(state.hoveredTraineeId, id, null),
@@ -358,6 +432,8 @@ export const useWorldStore = create<WorldState>((set) => ({
       enteredMonth: null,
       hoveredSession: null,
       openedSession: null,
+      foundTraineeId: null,
+      pendingFindId: null,
       whatIf: DEFAULT_WHAT_IF,
       interaction: 'IDLE',
     }),

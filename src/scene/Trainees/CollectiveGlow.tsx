@@ -1,10 +1,8 @@
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
-import { challengesOf, CHALLENGE_RECORDS } from '../../data/challenges';
-import { GROWTH_PER_CHALLENGE, baselineGrowth } from '../../data/growth';
 import { PALETTE } from '../../config/palette';
-import { CHALLENGES, GROWTH } from '../../config/dimensions';
+import { CHALLENGES, GROWTH, MEDALLION } from '../../config/dimensions';
 import { useWorldStore } from '../../store/useWorldStore';
 
 /**
@@ -24,11 +22,6 @@ export function CollectiveGlow() {
   const lightRef = useRef<THREE.PointLight>(null);
   const reducedMotion = useWorldStore((state) => state.reducedMotion);
 
-  const people = useMemo(
-    () => [...new Set(CHALLENGE_RECORDS.map((record) => record.personId))],
-    [],
-  );
-
   const level = useRef(0);
   const colour = useMemo(() => new THREE.Color(PALETTE.KNOWLEDGE), []);
 
@@ -41,16 +34,11 @@ export function CollectiveGlow() {
     const live =
       store.enteredMonth === CHALLENGES.MONTH && store.lens === 'databricks';
 
-    let total = 0;
-    if (live) {
-      for (const personId of people) {
-        const done = challengesOf(personId).filter(
-          (record) => store.challengeStatus[record.id] === 'overcome',
-        ).length;
-        total += Math.min(1, baselineGrowth(personId) + done * GROWTH_PER_CHALLENGE);
-      }
-      total /= Math.max(1, people.length);
-    }
+    // Every vessel burns the same in this lens, so the light the sixteen give
+    // off together is that one figure rather than a mean over sixteen copies of
+    // it. What distinguishes people here is the weight of their line, and light
+    // spilled into the room cannot carry that.
+    const total = live ? MEDALLION.EQUAL_GLOW : 0;
 
     // On the same slow clock the vessels use, so the room and the people it
     // holds brighten together rather than at two different rates.

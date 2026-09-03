@@ -13,9 +13,8 @@ import { OrbSparkles } from './OrbSparkles';
 import { CollectiveGlow } from './CollectiveGlow';
 import { KnowledgeCore } from '../Knowledge/KnowledgeCore';
 import { DataFlows } from '../Knowledge/DataFlows';
-import { challengesOf } from '../../data/challenges';
+import { MOST_PER_PERSON, challengesOf } from '../../data/challenges';
 import { GROWTH_PER_CHALLENGE, baselineGrowth } from '../../data/growth';
-import { arrivalAt } from '../Knowledge/flowState';
 import { SessionLabel } from './SessionLabel';
 import { useSelectionKeys } from '../../interaction/useSelectionKeys';
 import {
@@ -30,13 +29,22 @@ import type { GravityBody } from '../../sim/gravity';
 import { buildTeamFormations, stepGravity } from '../../sim/gravity';
 import { PALETTE } from '../../config/palette';
 import { ORBS } from '../../config/orbs';
-import { DIMENSION, GROWTH, RENDER_ORDER, SHELLS } from '../../config/dimensions';
+import { DIMENSION, GROWTH, MEDALLION, RENDER_ORDER, SHELLS } from '../../config/dimensions';
 import { useWorldStore } from '../../store/useWorldStore';
 
 /**
  * Which layers hold people. Month 3 is not wired yet.
  */
 const LIVE_MONTHS = [0, 1, 2] as const;
+
+/**
+ * How far a layer has to have resolved before a search may reach into it.
+ *
+ * Not 1: the last of the reveal is one person's stagger window finishing, and
+ * waiting for it would hold the camera still for a beat after the field is
+ * plainly there.
+ */
+const FIND_REVEAL_GATE = 0.92;
 
 /**
  * How hard each month's teams pull.
@@ -275,6 +283,8 @@ export function TraineeField() {
       // an undefined slot resolves to no layer at all.
       order: Array.from({ length: count }, (_, i) => i),
       distances: new Float32Array(count),
+      /** How far through the found-by-name pulse each person is, 1 down to 0. */
+      foundLevel: new Float32Array(count),
       /** Eased per-person values, indexed by trainee rather than by slot. */
       emphasisLevel: new Float32Array(count).fill(ORBS.EMPHASIS_NEUTRAL),
       complexityLevel: new Float32Array(count),
@@ -351,12 +361,24 @@ export function TraineeField() {
   /** Seconds each layer has been stood in, before its gravity is released. */
   const gravityHold = useRef(LIVE_MONTHS.map(() => 0));
 
-  useFrame(({ clock, camera }, delta) => {
+  /**
+   * The vessels' own clock, which can be brought to rest.
+   *
+   * Separate from the render clock because under the lens about knowledge the
+   * orbs are asked to hold still, and everything animating them — the breath,
+   * the surface strain, the drift of the interior — reads this rather than the
+   * wall clock. Advancing it at a rate that eases to zero stops them the way
+   * something settles, where freezing the wall clock would stop them the way a
+   * dropped frame does.
+   */
+  const orbClock = useRef(0);
+  const orbRate = useRef(1);
+
+  useFrame(({ camera }, delta) => {
     const orbs = orbRef.current;
     const halos = haloRef.current;
     if (!orbs || !halos) return;
 
-    const time = clock.elapsedTime;
     const step = Math.min(delta, 0.1);
 
     // Read state directly rather than subscribing: this runs every frame and
@@ -369,18 +391,39 @@ export function TraineeField() {
       whatIf,
       lens,
       challengeStatus,
+      foundTraineeId,
+      foundStamp,
+      pendingFindId,
     } = useWorldStore.getState();
     const hasSelection = focusedTraineeId !== null || focusedTeamId !== null;
 
+    // Under the lens about knowledge the vessels come to rest: a person's
+    // brightness there is a quantity, and light that rises and falls on its own
+    // says the quantity is changing when it is not.
+    const wantsStill = lens === 'databricks';
+    orbRate.current +=
+      ((wantsStill ? 0 : 1) - orbRate.current) *
+      (reducedMotion ? 1 : 1 - Math.exp(-step / GROWTH.STILL_EASE));
+    orbClock.current += step * orbRate.current;
+    const time = reducedMotion ? 4 : orbClock.current;
+
+    // How much of the found-by-name pulse is left, read off the clock rather
+    // than wound down by a timer: the choice can change at any moment, and a
+    // timer would have to be cancelled and restarted every time it did.
+    const foundLeft = foundTraineeId
+      ? Math.max(
+          0,
+          1 - (performance.now() - foundStamp) / (ORBS.FOUND_DURATION * 1000),
+        )
+      : 0;
+
 
     const ease = reducedMotion ? 1 : 1 - Math.exp(-step / ORBS.EMPHASIS_EASE);
-    // Two clocks. Knowledge settling after a difficulty is worked through has
-    // to arrive slowly or it reads as a flash; a beam landing has to arrive
-    // quickly or the slow clock smooths it away entirely and nothing is seen to
-    // happen. The arrival figure is already continuous, so responding to it
-    // fast cannot produce a step.
+    // One clock now. There used to be a second, fast one so that a beam landing
+    // was seen to land rather than being smoothed away — but the vessels no
+    // longer answer individual arrivals, so what is left is knowledge settling,
+    // and that has to arrive slowly or it reads as a flash.
     const growthEase = reducedMotion ? 1 : 1 - Math.exp(-step / GROWTH.EASE);
-    const arrivalEase = reducedMotion ? 1 : 1 - Math.exp(-step / GROWTH.ARRIVAL_EASE);
     const slowEase = reducedMotion ? 1 : 1 - Math.exp(-step / 0.85);
     const settled = transitionDepth() > 0.92;
 
@@ -403,6 +446,14 @@ export function TraineeField() {
           ? 1
           : 0
         : revealClock.current[cell.month];
+
+      // Somebody reached for from outside is taken up here and nowhere else,
+      // because this is the only place that knows when they are actually on
+      // screen. Sending the camera to them any earlier lands it on a vessel
+      // that has not resolved yet, which reads as the search having missed.
+      if (pendingFindId && live && revealProgress > FIND_REVEAL_GATE) {
+        useWorldStore.getState().findTrainee(pendingFindId);
+      }
 
       // Team gravity comes up only after the camera has landed, and over
       // several seconds. The viewer has to see the sixteen scattered before
@@ -451,7 +502,11 @@ export function TraineeField() {
 
         body.present = state.present;
         body.bonding = state.bonding;
-        body.turbulence = state.present ? state.turbulence : 0;
+        // Strain moves a person around their own place, which is the jiggle the
+        // vessels are being asked to lose here. It is held at zero rather than
+        // eased because the gravity solver reads it as a force: fading a force
+        // out still leaves the body drifting back, and the point is stillness.
+        body.turbulence = state.present && !wantsStill ? state.turbulence : 0;
 
         // Only the layer being occupied answers to attention. A person in a
         // month nobody has entered is context, not a subject.
@@ -475,8 +530,15 @@ export function TraineeField() {
           carried.length > 0 &&
           carried.every((record) => challengeStatus[record.id] === 'overcome');
 
+        // The pulse only ever lifts somebody who is already the subject, so a
+        // stale stamp cannot light up a person the viewer has since moved on
+        // from.
+        const found = attended && trainee.id === foundTraineeId ? foundLeft : 0;
+        buffers.foundLevel[index] = found;
+
         const emphasisTarget = attended
-          ? ORBS.EMPHASIS_ATTENDED
+          ? ORBS.EMPHASIS_ATTENDED +
+            (ORBS.EMPHASIS_FOUND - ORBS.EMPHASIS_ATTENDED) * found
           : grown
             ? ORBS.EMPHASIS_ATTENDED
             : hasSelection && live
@@ -506,15 +568,17 @@ export function TraineeField() {
         // hard. How much of a vessel is crossed is that person's own recorded
         // challenge load in this month, so nobody is cracked for effect and an
         // untroubled person shows nothing at all.
-        // The fissures follow the dummy challenge data, and close again as
-        // each one is worked through — so what the glass carries is only ever
-        // what is still open.
+        // The fissures close again as each kind is worked through, so what the
+        // glass carries is only ever what is still open. Measured against the
+        // heaviest load anybody actually carries — the raw count of answers
+        // somebody gave is a different number now that similar answers are
+        // gathered, and dividing by that one would mean nobody ever cracks.
         const stillOpen = carried.filter(
           (record) => challengeStatus[record.id] !== 'overcome',
         ).length;
         const cracksTarget =
           lens === 'challenges' && live
-            ? Math.min(1, stillOpen / MAX_CHALLENGES)
+            ? Math.min(1, stillOpen / MOST_PER_PERSON)
             : 0;
         buffers.cracksLevel[index] +=
           (cracksTarget - buffers.cracksLevel[index]) * slowEase;
@@ -541,14 +605,23 @@ export function TraineeField() {
         const growthTarget = !live
           ? 0
           : lens === 'databricks'
-            ? arrivalAt(trainee.id)
+            // The same for everybody, on purpose.
+            //
+            // Brightness carried a per-person figure here twice — first what
+            // was arriving down their beam at that instant, which flickered,
+            // then what they had gained, which did not. Both put a second
+            // channel alongside the beam saying the same kind of thing, and the
+            // eye cannot compare two brightnesses precisely anyway. The line's
+            // weight carries the rating now; the vessels are simply lit, so
+            // nothing competes with it or quietly contradicts it.
+            ? MEDALLION.EQUAL_GLOW
             : lens === 'challenges'
               // Held back so the glass inside can be read against it.
               ? gained * GROWTH.CHALLENGE_GLOW
               : 0;
         buffers.growthLevel[index] +=
           (growthTarget - buffers.growthLevel[index]) *
-          (lens === 'databricks' ? arrivalEase : growthEase);
+          growthEase;
 
         // Confidence sets the vessel's size, scaled to the layer it stands in
         // so a person looks the same in every month — which is what lets the
@@ -651,7 +724,7 @@ export function TraineeField() {
     buffers.order.sort((a, b) => buffers.distances[b] - buffers.distances[a]);
 
     if (orbMaterialRef.current) {
-      orbMaterialRef.current.uniforms.uTime.value = reducedMotion ? 4 : time;
+      orbMaterialRef.current.uniforms.uTime.value = time;
     }
 
     for (let slot = 0; slot < count; slot++) {
@@ -668,14 +741,21 @@ export function TraineeField() {
       // An attended orb swells slightly: enough to confirm the pointer found
       // it, far short of lurching toward the viewer.
       const emphasis = buffers.emphasisLevel[index];
+      // The attended term is clamped rather than left open-ended: emphasis now
+      // overshoots while somebody is being found, and letting the swell follow
+      // it that far would make the vessel lurch at the viewer instead of
+      // brightening. The overshoot is spent on light; size gets its own,
+      // smaller share of it.
       const swell =
         1 +
         ORBS.ATTENDED_SWELL *
-          Math.max(
-            0,
+          THREE.MathUtils.clamp(
             (emphasis - ORBS.EMPHASIS_NEUTRAL) /
               (ORBS.EMPHASIS_ATTENDED - ORBS.EMPHASIS_NEUTRAL),
-          );
+            0,
+            1,
+          ) +
+        ORBS.FOUND_SWELL * buffers.foundLevel[index];
       // Arriving by growing, not merely by fading: a vessel that swells into
       // existence has volume, one that only becomes opaque is a decal.
       const reveal = buffers.revealLevel[index];

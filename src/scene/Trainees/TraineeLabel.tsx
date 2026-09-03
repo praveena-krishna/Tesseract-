@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { ORBS } from '../../config/orbs';
+import { DIMENSION, SHELLS } from '../../config/dimensions';
 import { orbKey } from './orbKey';
 import { traineeById } from '../../data/world';
 import { useWorldStore } from '../../store/useWorldStore';
@@ -17,6 +18,11 @@ import { useWorldStore } from '../../store/useWorldStore';
  *
  * A selection outranks a hover, so passing the pointer across the field does
  * not steal the label away from whatever is currently held.
+ *
+ * The name and nothing else. A chosen person used to carry a second line naming
+ * their project and the size of their team, which put two facts in a place that
+ * is meant to identify one thing — and the formation and its roster are already
+ * drawn in the month where they matter.
  */
 export function TraineeLabel() {
   const groupRef = useRef<THREE.Group>(null);
@@ -59,8 +65,19 @@ export function TraineeLabel() {
     if (!position) return;
 
     // Sit clear of the subject's own glow so the type never overlaps it.
+    //
+    // Everything in a layer is scaled to that layer, the people included, so
+    // the lift has to be too. Held at Month 1's size it is a clearance in the
+    // first month and a position inside the vessel by the third, where the
+    // orbs are four times the radius.
+    const scale =
+      SHELLS[DIMENSION.SHELL_OF_MONTH[store.enteredMonth]].half /
+      SHELLS[DIMENSION.SHELL_OF_MONTH[0]].half;
+    const radius = (ORBS.BASE_RADIUS + ORBS.RADIUS_VARIANCE) * scale;
+
     offset.copy(position);
-    offset.y += (ORBS.BASE_RADIUS + ORBS.RADIUS_VARIANCE) * 2.1;
+    offset.y +=
+      radius * (subject.selected ? ORBS.LABEL_LIFT_FOCUSED : ORBS.LABEL_LIFT);
     group.position.copy(offset);
   });
 

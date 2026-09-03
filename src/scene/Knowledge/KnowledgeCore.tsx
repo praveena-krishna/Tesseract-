@@ -4,8 +4,6 @@ import { useFrame } from '@react-three/fiber';
 import { CORE_FRAG, CORE_VERT } from '../../shaders/knowledgeCore.glsl';
 import { PALETTE } from '../../config/palette';
 import { MEDALLION, RENDER_ORDER } from '../../config/dimensions';
-import { challengesOf, CHALLENGE_RECORDS } from '../../data/challenges';
-import { GROWTH_PER_CHALLENGE, baselineGrowth } from '../../data/growth';
 import { useWorldStore } from '../../store/useWorldStore';
 
 /** The three layers, innermost first — the order data moves through them. */
@@ -55,11 +53,6 @@ const LAYERS = [
 export function KnowledgeCore() {
   const groupRef = useRef<THREE.Group>(null);
   const reducedMotion = useWorldStore((state) => state.reducedMotion);
-
-  const people = useMemo(
-    () => [...new Set(CHALLENGE_RECORDS.map((record) => record.personId))],
-    [],
-  );
 
   const geometries = useMemo(
     () => LAYERS.map((layer) => new THREE.SphereGeometry(layer.radius, 64, 48)),
@@ -115,16 +108,9 @@ export function KnowledgeCore() {
     state.current.presence += ((live ? 1 : 0) - state.current.presence) * ease;
 
     // What is running through the structure is what the sixteen have gained.
-    let gained = 0;
-    if (live) {
-      for (const personId of people) {
-        const done = challengesOf(personId).filter(
-          (record) => store.challengeStatus[record.id] === 'overcome',
-        ).length;
-        gained += Math.min(1, baselineGrowth(personId) + done * GROWTH_PER_CHALLENGE);
-      }
-      gained /= Math.max(1, people.length);
-    }
+    // The same figure for everybody, so the charge running through the
+    // structure is that figure rather than a mean over sixteen copies of it.
+    const gained = live ? MEDALLION.EQUAL_GLOW : 0;
     state.current.flow += (gained - state.current.flow) * ease;
 
     group.visible = state.current.presence > 0.01;

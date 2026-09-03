@@ -8,11 +8,16 @@ import { Readout } from './ui/Readout';
 import { ClassLegend } from './ui/ClassLegend';
 import { ChallengeLegend } from './ui/ChallengeLegend';
 import { ProjectLegend } from './ui/ProjectLegend';
+import { RatingLegend } from './ui/RatingLegend';
 import { TimeControl } from './ui/TimeControl';
 import { LensControl } from './ui/LensControl';
+import { PeopleSearch } from './ui/PeopleSearch';
+import { SoundToggle } from './ui/SoundToggle';
+import { AudioAudit } from './ui/AudioAudit';
 import { WebGLFallback } from './ui/WebGLFallback';
 import { useReducedMotion } from './interaction/useReducedMotion';
 import { useHoverCursor } from './interaction/useHoverCursor';
+import { useAudioDirector } from './audio/useAudioDirector';
 import { useWorldStore } from './store/useWorldStore';
 import { CAMERA } from './config/dimensions';
 import { PALETTE } from './config/palette';
@@ -51,6 +56,9 @@ export default function App() {
   const debug = useMemo(() => hasFlag('debug'), []);
   useReducedMotion();
   useHoverCursor();
+  // The soundtrack observes the store and is not called from anywhere else.
+  // Mounted above the WebGL check so the hook order never changes.
+  useAudioDirector();
 
   if (!hasWebGL) return <WebGLFallback />;
 
@@ -94,8 +102,12 @@ export default function App() {
       <ClassLegend />
       <ChallengeLegend />
       <ProjectLegend />
+      <RatingLegend />
       <TimeControl />
       <LensControl />
+      <PeopleSearch />
+      <SoundToggle />
+      <AudioAudit />
       {/*
         The counterfactual panel is still not mounted. It alters skills, teams
         and training length, none of which are on screen in this phase, and a

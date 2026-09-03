@@ -6,11 +6,11 @@
  *  entry falls back to the neutral below rather than disappearing.
  * ─────────────────────────────────────────────────────────────────────────
  *
- * Fifteen classes appear across the sixteen people, which is more than shape
- * alone can carry — the forms differ, but at the size they are drawn inside a
- * vessel a viewer cannot hold fifteen silhouettes in their head at once. Hue
- * does that work, and it is the reason there is a key on screen: fifteen
- * colours are not memorable either, so the world names them rather than
+ * All sixteen classes appear across the sixteen people, which is more than
+ * shape alone can carry — the forms differ, but at the size they are drawn
+ * inside a vessel a viewer cannot hold sixteen silhouettes in their head at
+ * once. Hue does that work, and it is the reason there is a key on screen:
+ * sixteen colours are not memorable either, so the world names them rather than
  * expecting anybody to learn them.
  *
  * The hues are spread right around the wheel and kept light. These are read
@@ -32,6 +32,10 @@ export const CLASS_COLOUR: Record<string, string> = {
   iot: '#5cd7a8',
   linux: '#ffd166',
   'self-learning-by-trainee-members': '#c9b6f5',
+  // Chartreuse: the one gap left on the wheel once the other fifteen have
+  // taken their hues, and far enough from both the yellow of Linux and the
+  // green of Group Project to be told from either through the glass.
+  testing: '#d9e86b',
   'ui-ux': '#ff8ab0',
   'web-mobile-application': '#79c6ff',
 };

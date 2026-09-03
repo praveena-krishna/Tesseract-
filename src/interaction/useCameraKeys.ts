@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type CameraControlsImpl from 'camera-controls';
+import { isTypingTarget } from './typingTarget';
 
 /**
  * Keys the camera responds to. Held keys accumulate, so pressing two at once
@@ -52,6 +53,8 @@ export function useCameraKeys(
     const onKeyDown = (event: KeyboardEvent) => {
       // Never swallow keys meant for the browser's own navigation.
       if (event.metaKey || event.ctrlKey || event.altKey) return;
+      // The search field is a place to type, not another way to fly.
+      if (isTypingTarget(event)) return;
 
       if (event.code === 'Home' || event.code === 'Escape') {
         if (event.code === 'Home') optionsRef.current.onHome();

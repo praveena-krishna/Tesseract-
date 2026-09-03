@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import type { MonthIndex } from '../data/world';
 import { useWorldStore } from '../store/useWorldStore';
+import { isTypingTarget } from './typingTarget';
 
 /**
  * Keyboard selection.
@@ -19,6 +20,8 @@ export function useSelectionKeys(orderedIds: string[]): void {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return;
+      // The search field is a place to type, not another way to fly.
+      if (isTypingTarget(event)) return;
       const store = useWorldStore.getState();
 
       // The layers are volumes in 3D with nothing for Tab to land on, so the

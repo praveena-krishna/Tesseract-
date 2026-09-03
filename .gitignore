@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# The Interstellar soundtrack. 224 MB of audio served from beside the project
+# by the `ost-assets` plugin in vite.config.ts, never copied into the bundle.
+Hans Zimmer - Interstellar OST (Deluxe) 2014 [MP3 @ 320 kbps]/
+Hans Zimmer - Interstellar OST (Deluxe) 2014 [MP3 @ 320 kbps].zip
+*.zip

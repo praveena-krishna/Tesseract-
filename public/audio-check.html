@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tesseract — audio diagnosis</title>
+<style>
+  body { margin: 0; padding: 2rem; background: #05060a; color: #dfe5ee;
+         font: 14px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  h1 { font-size: 1rem; letter-spacing: .18em; text-transform: uppercase; color: #fff; }
+  p.lead { color: #94a2b4; max-width: 46rem; }
+  button { font: inherit; font-size: 1.05rem; padding: .9rem 1.6rem; margin: 1rem 0 1.5rem;
+           background: #dfe5ee; color: #05060a; border: 0; cursor: pointer; letter-spacing: .1em; }
+  table { border-collapse: collapse; width: 100%; max-width: 60rem; }
+  td { padding: .38rem .6rem; border-bottom: 1px solid #1b2230; vertical-align: top; }
+  td:first-child { color: #94a2b4; width: 17rem; }
+  .pass { color: #7fe3a4; } .fail { color: #ff8080; } .wait { color: #94a2b4; }
+  .verdict { margin-top: 1.5rem; padding: 1rem; border: 1px solid #1b2230; max-width: 60rem;
+             white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<h1>Tesseract — audio diagnosis</h1>
+<p class="lead">
+  Four independent tests, from the simplest thing your browser can make a sound with to the exact
+  path the Tesseract uses. Press the button, then <strong>listen</strong> — you should hear a short
+  beep, then about four seconds of music, twice. Whichever line first says FAIL, or whichever sound
+  you do not hear, is where the problem is.
+</p>
+
+<button id="go">Run the test — and listen</button>
+
+<table id="out"></table>
+<div class="verdict" id="verdict"></div>
+
+<script>
+const TRACK = '/ost/' + encodeURIComponent('17. First Step.mp3');
+const AT = 51.5;                    // where First Step actually has music
+const rows = {};
+const out = document.getElementById('out');
+
+function row(key, state, text) {
+  if (!rows[key]) {
+    const tr = document.createElement('tr');
+    const a = document.createElement('td'); a.textContent = key;
+    const b = document.createElement('td');
+    tr.append(a, b); out.append(tr); rows[key] = b;
+  }
+  rows[key].className = state;
+  rows[key].textContent = (state === 'pass' ? 'PASS  ' : state === 'fail' ? 'FAIL  ' : '····  ') + text;
+}
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+document.getElementById('go').addEventListener('click', async () => {
+  document.getElementById('verdict').textContent = '';
+  const notes = [];
+
+  /* 1 — can the browser reach the file at all? */
+  try {
+    const res = await fetch(TRACK, { headers: { Range: 'bytes=0-2047' } });
+    if (res.status === 206 || res.status === 200) {
+      const buf = await res.arrayBuffer();
+      row('1. file over HTTP', 'pass', `${res.status} · ${buf.byteLength} bytes · ${res.headers.get('content-type')}`);
+    } else {
+      row('1. file over HTTP', 'fail', `status ${res.status} — the dev server is not serving /ost/`);
+      notes.push('The audio files are not reachable. Is the dev server the one started from this project folder?');
+    }
+  } catch (e) {
+    row('1. file over HTTP', 'fail', String(e));
+    notes.push('The fetch itself failed — the dev server may not be running on this port.');
+  }
+
+  /* 2 — can the browser make ANY sound? A synthesized beep needs no file. */
+  let ctx = null;
+  try {
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    row('2. AudioContext', 'wait', `created, state = ${ctx.state}`);
+    await ctx.resume();
+    row('2. AudioContext', ctx.state === 'running' ? 'pass' : 'fail',
+        `state = ${ctx.state}${ctx.state !== 'running' ? ' — the browser is refusing to start audio' : ''} · output rate ${ctx.sampleRate} Hz`);
+    if (ctx.state !== 'running') notes.push('The AudioContext will not start. This is a browser or OS level block, not the Tesseract.');
+
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    g.gain.value = 0.0001;
+    osc.frequency.value = 440;
+    osc.connect(g).connect(ctx.destination);
+    osc.start();
+    g.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + 0.05);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.7);
+    osc.stop(ctx.currentTime + 0.75);
+    row('3. beep (no file)', 'pass', 'played a 440 Hz tone — DID YOU HEAR IT?');
+    await sleep(1100);
+  } catch (e) {
+    row('2. AudioContext', 'fail', String(e));
+    notes.push('Web Audio is unavailable in this browser.');
+  }
+
+  /* 3 — a plain audio element, no Web Audio graph at all. */
+  try {
+    const plain = new Audio(TRACK);
+    plain.volume = 1;
+    await new Promise((res, rej) => {
+      plain.addEventListener('loadedmetadata', res, { once: true });
+      plain.addEventListener('error', () => rej(new Error('element error code ' + (plain.error && plain.error.code))), { once: true });
+      plain.load();
+      setTimeout(() => rej(new Error('timed out waiting for metadata')), 8000);
+    });
+    plain.currentTime = AT;
+    await plain.play();
+    await sleep(500);
+    const moved = plain.currentTime > AT + 0.2;
+    row('4. plain <audio>', moved ? 'pass' : 'fail',
+        `duration ${plain.duration.toFixed(1)}s · playing at ${plain.currentTime.toFixed(1)}s · ${moved ? 'clock advancing' : 'CLOCK NOT ADVANCING'} — DID YOU HEAR MUSIC?`);
+    await sleep(3500);
+    plain.pause();
+    if (!moved) notes.push('The element will not actually play. Check the tab is not muted and the system output device.');
+  } catch (e) {
+    row('4. plain <audio>', 'fail', String(e));
+    notes.push('A plain audio element could not play the file — this is below the Tesseract entirely.');
+  }
+
+  /* 4 — the exact path the Tesseract uses: element routed through a gain node. */
+  try {
+    const el = new Audio(TRACK);
+    const src = ctx.createMediaElementSource(el);
+    const gain = ctx.createGain();
+    gain.gain.value = 0;
+    src.connect(gain).connect(ctx.destination);
+    await new Promise((res, rej) => {
+      el.addEventListener('loadedmetadata', res, { once: true });
+      el.addEventListener('error', () => rej(new Error('element error')), { once: true });
+      el.load();
+      setTimeout(() => rej(new Error('timed out')), 8000);
+    });
+    el.currentTime = AT;
+    await el.play();
+    gain.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.4);
+    await sleep(600);
+    const moved = el.currentTime > AT + 0.2;
+    row('5. routed through Web Audio', moved ? 'pass' : 'fail',
+        `at ${el.currentTime.toFixed(1)}s · gain ${gain.gain.value.toFixed(2)} · ${moved ? 'clock advancing' : 'CLOCK NOT ADVANCING'} — DID YOU HEAR MUSIC AGAIN?`);
+    await sleep(3400);
+    gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.4);
+    await sleep(500);
+    el.pause();
+  } catch (e) {
+    row('5. routed through Web Audio', 'fail', String(e));
+    notes.push('Routing an element through Web Audio failed — this is the exact thing the Tesseract does.');
+  }
+
+  document.getElementById('verdict').textContent =
+    'WHAT TO TELL ME\n\n' +
+    '· Which of the two music passes you heard, if either.\n' +
+    '· Whether you heard the beep.\n' +
+    '· Any line above marked FAIL.\n\n' +
+    (notes.length ? 'Automatic notes:\n· ' + notes.join('\n· ') : 'Every automated check passed, so the remaining question is purely whether sound reached your ears.');
+});
+</script>
+</body>
+</html>
