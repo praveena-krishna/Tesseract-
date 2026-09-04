@@ -33,7 +33,7 @@
 <div class="verdict" id="verdict"></div>
 
 <script>
-const TRACK = '/ost/' + encodeURIComponent('17. First Step.mp3');
+const TRACK = '/ost/' + encodeURIComponent('17-first-step.mp3');
 const AT = 51.5;                    // where First Step actually has music
 const rows = {};
 const out = document.getElementById('out');
@@ -61,12 +61,12 @@ document.getElementById('go').addEventListener('click', async () => {
       const buf = await res.arrayBuffer();
       row('1. file over HTTP', 'pass', `${res.status} · ${buf.byteLength} bytes · ${res.headers.get('content-type')}`);
     } else {
-      row('1. file over HTTP', 'fail', `status ${res.status} — the dev server is not serving /ost/`);
-      notes.push('The audio files are not reachable. Is the dev server the one started from this project folder?');
+      row('1. file over HTTP', 'fail', `status ${res.status} — nothing is serving /ost/ here`);
+      notes.push('The audio files are not reachable. On the dev server: is it the one started from this project folder? On a deployed build: dist/ost/ is empty, so check the ost-assets line in the build log.');
     }
   } catch (e) {
     row('1. file over HTTP', 'fail', String(e));
-    notes.push('The fetch itself failed — the dev server may not be running on this port.');
+    notes.push('The fetch itself failed — the server may not be running on this port, or the deployment is unreachable.');
   }
 
   /* 2 — can the browser make ANY sound? A synthesized beep needs no file. */
