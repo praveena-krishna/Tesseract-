@@ -23,8 +23,11 @@ dist-ssr
 *.sln
 *.sw?
 
-# The Interstellar soundtrack. 224 MB of audio served from beside the project
-# by the `ost-assets` plugin in vite.config.ts, never copied into the bundle.
+# The 320 kbps Interstellar release: 216 MB, and only ever the master source
+# for the transcode. What the project actually serves is ost/, an 87 MB 128 kbps
+# re-encode of this, which IS tracked — production has no dev server, so the
+# tracks have to reach the build machine. See the ost-assets plugin in
+# vite.config.ts and scripts/transcode-ost.sh.
 Hans Zimmer - Interstellar OST (Deluxe) 2014 [MP3 @ 320 kbps]/
 Hans Zimmer - Interstellar OST (Deluxe) 2014 [MP3 @ 320 kbps].zip
 *.zip

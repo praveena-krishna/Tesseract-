@@ -60,12 +60,23 @@
  * Every timestamp derived from these is a defensible place to start, not a
  * musically edited one — see the note on `startTime` below.
  *
- * `file` is the name on disk verbatim, apostrophes and all. The engine
+ * `file` is a web-safe slug of the release name — `15-stay-reprise.mp3` for
+ * `15. S.T.A.Y..mp3` — because these are served by a CDN in production and a
+ * path carrying spaces, apostrophes and a doubled dot is a class of failure
+ * that looks exactly like the audio not working. The engine still
  * percent-encodes it; do not pre-encode it here.
+ *
+ * What sits under those names is a 128 kbps CBR re-encode of the 320 kbps
+ * release, which is why a quarter of a gigabyte of soundtrack ships as 87 MB.
+ * Constant bitrate is deliberate: every cue below opens partway into its
+ * recording, and CBR makes that seek byte arithmetic rather than a lookup in a
+ * VBR table. Every measurement in this block was taken from the 320 kbps
+ * masters and still holds — a decode/re-encode round trip moves the timeline by
+ * an encoder-delay frame, about 26 ms.
  */
 export const TRACKS = {
   DREAMING_OF_THE_CRASH: {
-    file: "01. Dreaming of the Crash.mp3",
+    file: "01-dreaming-of-the-crash.mp3",
     seconds: 235.91,
     gain: 0.681,
     peak: 0.9516,
@@ -76,7 +87,7 @@ export const TRACKS = {
     tailStart: 231.0,
   },
   CORNFIELD_CHASE: {
-    file: "02. Cornfield Chase.mp3",
+    file: "02-cornfield-chase.mp3",
     seconds: 127.03,
     gain: 0.593,
     peak: 0.9791,
@@ -87,7 +98,7 @@ export const TRACKS = {
     tailStart: 122.0,
   },
   DUST: {
-    file: "03. Dust.mp3",
+    file: "03-dust.mp3",
     seconds: 341.45,
     gain: 0.878,
     peak: 0.9418,
@@ -98,7 +109,7 @@ export const TRACKS = {
     tailStart: 334.0,
   },
   DAY_ONE: {
-    file: "04. Day One.mp3",
+    file: "04-day-one.mp3",
     seconds: 199.5,
     gain: 1.145,
     peak: 0.777,
@@ -109,7 +120,7 @@ export const TRACKS = {
     tailStart: 193.0,
   },
   STAY: {
-    file: "05. Stay.mp3",
+    file: "05-stay.mp3",
     seconds: 412.5,
     gain: 0.401,
     peak: 0.968,
@@ -120,7 +131,7 @@ export const TRACKS = {
     tailStart: 407.5,
   },
   MESSAGE_FROM_HOME: {
-    file: "06. Message From Home.mp3",
+    file: "06-message-from-home.mp3",
     seconds: 100.94,
     gain: 3.162,
     peak: 0.1505,
@@ -131,7 +142,7 @@ export const TRACKS = {
     tailStart: 95.0,
   },
   THE_WORMHOLE: {
-    file: "07. The Wormhole.mp3",
+    file: "07-the-wormhole.mp3",
     seconds: 90.64,
     gain: 0.681,
     peak: 0.9656,
@@ -142,7 +153,7 @@ export const TRACKS = {
     tailStart: 84.0,
   },
   MOUNTAINS: {
-    file: "08. Mountains.mp3",
+    file: "08-mountains.mp3",
     seconds: 219.17,
     gain: 0.529,
     peak: 0.9816,
@@ -153,7 +164,7 @@ export const TRACKS = {
     tailStart: 214.5,
   },
   AFRAID_OF_TIME: {
-    file: "09. Afraid of Time.mp3",
+    file: "09-afraid-of-time.mp3",
     seconds: 152.74,
     gain: 3.162,
     peak: 0.1674,
@@ -164,7 +175,7 @@ export const TRACKS = {
     tailStart: 140.5,
   },
   A_PLACE_AMONG_THE_STARS: {
-    file: "10. A Place Among the Stars.mp3",
+    file: "10-a-place-among-the-stars.mp3",
     seconds: 207.18,
     gain: 1.118,
     peak: 0.7126,
@@ -175,7 +186,7 @@ export const TRACKS = {
     tailStart: 202.0,
   },
   RUNNING_OUT: {
-    file: "11. Running Out.mp3",
+    file: "11-running-out.mp3",
     seconds: 117.32,
     gain: 1.473,
     peak: 0.516,
@@ -186,7 +197,7 @@ export const TRACKS = {
     tailStart: 106.5,
   },
   IM_GOING_HOME: {
-    file: "12. I'm Going Home.mp3",
+    file: "12-im-going-home.mp3",
     seconds: 348.6,
     gain: 0.942,
     peak: 0.9452,
@@ -197,7 +208,7 @@ export const TRACKS = {
     tailStart: 336.0,
   },
   COWARD: {
-    file: "13. Coward.mp3",
+    file: "13-coward.mp3",
     seconds: 506.96,
     gain: 0.415,
     peak: 1.0,
@@ -208,7 +219,7 @@ export const TRACKS = {
     tailStart: 502.0,
   },
   DETACH: {
-    file: "14. Detach.mp3",
+    file: "14-detach.mp3",
     seconds: 402.26,
     gain: 0.401,
     peak: 0.9712,
@@ -219,7 +230,7 @@ export const TRACKS = {
     tailStart: 368.0,
   },
   STAY_REPRISE: {
-    file: "15. S.T.A.Y..mp3",
+    file: "15-stay-reprise.mp3",
     seconds: 383.58,
     gain: 0.8,
     peak: 0.9537,
@@ -230,7 +241,7 @@ export const TRACKS = {
     tailStart: 364.5,
   },
   WHERE_WERE_GOING: {
-    file: "16. Where We're Going.mp3",
+    file: "16-where-were-going.mp3",
     seconds: 461.35,
     gain: 0.921,
     peak: 0.9662,
@@ -241,7 +252,7 @@ export const TRACKS = {
     tailStart: 455.5,
   },
   FIRST_STEP: {
-    file: "17. First Step.mp3",
+    file: "17-first-step.mp3",
     seconds: 107.83,
     gain: 0.8,
     peak: 0.9495,
@@ -252,7 +263,7 @@ export const TRACKS = {
     tailStart: 103.5,
   },
   FLYING_DRONE: {
-    file: "18. Flying Drone.mp3",
+    file: "18-flying-drone.mp3",
     seconds: 113.24,
     gain: 0.756,
     peak: 0.7585,
@@ -263,7 +274,7 @@ export const TRACKS = {
     tailStart: 94.0,
   },
   ATMOSPHERIC_ENTRY: {
-    file: "19. Atmospheric Entry.mp3",
+    file: "19-atmospheric-entry.mp3",
     seconds: 101.07,
     gain: 0.535,
     peak: 0.4796,
@@ -274,7 +285,7 @@ export const TRACKS = {
     tailStart: 84.5,
   },
   NO_NEED_TO_COME_BACK: {
-    file: "20. No Need To Come Back.mp3",
+    file: "20-no-need-to-come-back.mp3",
     seconds: 272.98,
     gain: 0.936,
     peak: 0.9508,
@@ -285,7 +296,7 @@ export const TRACKS = {
     tailStart: 272.5,
   },
   IMPERFECT_LOCK: {
-    file: "21. Imperfect Lock.mp3",
+    file: "21-imperfect-lock.mp3",
     seconds: 414.98,
     gain: 0.593,
     peak: 0.9518,
@@ -296,7 +307,7 @@ export const TRACKS = {
     tailStart: 408.5,
   },
   WHAT_HAPPENS_NOW: {
-    file: "22. What Happens Now.mp3",
+    file: "22-what-happens-now.mp3",
     seconds: 146.26,
     gain: 0.764,
     peak: 0.7198,
@@ -307,7 +318,7 @@ export const TRACKS = {
     tailStart: 112.5,
   },
   DO_NOT_GO_GENTLE: {
-    file: "23. Do Not Go Gentle Into That Good Night.mp3",
+    file: "23-do-not-go-gentle.mp3",
     seconds: 99.19,
     gain: 3.162,
     peak: 0.2742,
